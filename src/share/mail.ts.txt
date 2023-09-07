@@ -1,0 +1,25 @@
+import { NodeMailgun } from 'ts-mailgun';
+
+const mailer = new NodeMailgun();
+mailer.apiKey = 'key-df32edce350d1ce87c630dfe40f39d2f'; // Set your API key ***
+mailer.domain = 'hits.nsip.edu.au';                     // Set the domain you registered earlier ***
+mailer.fromEmail = 'info@nsip.edu.au';                  // Set your from email
+mailer.fromTitle = 'Data Dictionary Info';              // Set the name (alias) you would like to send from
+mailer.init();
+
+export const SendMail = async (to: string, subject: string, content: string) => {
+    try {
+        const result = await mailer.send(to, subject, content)
+        console.log('Sent: ', result)
+        return true
+    } catch (e) {
+        console.log('Error: ', e)
+        return false
+    }
+}
+
+// Send an email to test@example.com
+// mailer
+// 	.send('cdutwhu@outlook.com', 'Hello!', '<h1>hsdf</h1>')
+// 	.then((result) => console.log('Done', result))
+// 	.catch((error) => console.error('Error: ', error));
