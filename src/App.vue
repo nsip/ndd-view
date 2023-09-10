@@ -34,7 +34,7 @@
 <script setup lang="ts">
 
 import { useCookies } from "vue3-cookies";
-import { useNotification } from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getUserInfoList, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/ClassNav.vue";
@@ -50,7 +50,6 @@ import UserAdmin from "@/components/UserAdmin.vue";
 import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
 
 const { cookies } = useCookies();
-const notification = useNotification()
 
 const Height = ref((window.innerHeight * 0.95).toString() + "px");
 
@@ -92,7 +91,7 @@ onMounted(async () => {
 
     if (loginAuth.value.length < 128) {
 
-        notification.notify({
+        notify({
             title: "Error",
             text: "Invalid Auth Info",
             type: "error"
@@ -104,7 +103,7 @@ onMounted(async () => {
         {
             const de = await getSelfName();
             if (de.error != null) {
-                notification.notify({
+                notify({
                     title: "Error: Cannot Get Self User Name",
                     text: de.error,
                     type: "error"
@@ -118,7 +117,7 @@ onMounted(async () => {
         {
             const de = await getUserInfoList(loginUser.value, "")
             if (de.error != null) {
-                notification.notify({
+                notify({
                     title: "Error: Cannot Get Self Info",
                     text: de.error,
                     type: "error"

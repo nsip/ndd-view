@@ -9,12 +9,10 @@
 <script setup lang="ts">
 
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { useNotification } from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import { loginUser, putLogout, ModalOn } from "@/share/share";
 import { URL_SIGN } from "@/share/ip"
 import CCModal from '@/components/shared/CCModal.vue'
-
-const notification = useNotification()
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
@@ -32,7 +30,7 @@ const PopupModal = async () => {
         })) === 'confirm') {
             const de = await putLogout()
             if (de.error != null) {
-                notification.notify({
+                notify({
                     title: "Error: Logout",
                     text: de.error,
                     type: "error"

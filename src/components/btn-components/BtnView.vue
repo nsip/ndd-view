@@ -17,7 +17,7 @@
 <script setup lang="ts">
 
 import { useCookies } from "vue3-cookies";
-import { useNotification } from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadCurrentList, lsSubscribed, putSubscribe } from "@/share/share";
 import { isEmpty } from "@/share/util";
@@ -25,7 +25,6 @@ import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
 
 const { cookies } = useCookies();
-const notification = useNotification()
 
 // for UI
 const btnNew = computed(() => Mode.value == 'normal')
@@ -101,7 +100,7 @@ const popupModal = async () => {
             {
                 const de = await delRemoveItem(delName.value)
                 if (de.error != null) {
-                    notification.notify({
+                    notify({
                         title: "Error: Delete Item",
                         text: de.error,
                         type: "error"
@@ -109,7 +108,7 @@ const popupModal = async () => {
                     ModalOn.value = false
                     return
                 }
-                notification.notify({
+                notify({
                     title: "Deleted OK",
                     text: `dictionary item '${delName.value}' is removed permanently`,
                     type: "success"
@@ -172,7 +171,7 @@ const subscribe = async () => {
     }
     const de = await putSubscribe(name, selType.value);
     if (de.error != null) {
-        notification.notify({
+        notify({
             title: "Error: Subscribe",
             text: de.error,
             type: "error"
@@ -180,7 +179,7 @@ const subscribe = async () => {
         return
     }
 
-    notification.notify({
+    notify({
         title: "Subscription",
         text: de.data ? `[${name}] is subscribed` : `[${name}] is unsubscribed`,
         type: "success"

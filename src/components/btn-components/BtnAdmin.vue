@@ -6,13 +6,11 @@
 
 <script setup lang="ts">
 
-import { useNotification } from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { ModalOn, postUserNew } from "@/share/share";
 import UserAddModal from '@/components/modal-components/UserAdd.vue'
 import eventBus from '@/share/util'
-
-const notification = useNotification()
 
 const PopupModal = async () => {
     if (ModalOn.value) {
@@ -27,7 +25,7 @@ const PopupModal = async () => {
 
         const de = await postUserNew(result.uname, result.email, result.password)
         if (de.error != null) {
-            notification.notify({
+            notify({
                 title: "Error: Create New User",
                 text: de.error,
                 type: "error"
@@ -36,7 +34,7 @@ const PopupModal = async () => {
             return
         }
 
-        notification.notify({
+        notify({
             title: `${result.uname} is created`,
             text: "",
             type: "success"

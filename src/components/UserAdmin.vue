@@ -11,7 +11,7 @@
 
 import eventBus from '@/share/util';
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { useNotification } from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import { getUserInfoList, getUserOnline, putUserUpdate, delUser, ModalOn } from "@/share/share";
 import TextLine from "@/components/shared/TextLine.vue";
 import type { Header, Item } from "vue3-easy-data-table";
@@ -19,8 +19,6 @@ import Vue3EasyDataTable from "vue3-easy-data-table";
 import "vue3-easy-data-table/dist/style.css";
 import UserEditModal from '@/components/modal-components/UserEdit.vue'
 import CCModal from '@/components/shared/CCModal.vue'
-
-const notification = useNotification()
 
 const headers = ref<any>(null);
 const items = ref<any>(null);
@@ -45,7 +43,7 @@ const reloadTable = async () => {
     {
         const de = await getUserInfoList('', '');
         if (de.error != null) {
-            notification.notify({
+            notify({
                 title: "Error: User Info List",
                 text: de.error,
                 type: "error"
@@ -60,7 +58,7 @@ const reloadTable = async () => {
     {
         const de = await getUserOnline();
         if (de.error != null) {
-            notification.notify({
+            notify({
                 title: "Error: User Online List",
                 text: de.error,
                 type: "error"
@@ -140,7 +138,7 @@ const PopupModal = async (item: ClickRowArgument) => {
         return
     }
     if (item['online']) {
-        notification.notify({
+        notify({
             title: "Notice: Admin User",
             text: "online user cannot be set",
             type: "warn"
@@ -175,7 +173,7 @@ const PopupModal = async (item: ClickRowArgument) => {
 
                     const de = await delUser(uname)
                     if (de.error != null) {
-                        notification.notify({
+                        notify({
                             title: "Error: Delete User",
                             text: de.error,
                             type: "error"
@@ -196,7 +194,7 @@ const PopupModal = async (item: ClickRowArgument) => {
 
             const de = await putUserUpdate(uname, result)
             if (de.error != null) {
-                notification.notify({
+                notify({
                     title: "Error: Update User",
                     text: de.error,
                     type: "error"

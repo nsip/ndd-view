@@ -9,7 +9,7 @@
  
 <script setup lang="ts">
 
-import { useNotification } from "@kyvg/vue3-notification";
+import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/shared/CCModal.vue'
 import { isEmpty } from "@/share/util"
@@ -29,8 +29,6 @@ import {
     ModalOn
 } from "@/share/share";
 
-const notification = useNotification()
-
 const showBtnApproval = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 const showBtnReject = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
@@ -48,7 +46,7 @@ const Approve = async () => {
     {
         const de = await getList(selType.value, "existing")
         if (de.error != null) {
-            notification.notify({
+            notify({
                 title: "Error: Get Existing List",
                 text: de.error,
                 type: "error"
@@ -68,7 +66,7 @@ const Approve = async () => {
     {
         const de = await putApprove(name, selType.value)
         if (de.error != null) {
-            notification.notify({
+            notify({
                 title: "Error: Approval",
                 text: de.error,
                 type: "error"
@@ -81,7 +79,7 @@ const Approve = async () => {
 
     const de = await getUserListAll("uname")
     if (de.error != null) {
-        notification.notify({
+        notify({
             title: "Error: Get User List",
             text: de.error,
             type: "error"
@@ -99,7 +97,7 @@ const Approve = async () => {
             // inform subscriber new item have been added
             const de = await postSendEmail("National Education Data Dictionary Info", content, uname)
             if (de.error != null) {
-                notification.notify({
+                notify({
                     title: "Error: Send Email (New)",
                     text: de.error,
                     type: "error"
@@ -112,7 +110,7 @@ const Approve = async () => {
 
             const de = await getUserListSubscribedAt(uname)
             if (de.error != null) {
-                notification.notify({
+                notify({
                     title: "Error: Get Subscribed User List",
                     text: de.error,
                     type: "error"
@@ -125,7 +123,7 @@ const Approve = async () => {
             if (subs.includes(name)) {
                 const de = await postSendEmail("notice:", content, uname)
                 if (de.error != null) {
-                    notification.notify({
+                    notify({
                         title: "Error: Send Email (Update)",
                         text: de.error,
                         type: "error"
@@ -165,7 +163,7 @@ const PopupModal = async () => {
             {
                 const de = await delReject(rejName.value, selType.value)
                 if (de.error != null) {
-                    notification.notify({
+                    notify({
                         title: "Error: Reject Item",
                         text: de.error,
                         type: "error"
@@ -173,7 +171,7 @@ const PopupModal = async () => {
                     ModalOn.value = false
                     return
                 }
-                notification.notify({
+                notify({
                     title: "Reject Done",
                     text: `candidate item ${rejName} has been rejected`,
                     type: "success"
