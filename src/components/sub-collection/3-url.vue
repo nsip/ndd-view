@@ -33,13 +33,15 @@ import { isNotEmpty, linkify } from "@/share/util";
     font-size: 18px;
     font-weight: bold;
     margin-left: 2%;
+    font-family: Arial Narrow, sans-serif;
 }
 
 .content {
     color: black;
-    margin: 0px 0px 0px 0px;
+    margin: 0px 0px 0px -50px;
     width: 100%;
     font-weight: normal;
     text-align: left;
+    font-size: 15px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="tbl">
-        <TextLine text="registered users:" textAlign="left" textColor="gray" lineColor="gray" lineHeight="0px" />
-        <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="PopupModal" />
+        <TextLine :text="title" textAlign="left" textColor="gray" lineColor="gray" lineHeight="0px" />
+        <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="PopupModal" alternating :fixed-header="true"/>
     </div>
 </template>
 
@@ -20,6 +20,8 @@ import "vue3-easy-data-table/dist/style.css";
 import UserEditModal from '@/components/modal-components/UserEdit.vue'
 import CCModal from '@/components/shared/CCModal.vue'
 
+const TableHeight = ref((window.innerHeight * 0.8).toString() + "px");
+const title = ref<any>("Registered Users:");
 const headers = ref<any>(null);
 const items = ref<any>(null);
 
@@ -95,6 +97,8 @@ const reloadTable = async () => {
             });
         });
     }
+
+    title.value = `${items.value.length} Registered Users:`
 }
 
 onMounted(() => {
@@ -249,5 +253,7 @@ const PopupModal = async (item: ClickRowArgument) => {
 
 .table {
     margin-top: 1%;
+    max-height: v-bind("TableHeight");
+    overflow-y: auto;
 }
 </style>

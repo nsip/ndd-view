@@ -51,7 +51,7 @@ import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
 
 const { cookies } = useCookies();
 
-const Height = ref((window.innerHeight * 0.95).toString() + "px");
+const Height = ref((window.innerHeight * 0.93).toString() + "px");
 
 const display = ref(false)
 const fNormal = computed(() => Mode.value == 'normal')
@@ -166,7 +166,7 @@ body {
 #left {
     width: 25%;
     height: 92%;
-    margin-right: 1%;
+    /* margin-right: 1%; */
     /* background-color: rgb(230, 230, 230); */
     /* List has its own scroll */
 }
@@ -174,7 +174,8 @@ body {
 #right {
     width: 75%;
     height: 93%;
-    margin-left: 0%;
+    margin-left: 0.5%;
+    margin-right: 0.5%;
     background-color: rgb(240, 240, 240);
     overflow-y: scroll;
 }

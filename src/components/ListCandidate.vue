@@ -48,9 +48,9 @@ ul.list-collection {
     /* display: inline-block; */
     overflow: scroll;
     /* scrollbar-width: none; */
-    font-size: 15px;
+    font-size: 14px;
     font-weight: normal;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Trebuchet MS, sans-serif;
     list-style: none;
     float: left;
     border-style: solid;

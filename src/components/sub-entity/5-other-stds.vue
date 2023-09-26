@@ -4,7 +4,7 @@
             <span class="category">Other Standards:</span>
             <span class="content-flex">
                 <div v-for="(item, idx) in selEntity.OtherStandards" :key="idx">
-                    <hr v-if="idx != selEntity.OtherStandards.length - 1" class="sub-sep-line" />
+                    <hr v-if="idx != selEntity.OtherStandards.length && idx != 0" class="sub-sep-line" />
 
                     <div v-if="isNotEmpty(item.Standard)" class="cat-val-flex">
                         <span class="sub-cat">Standard:</span>
@@ -69,6 +69,7 @@ import { isNotEmpty } from "@/share/util";
     font-size: 18px;
     font-weight: bold;
     margin-left: 2%;
+    font-family: Arial Narrow, sans-serif;
 }
 
 .content-flex {
@@ -94,6 +95,7 @@ import { isNotEmpty } from "@/share/util";
     width: 25%;
     /* background-color: rgb(172, 180, 178); */
     cursor: default;
+    font-family: Arial Narrow, sans-serif;
 }
 
 .sub-val {
@@ -101,7 +103,8 @@ import { isNotEmpty } from "@/share/util";
     text-align: left;
     color: black;
     width: 100%;
-    margin-left: -4%;
+    margin-left: -90px;
+    font-size: 15px;
 }
 
 .sub-sep-line {

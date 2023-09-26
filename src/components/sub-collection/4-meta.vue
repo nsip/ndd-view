@@ -40,6 +40,7 @@ import { isNotEmpty } from "@/share/util";
     font-size: 18px;
     font-weight: bold;
     margin-left: 2%;
+    font-family: Arial Narrow, sans-serif;
 }
 
 .content-flex {
@@ -65,6 +66,7 @@ import { isNotEmpty } from "@/share/util";
     width: 25%;
     /* background-color: rgb(172, 180, 178); */
     cursor: default;
+    font-family: Arial Narrow, sans-serif;
 }
 
 .sub-val {
@@ -72,6 +74,7 @@ import { isNotEmpty } from "@/share/util";
     text-align: left;
     color: black;
     width: 100%;
-    margin-left: -4%;
+    margin-left: -90px;
+    font-size: 15px;
 }
 </style>
