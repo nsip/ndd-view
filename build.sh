@@ -78,8 +78,8 @@ if [ -f "$2" ]; then
     TM=`date +%F@%T@%Z`
     CD=`pwd`
     PKG_NAME='dist'
-    echo "scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/$PKG_NAME($TM)"
-    scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/ndd-view-$PKG_NAME\($TM\)
+    echo "scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/$PKG_NAME-$TM"
+    scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/ndd-view-$PKG_NAME-$TM
 
 else
     echo "${Y}valid key file is not provided, cannot send package to EC2${W}"
