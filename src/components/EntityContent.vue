@@ -5,6 +5,7 @@
     <ItemSIF />
     <OtherStds />
     <LegalDefs />
+    <ItemSensi />
     <ItemCols />
     <MetaData />
 </template>
@@ -16,8 +17,9 @@ import ItemDef from "@/components/sub-entity/3-def.vue";
 import ItemSIF from "@/components/sub-entity/4-sif.vue";
 import OtherStds from "@/components/sub-entity/5-other-stds.vue";
 import LegalDefs from "@/components/sub-entity/6-legal-def.vue";
-import ItemCols from "@/components/sub-entity/7-collections.vue";
-import MetaData from "@/components/sub-entity/8-meta.vue";
+import ItemSensi from "@/components/sub-entity/7-sensitivity.vue";
+import ItemCols from "@/components/sub-entity/8-collections.vue";
+import MetaData from "@/components/sub-entity/9-meta.vue";
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

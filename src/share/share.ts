@@ -389,6 +389,8 @@ export const Refresh = async (name: any, dbCol: string) => {
         }
         const content = de.data;
 
+        // console.log(content)
+
         // set content to shared variables
         switch (selType.value) {
             case "entity":

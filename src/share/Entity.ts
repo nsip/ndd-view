@@ -5,6 +5,7 @@ export class entityType {
     SIF: sif[] = [];
     OtherStandards: otherStd[] = [];
     LegalDefinitions: legalDef[] = [];
+    Sensitivity: sensitivity[] = [];
     Collections: col[] = [];
     Metadata: meta = new meta();
 
@@ -15,6 +16,7 @@ export class entityType {
         this.SIF = object.SIF;
         this.OtherStandards = object.OtherStandards;
         this.LegalDefinitions = object.LegalDefinitions;
+        this.Sensitivity = object.Sensitivity;
         this.Collections = object.Collections;
         this.Metadata = object.Metadata;
     }
@@ -26,6 +28,7 @@ export class entityType {
         this.SIF = [];
         this.OtherStandards = [];
         this.LegalDefinitions = [];
+        this.Sensitivity = [];
         this.Collections = [];
         this.Metadata = new meta();
     }
@@ -53,6 +56,12 @@ class legalDef {
     Definition = "";
     Commentary = "";
     Datestamp = "";
+}
+
+class sensitivity {
+    Locale = "";
+    Value = "";
+    Commentary = "";
 }
 
 class col {
