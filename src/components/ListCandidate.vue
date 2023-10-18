@@ -1,20 +1,20 @@
 <template>
-    <h4 v-if="lsEntity.length > 0" class="title-entity">Entity:</h4>
-    <ul v-if="lsEntity.length > 0" class="list-entity">
-        <li v-for="(item, idx) in lsEntity" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'text')">
+    <h4 v-if="lsEnt.length > 0" class="title-entity">Entity:</h4>
+    <ul v-if="lsEnt.length > 0" class="list-entity">
+        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'text')">
             {{ item }}
         </li>
     </ul>
-    <h4 v-if="lsCollection.length > 0" class="title-collection">Collection:</h4>
-    <ul v-if="lsCollection.length > 0" class="list-collection">
-        <li v-for="(item, idx) in lsCollection" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'text')">
+    <h4 v-if="lsCol.length > 0" class="title-collection">Collection:</h4>
+    <ul v-if="lsCol.length > 0" class="list-collection">
+        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'text')">
             {{ item }}
         </li>
     </ul>
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEntity, lsCollection, LoadCurrentList, Refresh } from "@/share/share";
+import { selItem, lsEnt, lsCol, LoadCurrentList, Refresh } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");

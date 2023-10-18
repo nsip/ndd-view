@@ -16,8 +16,8 @@ export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
 export const selCollection = reactive(new collectionType()); // collection content
 export const aim = ref(""); // what item want to be search
-export const lsEntity = ref([]); // name list of entity
-export const lsCollection = ref([]); // name list of collection
+export const lsEnt = ref([]); // name list of entity
+export const lsCol = ref([]); // name list of collection
 export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
@@ -324,7 +324,7 @@ export const postSendEmail = async (
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// set 'lsEntity', 'lsCollection' here
+// set 'lsEnt', 'lsCol' here
 export const LoadCurrentList = async (kind: string, dbCol: string) => {
     // get list of item
     switch (kind) {
@@ -335,7 +335,7 @@ export const LoadCurrentList = async (kind: string, dbCol: string) => {
                     alert(de.error)
                     break
                 }
-                lsEntity.value = de.data
+                lsEnt.value = de.data
             }
             break;
 
@@ -346,7 +346,7 @@ export const LoadCurrentList = async (kind: string, dbCol: string) => {
                     alert(de.error)
                     break
                 }
-                lsCollection.value = de.data
+                lsCol.value = de.data
             }
             break;
     }
@@ -429,8 +429,8 @@ export const Search = async () => {
         return
     }
     const list = de.data;
-    lsEntity.value = list.Entities;
-    lsCollection.value = list.Collections;
+    lsEnt.value = list.Entities;
+    lsCol.value = list.Collections;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////

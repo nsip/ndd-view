@@ -7,12 +7,12 @@
         <label>collection</label>
     </div>
     <ul v-if="selType == 'entity'" class="list-entity">
-        <li v-for="(item, idx) in lsEntity" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
     <ul v-if="selType == 'collection'" class="list-collection">
-        <li v-for="(item, idx) in lsCollection" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEntity, lsCollection, lsSubscribed, LoadCurrentList, Refresh, selType } from "@/share/share";
+import { selItem, lsEnt, lsCol, lsSubscribed, LoadCurrentList, Refresh, selType } from "@/share/share";
 
 let mounted = false;
 
@@ -36,10 +36,10 @@ watchEffect(async () => {
             await LoadCurrentList(t, "existing")
             switch (t) {
                 case "entity":
-                    await Refresh(lsEntity.value[0], 'existing')
+                    await Refresh(lsEnt.value[0], 'existing')
                     break
                 case "collection":
-                    await Refresh(lsCollection.value[0], 'existing')
+                    await Refresh(lsCol.value[0], 'existing')
                     break
             }
         }

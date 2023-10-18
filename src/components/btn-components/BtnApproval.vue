@@ -39,7 +39,7 @@ const Approve = async () => {
     const name = selType.value == "entity" ? selEntity.Entity : selCollection.Entity;
 
     // check New item OR Updated item to be approved
-    // DO NOT USE 'lsEntity', 'lsCollection', get list from coldb 'existing'
+    // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
 
     let create = true;
 
