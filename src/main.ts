@@ -1,10 +1,10 @@
 import App from "@/App.vue";
 import Notifications from '@kyvg/vue3-notification'
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes);
+library.add(faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes, faDownload);
 
 // import { globalCookiesConfig } from "vue3-cookies";
 // globalCookiesConfig({

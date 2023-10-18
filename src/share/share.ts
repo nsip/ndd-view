@@ -196,6 +196,18 @@ export const getList = async (kind: string, dbCol: string) => {
     };
 };
 
+export const getDump = async (kind: string, dbCol: string) => {
+    const mQuery = new Map<string, any>([
+        ["dbcol", dbCol]
+    ]);
+    const rt = await fetchNoBody(`api/dictionary/pub/dump/${kind}`, "GET", mQuery, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getSearch = async (lookfor: string) => {
     const mQuery = new Map<string, any>([
         ["aim", lookfor],

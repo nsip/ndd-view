@@ -1,8 +1,10 @@
 <template>
-    <input class="search-box" type="text" id="search" name="search" placeholder="searching ..." v-model="aim" ref="searchInput" />
-    <button class="search-btn" @click="Search()">
-        <font-awesome-icon icon="search" />
-    </button>
+    <div class="search-div">
+        <input class="search-box" type="text" id="search" name="search" placeholder="searching ..." v-model="aim" ref="searchInput" />
+        <button class="search-btn" @click="Search()">
+            <font-awesome-icon icon="search" />
+        </button>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +22,12 @@ onMounted(async () => {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.search-div {
+    background-color: rgb(220, 220, 220);
+    width: 100%;
+    height: 50px;
+}
+
 .search-box {
     float: left;
     width: 80%;
