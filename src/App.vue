@@ -11,7 +11,6 @@
                 <SearchFilter v-if="fSearchFilter" />
                 <ListItem v-if="fListItem" />
                 <ListCandidate v-if="fListCandidate" />
-                <BtnList v-if="fListItem" />
             </div>
             <div id="right">
                 <EntityContent v-if="entityContent" />
@@ -49,12 +48,9 @@ import BtnView from "@/components/btn-components/BtnView.vue";
 import BtnApproval from "@/components/btn-components/BtnApproval.vue";
 import UserAdmin from "@/components/UserAdmin.vue";
 import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
-import BtnList from "./components/btn-components/BtnList.vue";
 
 const { cookies } = useCookies();
-
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
-
 const display = ref(false)
 const fNormal = computed(() => Mode.value == 'normal')
 const fApproval = computed(() => Mode.value == 'approval')

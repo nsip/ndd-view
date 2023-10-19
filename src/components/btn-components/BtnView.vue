@@ -1,5 +1,5 @@
 <template>
-    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="subscribe()" v-if="btnSubscribe">
+    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="btnSubscribe">
         <font-awesome-icon icon="bookmark" class="floating" />
     </a>
     <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="btnNew">
@@ -9,8 +9,11 @@
     <a class="float" id="pen" :title="hintEdit" @click="ToCMS('edit')" v-if="btnEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
-    <a class="float" id="times" :title="hintDelete" @click="popupModal()" v-if="btnDel">
+    <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="btnDelete">
         <font-awesome-icon icon="times" class="floating" />
+    </a>
+    <a class="float" id="download" :title="hintDownload" @click="Dump()">
+        <font-awesome-icon icon="download" class="floating" />
     </a>
 </template>
 
@@ -19,7 +22,7 @@
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadCurrentList, lsSubscribed, putSubscribe } from "@/share/share";
+import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadCurrentList, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
@@ -28,21 +31,23 @@ const { cookies } = useCookies();
 
 // for UI
 const btnNew = computed(() => Mode.value == 'normal')
-const btnEdit = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const btnDel = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 const btnSubscribe = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const btnEdit = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const btnDelete = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
-const bottomBtnNew = computed(() => {
+const Y_BtnSubscribe = ref('250px')
+const Y_BtnEdit = ref('180px')
+const Y_BtnDelete = ref('110px')
+const Y_BtnDownload = ref('40px')
+
+const Y_BtnNew = computed(() => {
     if (selType.value.length == 0 ||
         (selType.value == 'entity' && isEmpty(selEntity)) ||
         (selType.value == 'collection' && isEmpty(selCollection))) {
-        return "40px"
+        return Y_BtnDelete.value
     }
-    return "250px"
+    return "320px"
 })
-const bottomBtnEdit = computed(() => '110px')
-const bottomBtnDel = computed(() => '40px')
-const bottomBtnSubscribe = computed(() => '180px')
 
 // NEW, EDIT ///////////////////////////////////////////////////////////////
 
@@ -84,7 +89,7 @@ const ToCMS = async (flag: string) => {
 const delName = computed(() => selType.value == "entity" ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
-const popupModal = async () => {
+const PopupModal = async () => {
     if (ModalOn.value) {
         return
     }
@@ -153,8 +158,9 @@ const hintSubscription = computed(() => {
 })
 const hintEdit = computed(() => `edit '${selItem.value}'`)
 const hintDelete = computed(() => `delete '${selItem.value}'`)
+const hintDownload = computed(() => `download all items`)
 
-const subscribe = async () => {
+const Subscribe = async () => {
     // alert(selType.value)
 
     let name = "";
@@ -190,6 +196,21 @@ const subscribe = async () => {
     LoadCurrentList("collection", "existing");
 };
 
+const Dump = async () => {
+    const de = await getDump(selType.value, "existing")
+    if (de.error != null) {
+        notify({
+            title: "Error: Download All",
+            text: de.error,
+            type: "error"
+        })
+        return
+    }
+    const url = de.data
+    let dlTab = window.open();
+    dlTab!.location = url;
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -220,7 +241,7 @@ const subscribe = async () => {
 }
 
 #bookmark {
-    bottom: v-bind(bottomBtnSubscribe);
+    bottom: v-bind(Y_BtnSubscribe);
 }
 
 #bookmark:hover {
@@ -228,7 +249,7 @@ const subscribe = async () => {
 }
 
 #plus {
-    bottom: v-bind(bottomBtnNew);
+    bottom: v-bind(Y_BtnNew);
 }
 
 #plus:hover {
@@ -236,7 +257,7 @@ const subscribe = async () => {
 }
 
 #pen {
-    bottom: v-bind(bottomBtnEdit);
+    bottom: v-bind(Y_BtnEdit);
 }
 
 #pen:hover {
@@ -244,11 +265,19 @@ const subscribe = async () => {
 }
 
 #times {
-    bottom: v-bind(bottomBtnDel);
+    bottom: v-bind(Y_BtnDelete);
 }
 
 #times:hover {
     background-color: rgb(221, 82, 44);
+}
+
+#download {
+    bottom: v-bind(Y_BtnDownload);
+}
+
+#download:hover {
+    background-color: rgb(110, 158, 240);
 }
 
 /* dynamically used styles for bookmark */
