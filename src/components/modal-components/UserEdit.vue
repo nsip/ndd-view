@@ -25,7 +25,10 @@
         </select>
         <span id="note-delete">(delete an inactive user)</span>
 
-        <button id="btn-confirm" @click="resolve({ admin: valAdmin, active: valActive, delete: valDelete })">confirm</button>
+        <span id="prefix-reset-pwd">reset password:</span>
+        <input type="text" id="value-reset-pwd" v-model="valNewPwd" :placeholder="valNewPwdPH" :title="valNewPwdPH">
+
+        <button id="btn-confirm" @click="resolve({ admin: valAdmin, active: valActive, delete: valDelete, pwd: valNewPwd })">confirm</button>
         <button id="btn-cancel" @click="reject('cancel')">cancel</button>
 
     </div>
@@ -34,6 +37,7 @@
 <script setup lang="ts">
 
 import { useOverlayMeta } from '@unoverlays/vue'
+import { getPwdRule } from '@/share/share'
 
 const props = defineProps({
     uname: String,
@@ -60,14 +64,21 @@ const { visible, resolve, reject } = useOverlayMeta({
 const valAdmin = ref(props.admin)
 const valActive = ref(props.active)
 const valDelete = ref(props.delete)
+const valNewPwd = ref('')
+const valNewPwdPH = ref('')
 
 // let mounted = false;
 
-// onMounted(async () => {
-//     valAdmin.value = props.admin
-//     valActive.value = props.active
-//     mounted = true;
-// })
+onMounted(async () => {
+    const de = await getPwdRule();
+    if (de.error != null) {
+        alert(`${de.error}`)
+        return
+    }
+    valNewPwdPH.value = de.data;
+
+    // mounted = true;
+})
 
 // modal show event
 // watch(
@@ -86,18 +97,20 @@ const valDelete = ref(props.delete)
 // *** style variables ***
 
 // for labels, etc.
-let leftColumn1 = '30px'
-let leftColumn2 = '120px'
-let leftColumn3 = '190px'
-let topRow1 = '10px'
-let topRow2 = '45px'
-let topRow3 = '80px'
-let topRow4 = '115px'
+const leftColumn1 = '30px'
+const leftColumn2 = '120px'
+const leftColumn3 = '190px'
+
+const topRow1 = '10px'
+const topRow2 = '45px'
+const topRow3 = '80px'
+const topRow4 = '115px'
+const topRow5 = '150px'
 
 // for buttons
-let rightColumn1 = '15px'
-let rightColumn2 = '80px'
-let bottomRow1 = '15px'
+const rightColumn1 = '15px'
+const rightColumn2 = '80px'
+const bottomRow1 = '15px'
 
 </script>
 
@@ -108,7 +121,7 @@ let bottomRow1 = '15px'
     left: 50%;
     transform: translate(-50%, -50%);
     width: 450px;
-    height: 200px;
+    height: 235px;
     background-color: rgb(230, 230, 230);
     opacity: 0.95;
     border-radius: 20px;
@@ -122,6 +135,7 @@ let bottomRow1 = '15px'
     top: v-bind('topRow1');
     margin-top: 5px;
     font-size: large;
+    font-family: Trebuchet MS, sans-serif;
 }
 
 #value-user {
@@ -129,9 +143,10 @@ let bottomRow1 = '15px'
     left: v-bind('leftColumn2');
     top: v-bind('topRow1');
     margin-top: 5px;
-    font-size: medium;
+    font-size: large;
     font-style: italic;
     font-weight: bold;
+    color: grey;
 }
 
 /* 2nd line */
@@ -142,6 +157,7 @@ let bottomRow1 = '15px'
     top: v-bind('topRow2');
     margin-top: 2px;
     font-size: large;
+    font-family: Trebuchet MS, sans-serif;
 }
 
 #value-set-admin {
@@ -169,6 +185,7 @@ let bottomRow1 = '15px'
     top: v-bind('topRow3');
     margin-top: 2px;
     font-size: large;
+    font-family: Trebuchet MS, sans-serif;
 }
 
 #value-set-active {
@@ -196,6 +213,7 @@ let bottomRow1 = '15px'
     top: v-bind('topRow4');
     margin-top: 2px;
     font-size: large;
+    font-family: Trebuchet MS, sans-serif;
 }
 
 #value-delete {
@@ -213,6 +231,26 @@ let bottomRow1 = '15px'
     margin-top: 5px;
     font-size: small;
     font-style: italic;
+}
+
+/* 5th line */
+
+#prefix-reset-pwd {
+    position: absolute;
+    left: v-bind('leftColumn1');
+    top: v-bind('topRow5');
+    margin-top: 2px;
+    font-size: normal;
+    font-family: Trebuchet MS, sans-serif;
+}
+
+#value-reset-pwd {
+    position: absolute;
+    left: v-bind('leftColumn3');
+    top: v-bind(topRow5);
+    margin-top: 0px;
+    font-size: 11;
+    font-family: Trebuchet MS, sans-serif;
 }
 
 /* button */

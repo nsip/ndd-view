@@ -60,3 +60,36 @@ export const linkify = (s: any, lf: boolean) => {
         return linkstr;
     }
 };
+
+export const offsetCSS = (sz: string, offset: number) => {
+    if (sz.endsWith('cm') ||
+        sz.endsWith('mm') ||
+        sz.endsWith('in') ||
+        sz.endsWith('px') ||
+        sz.endsWith('pt') ||
+        sz.endsWith('pc') ||
+        sz.endsWith('em') ||
+        sz.endsWith('ex') ||
+        sz.endsWith('ch') ||
+        sz.endsWith('vw') ||
+        sz.endsWith('vh')
+    ) {
+        const tail = sz.slice(sz.length - 2, sz.length);
+        const strNum = sz.slice(0, -2);
+        return parseFloat(strNum) + offset + tail
+    }
+
+    if (sz.endsWith('rem') || sz.endsWith('vmin') || sz.endsWith('vmax')) {
+        const tail = sz.slice(sz.length - 3, sz.length);
+        const strNum = sz.slice(0, -3);
+        return parseFloat(strNum) + offset + tail
+    }
+
+    if (sz.endsWith('%')) {
+        const tail = sz.slice(sz.length - 1, sz.length);
+        const strNum = sz.slice(0, -1);
+        return parseFloat(strNum) + offset + tail
+    }
+
+    return sz
+}

@@ -1,7 +1,7 @@
 <template>
     <div class="tbl">
         <TextLine :text="title" textAlign="left" textColor="gray" lineColor="gray" lineHeight="0px" />
-        <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="PopupModal" alternating :fixed-header="true"/>
+        <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="PopupModal" alternating :fixed-header="true" />
     </div>
 </template>
 
@@ -12,7 +12,7 @@
 import eventBus from '@/share/util';
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
-import { getUserInfoList, getUserOnline, putUserUpdate, delUser, ModalOn } from "@/share/share";
+import { getUserInfoList, getUserOnline, putUserUpdate, delUser, putResetUserPWD, ModalOn } from "@/share/share";
 import TextLine from "@/components/shared/TextLine.vue";
 import type { Header, Item } from "vue3-easy-data-table";
 import Vue3EasyDataTable from "vue3-easy-data-table";
@@ -152,7 +152,7 @@ const PopupModal = async (item: ClickRowArgument) => {
     ModalOn.value = true
 
     try {
-        // result is updated user
+        // result is a struct {...}, updated user
         const result = await renderOverlay(UserEditModal, {
             props: {
                 uname: item['user'],
@@ -166,6 +166,7 @@ const PopupModal = async (item: ClickRowArgument) => {
 
         if ((result as any).delete) { // if [delete] set is true
 
+            // delete user with confirmation
             try {
                 if (String(await renderOverlay(CCModal, {
                     props: {
@@ -174,7 +175,6 @@ const PopupModal = async (item: ClickRowArgument) => {
                         height: "10%",
                     },
                 })) === 'confirm') {
-
                     const de = await delUser(uname)
                     if (de.error != null) {
                         notify({
@@ -186,7 +186,6 @@ const PopupModal = async (item: ClickRowArgument) => {
                         return
                     }
                 }
-
             } catch (e) {
                 switch (e) {
                     case 'cancel':
@@ -196,15 +195,54 @@ const PopupModal = async (item: ClickRowArgument) => {
 
         } else { // other setting
 
-            const de = await putUserUpdate(uname, result)
-            if (de.error != null) {
-                notify({
-                    title: "Error: Update User",
-                    text: de.error,
-                    type: "error"
-                })
-                ModalOn.value = false
-                return
+            // set other properties & password confirmation
+            try {
+
+                const admin = (result as any).admin as string
+                const active = (result as any).active as boolean
+                const pwd = (result as any).pwd as string
+
+                let confirmation = `[${uname}]\n\n\tADMIN => ${admin}\t\t\t\tACTIVE => ${active}`
+                if (pwd.trim().length > 0) {
+                    confirmation += `\n\n\tPASSWORD => ${pwd}`
+                }
+                if (String(await renderOverlay(CCModal, {
+                    props: {
+                        text: confirmation,
+                        width: "20%",
+                        height: "12%",
+                    },
+                })) === 'confirm') {
+
+                    if (pwd.trim().length > 0) {
+                        const de = await putResetUserPWD(uname, pwd)
+                        if (de.error != null) {
+                            notify({
+                                title: "Error: Reset Password",
+                                text: de.error,
+                                type: "error"
+                            })
+                            ModalOn.value = false
+                            return
+                        }
+                    }
+
+                    const de = await putUserUpdate(uname, result)
+                    if (de.error != null) {
+                        notify({
+                            title: "Error: Update User",
+                            text: de.error,
+                            type: "error"
+                        })
+                        ModalOn.value = false
+                        return
+                    }
+                }
+            } catch (e) {
+                switch (e) {
+                    case 'cancel':
+                        break
+                }
             }
         }
 

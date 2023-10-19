@@ -114,6 +114,28 @@ export const putUserUpdate = async (uname: string, data: any) => {
     };
 }
 
+export const putResetUserPWD = async (uname: string, pwd: string) => {
+    const mForm = new Map<string, any>([
+        ["uname", uname],
+        ["pwd", pwd]
+    ]);
+    const rt = await fetchBodyForm(`api/admin/user/reset-pwd`, "PUT", mEmpty, mForm, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const getPwdRule = async () => {
+    const rt = await fetchNoBody(`/api/user/pub/pwdrule`, "GET", mEmpty, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    }
+};
+
 export const delUser = async (uname: string) => {
     const rt = await fetchNoBody(`api/admin/user/remove/${uname}`, "DELETE", mEmpty, loginAuth.value);
     const err = await fetchErr(rt, onExpired)

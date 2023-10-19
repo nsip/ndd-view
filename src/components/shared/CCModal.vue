@@ -1,6 +1,7 @@
 <template>
     <div id="modal">
-        <span id="prefix">{{ props.text }}</span>
+        <!-- <span id="prefix">{{ props.text }}</span> -->
+        <span id="prefix" v-html="htmlText"></span>
         <button id="btn-confirm" @click="resolve('confirm')">confirm</button>
         <button id="btn-cancel" @click="reject('cancel')">cancel</button>
     </div>
@@ -25,6 +26,13 @@ const { visible, resolve, reject } = useOverlayMeta({
     // Animation duration to avoid premature destruction of components
     // Only use component in template and no need to define
     animation: 100
+})
+
+const htmlText = computed(() => {
+    if (props.text != undefined) {
+        let t = props.text.replace(/\n/g, '<br>')
+        return t.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+    }
 })
 
 ///////////////////////////////////////////////////////
@@ -63,8 +71,8 @@ let bottomRow1 = '10px'
     position: absolute;
     left: v-bind('leftColumn1');
     top: v-bind('topRow1');
-    font-size: medium;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: large;
+    font-family: Trebuchet MS, sans-serif;
 }
 
 /* button */
