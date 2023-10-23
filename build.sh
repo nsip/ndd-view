@@ -76,6 +76,7 @@ if [ -f "$2" ]; then
     if [[ $1 == 'prod' || $1 == 'product' ]]; then IP='54.66.224.148'; fi
         
     TM=`date +%F@%T@%Z`
+    TM="${TM//:/-}" # change ':' to '-'
     CD=`pwd`
     PKG_NAME='dist'
     echo "scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/$PKG_NAME-$TM"
