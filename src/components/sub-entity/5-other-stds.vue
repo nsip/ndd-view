@@ -38,7 +38,7 @@
 
                     <div v-if="isNotEmpty(item.Commentary)" class="cat-val-flex">
                         <span class="sub-cat">Commentary:</span>
-                        <span class="sub-val">{{ item.Commentary }}</span>
+                        <span class="sub-val" v-html="item.Commentary"></span>
                     </div>
                 </div>
             </span>

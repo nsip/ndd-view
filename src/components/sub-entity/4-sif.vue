@@ -16,12 +16,12 @@
 
                     <div v-if="isNotEmpty(item.Definition)" class="cat-val-flex">
                         <span class="sub-cat">Definition:</span>
-                        <span class="sub-val">{{ item.Definition }}</span>
+                        <span class="sub-val" v-html="item.Definition"></span>
                     </div>
 
                     <div v-if="isNotEmpty(item.Commentary)" class="cat-val-flex">
                         <span class="sub-cat">Commentary:</span>
-                        <span class="sub-val">{{ item.Commentary }}</span>
+                        <span class="sub-val" v-html="item.Commentary"></span>
                     </div>
 
                     <div v-if="isNotEmpty(item.Datestamp)" class="cat-val-flex">

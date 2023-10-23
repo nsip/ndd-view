@@ -13,7 +13,7 @@
 
                     <div v-if="isNotEmpty(item.Description)" class="cat-val-flex">
                         <span class="sub-cat">Description:</span>
-                        <span class="sub-val">{{ item.Description }}</span>
+                        <span class="sub-val" v-html="item.Description"></span>
                     </div>
 
                     <div v-if="isNotEmpty(item.Standard)" class="cat-val-flex">
@@ -35,7 +35,7 @@
                         <span class="sub-cat">Business Rules:</span>
                         <div class="sub-val">
                             <div v-for="(subitem, i) in item.BusinessRules" :key="i">
-                                <span>{{ subitem }}</span>
+                                <span v-html="subitem"></span>
                                 <br />
                             </div>
                         </div>
@@ -43,7 +43,7 @@
 
                     <div v-if="isNotEmpty(item.DefinitionModification)" class="cat-val-flex">
                         <span class="sub-cat">Definition Modification:</span>
-                        <span class="sub-val">{{ item.DefinitionModification }}</span>
+                        <span class="sub-val" v-html="item.DefinitionModification"></span>
                     </div>
                 </div>
             </span>

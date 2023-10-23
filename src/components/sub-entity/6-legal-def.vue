@@ -13,7 +13,7 @@
 
                     <div v-if="isNotEmpty(item.Citation)" class="cat-val-flex">
                         <span class="sub-cat">Citation:</span>
-                        <span class="sub-val">{{ item.Citation }}</span>
+                        <span class="sub-val" v-html="item.Citation"></span>
                     </div>
 
                     <div v-if="isNotEmpty(item.Link)" class="cat-val-flex">
@@ -28,7 +28,7 @@
 
                     <div v-if="isNotEmpty(item.Commentary)" class="cat-val-flex">
                         <span class="sub-cat">Commentary:</span>
-                        <span class="sub-val">{{ item.Commentary }}</span>
+                        <span class="sub-val" v-html="item.Commentary"></span>
                     </div>
 
                     <div v-if="isNotEmpty(item.Datestamp)" class="cat-val-flex">
