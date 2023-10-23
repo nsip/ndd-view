@@ -1,13 +1,13 @@
 <template>
     <h4 v-if="lsEnt.length > 0" class="title-entity">Entity:</h4>
     <ul v-if="lsEnt.length > 0" class="list-entity">
-        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'text')">
+        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'html')">
             {{ item }}
         </li>
     </ul>
     <h4 v-if="lsCol.length > 0" class="title-collection">Collection:</h4>
     <ul v-if="lsCol.length > 0" class="list-collection">
-        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'text')">
+        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'html')">
             {{ item }}
         </li>
     </ul>

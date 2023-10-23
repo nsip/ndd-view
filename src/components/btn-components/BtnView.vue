@@ -1,18 +1,18 @@
 <template>
-    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="btnSubscribe">
+    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="doSubscribe">
         <font-awesome-icon icon="bookmark" class="floating" />
     </a>
-    <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="btnNew">
+    <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="doNew">
         <font-awesome-icon icon="plus" class="floating" />
     </a>
     <!-- <a :href="URL_CMS + '?name=' + selItem + '&kind=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
-    <a class="float" id="pen" :title="hintEdit" @click="ToCMS('edit')" v-if="btnEdit">
+    <a class="float" id="pen" :title="hintEdit" @click="ToCMS('edit')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
-    <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="btnDelete">
+    <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="doDelete">
         <font-awesome-icon icon="times" class="floating" />
     </a>
-    <a class="float" id="download" :title="hintDownload" @click="Dump()">
+    <a class="float" id="download" :title="hintDownload" @click="Dump()" v-if="doDump">
         <font-awesome-icon icon="download" class="floating" />
     </a>
 </template>
@@ -30,10 +30,11 @@ import CCModal from '@/components/shared/CCModal.vue'
 const { cookies } = useCookies();
 
 // for UI
-const btnNew = computed(() => Mode.value == 'normal')
-const btnSubscribe = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const btnEdit = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const btnDelete = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doNew = computed(() => Mode.value == 'normal')
+const doSubscribe = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDump = computed(() => Mode.value == 'normal')
 
 const Y_BtnSubscribe = ref('250px')
 const Y_BtnEdit = ref('180px')

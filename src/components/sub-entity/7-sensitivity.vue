@@ -5,7 +5,7 @@
             <span class="content-flex">
                 <div v-for="(item, idx) in selEntity.Sensitivity" :key="idx">
 
-                   <hr v-if="idx != selEntity.Sensitivity.length && idx != 0" class="sub-sep-line" />
+                    <hr v-if="idx != selEntity.Sensitivity.length && idx != 0" class="sub-sep-line" />
 
                     <div v-if="isNotEmpty(item.Locale)" class="cat-val-flex">
                         <span class="sub-cat">Locale:</span>
@@ -19,8 +19,8 @@
 
                     <div v-if="isNotEmpty(item.Commentary)" class="cat-val-flex">
                         <span class="sub-cat">Commentary:</span>
-                        <span class="sub-val">{{ item.Commentary }}</span>
-                    </div>                   
+                        <span class="sub-val" v-html="item.Commentary"></span>
+                    </div>
 
                 </div>
             </span>
