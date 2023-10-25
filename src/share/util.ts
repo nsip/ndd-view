@@ -93,3 +93,12 @@ export const offsetCSS = (sz: string, offset: number) => {
 
     return sz
 }
+
+export const download_file = (url: string, file_name: string) => {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = file_name;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+}

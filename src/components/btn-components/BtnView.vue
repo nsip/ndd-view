@@ -23,7 +23,7 @@ import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadCurrentList, lsSubscribed, putSubscribe, getDump } from "@/share/share";
-import { isEmpty } from "@/share/util";
+import { isEmpty, download_file } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
 
@@ -208,8 +208,7 @@ const Dump = async () => {
         return
     }
     const url = de.data
-    let dlTab = window.open();
-    dlTab!.location = url;
+    download_file(url, "dump-dic.zip");
 }
 
 </script>
