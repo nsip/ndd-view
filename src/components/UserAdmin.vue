@@ -171,8 +171,9 @@ const PopupModal = async (item: ClickRowArgument) => {
                 if (String(await renderOverlay(CCModal, {
                     props: {
                         text: `remove user '${uname}' permanently?`,
-                        width: "20%",
-                        height: "10%",
+                        fontsize: "14px",
+                        width: "450px",
+                        height: "85px",
                     },
                 })) === 'confirm') {
                     const de = await delUser(uname)
@@ -209,8 +210,9 @@ const PopupModal = async (item: ClickRowArgument) => {
                 if (String(await renderOverlay(CCModal, {
                     props: {
                         text: confirmation,
-                        width: "20%",
-                        height: "12%",
+                        fontsize: "13px",                        
+                        width: "450px",
+                        height: "180px",
                     },
                 })) === 'confirm') {
 

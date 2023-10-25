@@ -156,6 +156,7 @@ const PopupModal = async () => {
         if (String(await renderOverlay(CCModal, {
             props: {
                 text: `Reject candidate '${rejName.value}' ?`,
+                fontsize: "13px",
                 width: "20%",
                 height: "10%",
             },

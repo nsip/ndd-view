@@ -13,6 +13,7 @@ import { useOverlayMeta } from '@unoverlays/vue'
 
 const props = defineProps({
     text: String,
+    fontsize: String,
     width: String,
     height: String,
 })
@@ -29,9 +30,14 @@ const { visible, resolve, reject } = useOverlayMeta({
 })
 
 const htmlText = computed(() => {
+    let fs = '15px';
+    if (props.fontsize != undefined && props.fontsize != null && props.fontsize.endsWith('px')) {
+        fs = props.fontsize;
+    }
     if (props.text != undefined) {
         let t = props.text.replace(/\n/g, '<br>')
-        return t.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+        t = t.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+        return `<p style="font-size: ${fs};">` + t + '</p>'
     }
 })
 
@@ -62,7 +68,7 @@ let bottomRow1 = '10px'
     height: v-bind('props.height');
     background-color: rgb(150, 180, 180);
     opacity: 0.95;
-    border-radius: 10px;
+    border-radius: 20px;
 }
 
 /* 1st line */

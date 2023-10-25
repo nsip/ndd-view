@@ -24,6 +24,7 @@ const PopupModal = async () => {
         if (String(await renderOverlay(CCModal, {
             props: {
                 text: "Logout ?",
+                fontsize: "14px",
                 width: "12%",
                 height: "9%",
             },

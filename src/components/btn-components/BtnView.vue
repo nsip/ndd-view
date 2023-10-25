@@ -99,6 +99,7 @@ const PopupModal = async () => {
         if (String(await renderOverlay(CCModal, {
             props: {
                 text: `Delete '${delName.value}' permanently?`,
+                fontsize: "13px",
                 width: "20%",
                 height: "10%",
             },
