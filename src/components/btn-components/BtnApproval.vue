@@ -134,8 +134,8 @@ const Approve = async () => {
         }
     });
 
-    LoadCurrentList("entity", "text");
-    LoadCurrentList("collection", "text");
+    LoadCurrentList("entity", "inbound");
+    LoadCurrentList("collection", "inbound");
     selEntity.Reset();
     selCollection.Reset();
     UpdateSubmitListStatus();
@@ -178,9 +178,9 @@ const PopupModal = async () => {
                     type: "success"
                 })
 
-                // 'text' db-col for candidates list
-                await LoadCurrentList("entity", "text");
-                await LoadCurrentList("collection", "text");
+                // 'inbound' db-col for candidates list
+                await LoadCurrentList("entity", "inbound");
+                await LoadCurrentList("collection", "inbound");
                 selEntity.Reset();
                 selCollection.Reset();
                 await UpdateSubmitListStatus(); // indicates any candidates are there for approval

@@ -475,7 +475,7 @@ export const UpdateSubmitListStatus = async () => {
     let lsEnt: string | any[];
     let lsCol: string | any[];
     {
-        const de = await getList("entity", "text");
+        const de = await getList("entity", "inbound");
         if (de.error != null) {
             alert(de.error)
             return
@@ -483,7 +483,7 @@ export const UpdateSubmitListStatus = async () => {
         lsEnt = de.data;
     }
     {
-        const de = await getList("collection", "text");
+        const de = await getList("collection", "inbound");
         if (de.error != null) {
             alert(de.error)
             return
