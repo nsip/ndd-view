@@ -41,7 +41,7 @@ const Approve = async () => {
     // check New item OR Updated item to be approved
     // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
 
-    let create = true;
+    let flagCreate = true;
 
     {
         const de = await getList(selType.value, "existing")
@@ -56,18 +56,19 @@ const Approve = async () => {
         const lsExisting = de.data as string[];
         lsExisting.forEach((val) => {
             if (val == name) {
-                create = false;
+                flagCreate = false;
             }
         });
-        // alert(`create flag: ${create}`)
+        // alert(`flagCreate flag: ${flagCreate}`)
     }
 
     // do approve
     {
+        const msg = flagCreate ? 'new item' : 'modified item'
         const de = await putApprove(name, selType.value)
         if (de.error != null) {
             notify({
-                title: "Error: Approval",
+                title: `Error: Approval ${msg}`,
                 text: de.error,
                 type: "error"
             })
@@ -75,64 +76,66 @@ const Approve = async () => {
         }
     }
 
-    const content = create ? `new item [${name}] has been added` : `item [${name}] has been updated`;
+    // TODO: should append sending email function to the API side.
+    //
 
-    const de = await getUserListAll("uname")
-    if (de.error != null) {
-        notify({
-            title: "Error: Get User List",
-            text: de.error,
-            type: "error"
-        })
-        return
-    }
-    const users = de.data as any[];
-    users.forEach(async (user) => {
+    // const content = flagCreate ? `new item [${name}] has been added` : `item [${name}] has been updated`;
+    // const de = await getUserListAll("uname")
+    // if (de.error != null) {
+    //     notify({
+    //         title: "Error: Get User List",
+    //         text: de.error,
+    //         type: "error"
+    //     })
+    //     return
+    // }
+    // const users = de.data as any[];
+    // users.forEach(async (user) => {
 
-        const uname = user.UName;
-        // console.log(uname)
+    //     const uname = user.UName;
+    //     // console.log(uname)
 
-        if (create) {
+    //     if (flagCreate) {
 
-            // inform subscriber new item have been added
-            const de = await postSendEmail("National Education Data Dictionary Info", content, uname)
-            if (de.error != null) {
-                notify({
-                    title: "Error: Send Email (New)",
-                    text: de.error,
-                    type: "error"
-                })
-                return
-            }
+    //         // inform subscriber new item have been added
+    //         const de = await postSendEmail("National Education Data Dictionary Info", content, uname)
+    //         if (de.error != null) {
+    //             notify({
+    //                 title: "Error: Send Email (New)",
+    //                 text: de.error,
+    //                 type: "error"
+    //             })
+    //             return
+    //         }
 
-        } else {
-            // inform subscriber his subscribed item has been updated
+    //     } else {
+    //         // inform subscriber his subscribed item has been updated
 
-            const de = await getUserListSubscribedAt(uname)
-            if (de.error != null) {
-                notify({
-                    title: "Error: Get Subscribed User List",
-                    text: de.error,
-                    type: "error"
-                })
-                return
-            }
-            const subs = de.data as string[];
-            console.log("getAdminListSubscription:", uname, subs)
+    //         const de = await getUserListSubscribedAt(uname)
+    //         if (de.error != null) {
+    //             notify({
+    //                 title: "Error: Get Subscribed User List",
+    //                 text: de.error,
+    //                 type: "error"
+    //             })
+    //             return
+    //         }
+    //         const subs = de.data as string[];
+    //         console.log("getAdminListSubscription:", uname, subs)
 
-            if (subs.includes(name)) {
-                const de = await postSendEmail("notice:", content, uname)
-                if (de.error != null) {
-                    notify({
-                        title: "Error: Send Email (Update)",
-                        text: de.error,
-                        type: "error"
-                    })
-                    return
-                }
-            }
-        }
-    });
+    //         if (subs.includes(name)) {
+    //             const de = await postSendEmail("notice:", content, uname)
+    //             if (de.error != null) {
+    //                 notify({
+    //                     title: "Error: Send Email (Update)",
+    //                     text: de.error,
+    //                     type: "error"
+    //                 })
+    //                 return
+    //             }
+    //         }
+    //     }
+    // });
 
     LoadCurrentList("entity", "inbound");
     LoadCurrentList("collection", "inbound");

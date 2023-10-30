@@ -156,10 +156,10 @@ export const putLogout = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const getItemKind = async (name: string, dbCol: string) => {
+export const getItemKind = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["dbcol", dbCol],
+        ["phase", phase],
     ]);
     const rt = await fetchNoBody(`api/dictionary/pub/kind`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
@@ -169,10 +169,10 @@ export const getItemKind = async (name: string, dbCol: string) => {
     };
 };
 
-export const getContent = async (name: string, dbCol: string) => {
+export const getContent = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["dbcol", dbCol],
+        ["phase", phase],
     ]);
     const rt = await fetchNoBody(`api/dictionary/pub/one`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
@@ -206,9 +206,9 @@ export const getClsInfo = async (name: string) => {
     };
 };
 
-export const getList = async (kind: string, dbCol: string) => {
+export const getList = async (kind: string, phase: string) => {
     const mQuery = new Map<string, any>([
-        ["dbcol", dbCol]
+        ["phase", phase]
     ]);
     const rt = await fetchNoBody(`api/dictionary/pub/list/${kind}`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
@@ -218,9 +218,9 @@ export const getList = async (kind: string, dbCol: string) => {
     };
 };
 
-export const getDump = async (kind: string, dbCol: string) => {
+export const getDump = async (kind: string, phase: string) => {
     const mQuery = new Map<string, any>([
-        ["dbcol", dbCol]
+        ["phase", phase]
     ]);
     const rt = await fetchNoBody(`api/dictionary/pub/dump/${kind}`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
@@ -359,12 +359,12 @@ export const postSendEmail = async (
 //////////////////////////////////////////////////////////////////////////////////////
 
 // set 'lsEnt', 'lsCol' here
-export const LoadCurrentList = async (kind: string, dbCol: string) => {
+export const LoadCurrentList = async (kind: string, phase: string) => {
     // get list of item
     switch (kind) {
         case "entity":
             {
-                const de = await getList(kind, dbCol);
+                const de = await getList(kind, phase);
                 if (de.error != null) {
                     alert(de.error)
                     break
@@ -375,7 +375,7 @@ export const LoadCurrentList = async (kind: string, dbCol: string) => {
 
         case "collection":
             {
-                const de = await getList(kind, dbCol);
+                const de = await getList(kind, phase);
                 if (de.error != null) {
                     alert(de.error)
                     break
@@ -395,8 +395,8 @@ export const LoadCurrentList = async (kind: string, dbCol: string) => {
 };
 
 // set 'selItem', 'aim', 'selType' etc. here etc.
-export const Refresh = async (name: any, dbCol: string) => {
-    // alert(`into refresh, name is [${name}], dbcol is [${dbCol}]`)
+export const Refresh = async (name: any, phase: string) => {
+    // alert(`into refresh, name is [${name}], phase is [${phase}]`)
 
     // set current selected item
     selItem.value = name;
@@ -406,7 +406,7 @@ export const Refresh = async (name: any, dbCol: string) => {
 
     // selected kind
     {
-        const de = await getItemKind(name, dbCol);
+        const de = await getItemKind(name, phase);
         if (de.error != null) {
             alert(de.error)
             return
@@ -416,7 +416,7 @@ export const Refresh = async (name: any, dbCol: string) => {
 
     // get content
     {
-        const de = await getContent(name, dbCol);
+        const de = await getContent(name, phase);
         if (de.error != null) {
             alert(de.error)
             return
