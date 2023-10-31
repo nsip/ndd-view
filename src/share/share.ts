@@ -270,10 +270,7 @@ export const delReject = async (name: string, kind: string) => {
 }
 
 export const delRemoveItem = async (name: string) => {
-    const mQuery = new Map<string, any>([
-        ["name", name],
-    ]);
-    const rt = await fetchNoBody(`api/dictionary/auth/item`, "DELETE", mQuery, loginAuth.value);
+    const rt = await fetchNoBody(`api/dictionary/auth/delete/${name}`, "DELETE", mEmpty, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,

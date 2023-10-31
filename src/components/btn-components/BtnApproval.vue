@@ -74,6 +74,12 @@ const Approve = async () => {
             })
             return
         }
+
+        notify({
+            title: `Approval`,
+            text: `${name} is approved to dictionary`,
+            type: "success"
+        })
     }
 
     // TODO: should append sending email function to the API side.
