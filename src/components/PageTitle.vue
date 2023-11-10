@@ -1,7 +1,8 @@
 <template>
     <div>
-        <span class="title"> National Education Data Dictionary </span>
-        <button class="btn-as-link" title="logout?" @click="PopupModal()">{{ loginUser }}</button>
+        <span class="title">National Education Data Dictionary</span>
+        <button class="btn-exit" title="logout?" @click="PopupModal()">Exit</button>
+        <span class="user-name">{{ loginUser }}</span>
         <hr class="sep" />
     </div>
 </template>
@@ -25,7 +26,7 @@ const PopupModal = async () => {
             props: {
                 text: "Logout ?",
                 fontsize: "14px",
-                width: "12%",
+                width: "10%",
                 height: "9%",
             },
         })) === 'confirm') {
@@ -61,12 +62,31 @@ const PopupModal = async () => {
     font-weight: bold;
 }
 
-.btn-as-link {
+.user-name {
     float: right;
-    margin-top: 0.4%;
-    margin-right: 1%;
+    margin-top: 0.3%;
+    margin-right: 0.8%;
     background: none;
     border: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-exit {
+    float: right;
+    margin-top: 0.2%;
+    margin-right: 1%;
+    padding: 2px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #7a7e81;
+    color: #fff;
+    transition: background-color 0.3s ease;
 }
 
 .sep {

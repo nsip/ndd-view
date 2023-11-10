@@ -14,13 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt, lsCol, LoadCurrentList, Refresh } from "@/share/share";
+import { selItem, lsEnt, lsCol, Refresh } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
 
-LoadCurrentList("entity", "inbound");
-LoadCurrentList("collection", "inbound");
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

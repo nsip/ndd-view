@@ -17,9 +17,7 @@
 
 <script setup lang="ts">
 
-import { loginAsAdmin, Mode, selType, selEntity, selCollection, aim, selClsPath, selChildren, isSubmitListEmpty, UpdateSubmitListStatus } from "@/share/share";
-
-UpdateSubmitListStatus();
+import { loginAsAdmin, Mode, selType, selEntity, selCollection, aim, selClsPath, selChildren, isSubmitListEmpty } from "@/share/share";
 
 const select = (mode: string) => {
 

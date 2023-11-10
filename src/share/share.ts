@@ -363,7 +363,8 @@ export const LoadCurrentList = async (kind: string, phase: string) => {
             {
                 const de = await getList(kind, phase);
                 if (de.error != null) {
-                    alert(de.error)
+                    // alert(de.error)
+                    console.log(de.error)
                     break
                 }
                 lsEnt.value = de.data
@@ -374,7 +375,8 @@ export const LoadCurrentList = async (kind: string, phase: string) => {
             {
                 const de = await getList(kind, phase);
                 if (de.error != null) {
-                    alert(de.error)
+                    // alert(de.error)
+                    console.log(de.error)
                     break
                 }
                 lsCol.value = de.data
@@ -385,7 +387,8 @@ export const LoadCurrentList = async (kind: string, phase: string) => {
     // get list of subscribed item
     const de = await getListSubscription();
     if (de.error != null) {
-        alert(de.error)
+        // alert(de.error)
+        console.log(de.error)
         return
     }
     lsSubscribed.value = de.data
@@ -405,7 +408,8 @@ export const Refresh = async (name: any, phase: string) => {
     {
         const de = await getItemKind(name, phase);
         if (de.error != null) {
-            alert(de.error)
+            // alert(de.error)
+            console.log(de.error)
             return
         }
         selType.value = de.data;
@@ -415,7 +419,8 @@ export const Refresh = async (name: any, phase: string) => {
     {
         const de = await getContent(name, phase);
         if (de.error != null) {
-            alert(de.error)
+            // alert(de.error)
+            console.log(de.error)
             return
         }
         const content = de.data;
@@ -434,7 +439,8 @@ export const Refresh = async (name: any, phase: string) => {
                 // get computed collection entities and set them to 'selCollection'
                 const de = await getColEntities(name)
                 if (de.error != null) {
-                    alert(de.error)
+                    // alert(de.error)
+                    console.log(de.error)
                     return
                 }
                 selCollection.SetEntities(de.data);
@@ -445,7 +451,8 @@ export const Refresh = async (name: any, phase: string) => {
     // get class info
     const de = await getClsInfo(name)
     if (de.error != null) {
-        alert(de.error)
+        // alert(de.error)
+        console.log(de.error)
         return
     }
     const clsInfo = de.data;
@@ -456,7 +463,8 @@ export const Refresh = async (name: any, phase: string) => {
 export const Search = async () => {
     const de = await getSearch(aim.value.trim());
     if (de.error != null) {
-        alert(de.error)
+        // alert(de.error)
+        console.log(de.error)
         return
     }
     const list = de.data;
@@ -474,7 +482,8 @@ export const UpdateSubmitListStatus = async () => {
     {
         const de = await getList("entity", "inbound");
         if (de.error != null) {
-            alert(de.error)
+            // alert(de.error)
+            console.log("-->", de.error)
             return
         }
         lsEnt = de.data;
@@ -482,7 +491,8 @@ export const UpdateSubmitListStatus = async () => {
     {
         const de = await getList("collection", "inbound");
         if (de.error != null) {
-            alert(de.error)
+            // alert(de.error)
+            console.log("==>", de.error)
             return
         }
         lsCol = de.data

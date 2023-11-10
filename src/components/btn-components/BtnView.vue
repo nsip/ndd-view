@@ -194,8 +194,8 @@ const Subscribe = async () => {
     })
 
     // reload list for changing item color
-    LoadCurrentList("entity", "existing");
-    LoadCurrentList("collection", "existing");
+    await LoadCurrentList("entity", "existing");
+    await LoadCurrentList("collection", "existing");
 };
 
 const Dump = async () => {

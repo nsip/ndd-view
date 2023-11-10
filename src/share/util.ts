@@ -102,3 +102,7 @@ export const download_file = (url: string, file_name: string) => {
     anchor.click();
     document.body.removeChild(anchor);
 }
+
+export const sleep = async (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

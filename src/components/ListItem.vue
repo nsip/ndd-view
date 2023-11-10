@@ -77,9 +77,6 @@ const style = (name: string) => {
     }
 };
 
-LoadCurrentList("entity", "existing");
-LoadCurrentList("collection", "existing");
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -35,6 +35,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
+import { sleep } from "@/share/util";
 import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getUserInfoList, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/ClassNav.vue";
@@ -126,7 +127,7 @@ onMounted(async () => {
             loginAsAdmin.value = de.data[0].role == 'admin' ? true : false
         }
 
-        await new Promise((f) => setTimeout(f, 500));
+        await sleep(500);
 
         display.value = true
 

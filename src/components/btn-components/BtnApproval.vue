@@ -18,9 +18,6 @@ import {
     selEntity,
     selCollection,
     putApprove,
-    getUserListAll,
-    getUserListSubscribedAt,
-    postSendEmail,
     getList,
     LoadCurrentList,
     UpdateSubmitListStatus,
@@ -82,73 +79,11 @@ const Approve = async () => {
         })
     }
 
-    // TODO: should append sending email function to the API side.
-    //
-
-    // const content = flagCreate ? `new item [${name}] has been added` : `item [${name}] has been updated`;
-    // const de = await getUserListAll("uname")
-    // if (de.error != null) {
-    //     notify({
-    //         title: "Error: Get User List",
-    //         text: de.error,
-    //         type: "error"
-    //     })
-    //     return
-    // }
-    // const users = de.data as any[];
-    // users.forEach(async (user) => {
-
-    //     const uname = user.UName;
-    //     // console.log(uname)
-
-    //     if (flagCreate) {
-
-    //         // inform subscriber new item have been added
-    //         const de = await postSendEmail("National Education Data Dictionary Info", content, uname)
-    //         if (de.error != null) {
-    //             notify({
-    //                 title: "Error: Send Email (New)",
-    //                 text: de.error,
-    //                 type: "error"
-    //             })
-    //             return
-    //         }
-
-    //     } else {
-    //         // inform subscriber his subscribed item has been updated
-
-    //         const de = await getUserListSubscribedAt(uname)
-    //         if (de.error != null) {
-    //             notify({
-    //                 title: "Error: Get Subscribed User List",
-    //                 text: de.error,
-    //                 type: "error"
-    //             })
-    //             return
-    //         }
-    //         const subs = de.data as string[];
-    //         console.log("getAdminListSubscription:", uname, subs)
-
-    //         if (subs.includes(name)) {
-    //             const de = await postSendEmail("notice:", content, uname)
-    //             if (de.error != null) {
-    //                 notify({
-    //                     title: "Error: Send Email (Update)",
-    //                     text: de.error,
-    //                     type: "error"
-    //                 })
-    //                 return
-    //             }
-    //         }
-    //     }
-    // });
-
-    LoadCurrentList("entity", "inbound");
-    LoadCurrentList("collection", "inbound");
+    await LoadCurrentList("entity", "inbound");
+    await LoadCurrentList("collection", "inbound");
     selEntity.Reset();
     selCollection.Reset();
-    UpdateSubmitListStatus();
-
+    await UpdateSubmitListStatus();
 };
 
 // REJECT /////////////////////////////////////////////////////////////////////////
