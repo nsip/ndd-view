@@ -51,6 +51,15 @@ export const getSelfName = async () => {
     };
 };
 
+export const getSelfAdminStatus = async () => {
+    const rt = await fetchNoBody("api/user/auth/is-admin", "GET", mEmpty, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getUserInfoList = async (uname: string, fields: string) => {
     // means list all fields. 
     // swagger 'Try' uses '{fields}' as empty path param, so we intentionally use this literal string

@@ -36,7 +36,7 @@
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import { sleep } from "@/share/util";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getUserInfoList, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/ClassNav.vue";
 import ModeSel from "@/components/ModeSel.vue";
@@ -114,17 +114,17 @@ onMounted(async () => {
         }
 
         {
-            const de = await getUserInfoList(loginUser.value, "")
+            const de = await getSelfAdminStatus();
             if (de.error != null) {
                 notify({
-                    title: "Error: Cannot Get Self Info",
+                    title: "Error: Cannot Get Self Admin Status",
                     text: de.error,
                     type: "error"
                 })
                 display.value = false
                 return
             }
-            loginAsAdmin.value = de.data[0].role == 'admin' ? true : false
+            loginAsAdmin.value = de.data
         }
 
         await sleep(500);
