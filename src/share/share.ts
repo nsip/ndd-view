@@ -483,9 +483,7 @@ export const Search = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const isSubmitListEmpty = ref(true);
-
-export const UpdateSubmitListStatus = async () => {
+export const hasSubmission = async () => {
     let lsEnt: string | any[];
     let lsCol: string | any[];
     {
@@ -506,5 +504,5 @@ export const UpdateSubmitListStatus = async () => {
         }
         lsCol = de.data
     }
-    isSubmitListEmpty.value = lsEnt.length == 0 && lsCol.length == 0;
-};
+    return lsEnt.length > 0 || lsCol.length > 0;
+}

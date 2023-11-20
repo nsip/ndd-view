@@ -13,6 +13,7 @@ import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/shared/CCModal.vue'
 import { isEmpty } from "@/share/util"
+import eventBus from '@/share/util'
 import {
     selType,
     selEntity,
@@ -20,7 +21,6 @@ import {
     putApprove,
     getList,
     LoadCurrentList,
-    UpdateSubmitListStatus,
     delReject,
     Mode,
     ModalOn
@@ -83,7 +83,7 @@ const Approve = async () => {
     await LoadCurrentList("collection", "inbound");
     selEntity.Reset();
     selCollection.Reset();
-    await UpdateSubmitListStatus();
+    eventBus.emit('check-submission', 'from BtnApproval');
 };
 
 // REJECT /////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ const PopupModal = async () => {
                 await LoadCurrentList("collection", "inbound");
                 selEntity.Reset();
                 selCollection.Reset();
-                await UpdateSubmitListStatus(); // indicates any candidates are there for approval
+                eventBus.emit('check-submission', 'from BtnReject');
             }
         }
     } catch (e) {

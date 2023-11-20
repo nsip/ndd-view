@@ -23,9 +23,10 @@
 import { selItem, lsEnt, lsCol, lsSubscribed, LoadCurrentList, Refresh, selType } from "@/share/share";
 
 let mounted = false;
-
 onMounted(async () => {
     selType.value = "entity"
+    await LoadCurrentList("entity", "existing")
+    await LoadCurrentList("collection", "existing")
     mounted = true;
 })
 

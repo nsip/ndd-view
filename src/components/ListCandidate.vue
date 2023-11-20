@@ -14,10 +14,15 @@
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt, lsCol, Refresh } from "@/share/share";
+import { selItem, lsEnt, lsCol, Refresh, LoadCurrentList } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
+
+onMounted(async () => {
+    await LoadCurrentList("entity", "inbound")
+    await LoadCurrentList("collection", "inbound")
+});
 
 </script>
 
