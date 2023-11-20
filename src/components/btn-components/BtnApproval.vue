@@ -5,6 +5,7 @@
     <a class="float" id="times" @click="PopupModal()" v-if="showBtnReject">
         <font-awesome-icon icon="times" class="floating" />
     </a>
+    <Loader id="loader" v-if="loading" />
 </template>
  
 <script setup lang="ts">
@@ -12,7 +13,8 @@
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/shared/CCModal.vue'
-import { isEmpty } from "@/share/util"
+import Loader from "@/components/shared/Loader.vue"
+import { isEmpty, sleep } from "@/share/util"
 import eventBus from '@/share/util'
 import {
     selType,
@@ -29,6 +31,8 @@ import {
 
 const showBtnApproval = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 const showBtnReject = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+
+const loading = ref(false);
 
 // APPROVE /////////////////////////////////////////////////////////////////////////
 
@@ -73,13 +77,19 @@ const Approve = async () => {
             return
         }
 
+        // waiting...
+        loading.value = true
+        document.body.style.pointerEvents = "none"
+        await sleep(10000)
+        document.body.style.pointerEvents = "auto";
+        loading.value = false
+
         notify({
             title: `Approval`,
             text: `${name} is approved to dictionary`,
             type: "success"
         })
     }
-
     await LoadList4Sub("entity");
     await LoadList4Sub("collection");
     await LoadList4Dic("entity");

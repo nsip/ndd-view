@@ -15,19 +15,23 @@
     <a class="float" id="download" :title="hintDownload" @click="Dump()" v-if="doDump">
         <font-awesome-icon icon="download" class="floating" />
     </a>
+    <Loader id="loader" v-if="loading" />
 </template>
 
 <script setup lang="ts">
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
+import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
-import { isEmpty, download_file } from "@/share/util";
+import { isEmpty, download_file, sleep } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
 
 const { cookies } = useCookies();
+
+const loading = ref(false);
 
 // for UI
 const doNew = computed(() => Mode.value == 'normal')
@@ -115,6 +119,14 @@ const PopupModal = async () => {
                     ModalOn.value = false
                     return
                 }
+
+                // waiting...
+                loading.value = true
+                document.body.style.pointerEvents = "none"
+                await sleep(10000)
+                document.body.style.pointerEvents = "auto";
+                loading.value = false
+
                 notify({
                     title: "Deleted OK",
                     text: `dictionary item '${delName.value}' is removed permanently`,
