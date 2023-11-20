@@ -22,7 +22,7 @@
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadCurrentList, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty, download_file } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
@@ -120,8 +120,8 @@ const PopupModal = async () => {
                     text: `dictionary item '${delName.value}' is removed permanently`,
                     type: "success"
                 })
-                await LoadCurrentList("entity", "existing");
-                await LoadCurrentList("collection", "existing");
+                await LoadList4Dic("entity");
+                await LoadList4Dic("collection");
                 selEntity.Reset();
                 selCollection.Reset();
             }
@@ -194,8 +194,8 @@ const Subscribe = async () => {
     })
 
     // reload list for changing item color
-    await LoadCurrentList("entity", "existing");
-    await LoadCurrentList("collection", "existing");
+    await LoadList4Dic("entity");
+    await LoadList4Dic("collection");
 };
 
 const Dump = async () => {

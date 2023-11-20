@@ -16,8 +16,10 @@ export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
 export const selCollection = reactive(new collectionType()); // collection content
 export const aim = ref(""); // what item want to be search
-export const lsEnt = ref([]); // name list of entity
-export const lsCol = ref([]); // name list of collection
+export const lsEnt4Dic = ref([]); // name list of entity in dictionary
+export const lsCol4Dic = ref([]); // name list of collection in dictionary
+export const lsEnt4Sub = ref([]); // name list of entity in candidates
+export const lsCol4Sub = ref([]); // name list of collection in candidates
 export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
@@ -364,31 +366,31 @@ export const postSendEmail = async (
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// set 'lsEnt', 'lsCol' here
-export const LoadCurrentList = async (kind: string, phase: string) => {
+// set 'lsEnt4Dic', 'lsCol4Dic' here
+export const LoadList4Dic = async (kind: string) => {
     // get list of item
     switch (kind) {
         case "entity":
             {
-                const de = await getList(kind, phase);
+                const de = await getList(kind, "existing");
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
                     break
                 }
-                lsEnt.value = de.data
+                lsEnt4Dic.value = de.data
             }
             break;
 
         case "collection":
             {
-                const de = await getList(kind, phase);
+                const de = await getList(kind, "existing");
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
                     break
                 }
-                lsCol.value = de.data
+                lsCol4Dic.value = de.data
             }
             break;
     }
@@ -401,6 +403,36 @@ export const LoadCurrentList = async (kind: string, phase: string) => {
         return
     }
     lsSubscribed.value = de.data
+};
+
+// set 'lsEnt4Sub', 'lsCol4Sub' here
+export const LoadList4Sub = async (kind: string) => {
+    // get list of item
+    switch (kind) {
+        case "entity":
+            {
+                const de = await getList(kind, "inbound");
+                if (de.error != null) {
+                    // alert(de.error)
+                    console.log(de.error)
+                    break
+                }
+                lsEnt4Sub.value = de.data
+            }
+            break;
+
+        case "collection":
+            {
+                const de = await getList(kind, "inbound");
+                if (de.error != null) {
+                    // alert(de.error)
+                    console.log(de.error)
+                    break
+                }
+                lsCol4Sub.value = de.data
+            }
+            break;
+    }
 };
 
 // set 'selItem', 'aim', 'selType' etc. here etc.
@@ -477,32 +509,14 @@ export const Search = async () => {
         return
     }
     const list = de.data;
-    lsEnt.value = list.Entities;
-    lsCol.value = list.Collections;
+    lsEnt4Dic.value = list.Entities;
+    lsCol4Dic.value = list.Collections;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////
 
 export const hasSubmission = async () => {
-    let lsEnt: string | any[];
-    let lsCol: string | any[];
-    {
-        const de = await getList("entity", "inbound");
-        if (de.error != null) {
-            // alert(de.error)
-            console.log("-->", de.error)
-            return
-        }
-        lsEnt = de.data;
-    }
-    {
-        const de = await getList("collection", "inbound");
-        if (de.error != null) {
-            // alert(de.error)
-            console.log("==>", de.error)
-            return
-        }
-        lsCol = de.data
-    }
-    return lsEnt.length > 0 || lsCol.length > 0;
+    await LoadList4Sub("entity");
+    await LoadList4Sub("collection");
+    return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
 }

@@ -7,12 +7,12 @@
         <label>collection</label>
     </div>
     <ul v-if="selType == 'entity'" class="list-ent">
-        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
     <ul v-if="selType == 'collection'" class="list-col">
-        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
@@ -20,13 +20,13 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt, lsCol, lsSubscribed, LoadCurrentList, Refresh, selType } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selType } from "@/share/share";
 
 let mounted = false;
 onMounted(async () => {
     selType.value = "entity"
-    await LoadCurrentList("entity", "existing")
-    await LoadCurrentList("collection", "existing")
+    await LoadList4Dic("entity")
+    await LoadList4Dic("collection")
     mounted = true;
 })
 
@@ -34,13 +34,13 @@ watchEffect(async () => {
     const t = selType.value;
     if (mounted) {
         if (t.length > 0) {
-            await LoadCurrentList(t, "existing")
+            await LoadList4Dic(t)
             switch (t) {
                 case "entity":
-                    await Refresh(lsEnt.value[0], 'existing')
+                    await Refresh(lsEnt4Dic.value[0], 'existing')
                     break
                 case "collection":
-                    await Refresh(lsCol.value[0], 'existing')
+                    await Refresh(lsCol4Dic.value[0], 'existing')
                     break
             }
         }

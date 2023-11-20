@@ -20,7 +20,8 @@ import {
     selCollection,
     putApprove,
     getList,
-    LoadCurrentList,
+    LoadList4Dic,
+    LoadList4Sub,
     delReject,
     Mode,
     ModalOn
@@ -79,8 +80,10 @@ const Approve = async () => {
         })
     }
 
-    await LoadCurrentList("entity", "inbound");
-    await LoadCurrentList("collection", "inbound");
+    await LoadList4Sub("entity");
+    await LoadList4Sub("collection");
+    await LoadList4Dic("entity");
+    await LoadList4Dic("collection");
     selEntity.Reset();
     selCollection.Reset();
     eventBus.emit('check-submission', 'from BtnApproval');
@@ -123,8 +126,10 @@ const PopupModal = async () => {
                 })
 
                 // 'inbound' db-col for candidates list
-                await LoadCurrentList("entity", "inbound");
-                await LoadCurrentList("collection", "inbound");
+                await LoadList4Sub("entity");
+                await LoadList4Sub("collection");
+                await LoadList4Dic("entity");
+                await LoadList4Dic("collection");
                 selEntity.Reset();
                 selCollection.Reset();
                 eventBus.emit('check-submission', 'from BtnReject');
