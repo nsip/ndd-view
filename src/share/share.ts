@@ -193,23 +193,11 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
-export const getColEntities = async (name: string) => {
-    const mQuery = new Map<string, any>([
-        ["colname", name]
-    ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/colentities`, "GET", mQuery, "");
-    const err = await fetchErr(rt, onExpired)
-    return {
-        'data': err == null ? (rt as any[])[0] : null,
-        'error': err
-    };
-};
-
 export const getClsInfo = async (name: string) => {
     const mQuery = new Map<string, any>([
-        ["entname", name]
+        ["name", name]
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/entclasses`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/branch`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -456,7 +444,7 @@ export const Refresh = async (name: any, phase: string) => {
         selType.value = de.data;
     }
 
-    // get content
+    // get content, here content is json as string
     {
         const de = await getContent(name, phase);
         if (de.error != null) {
@@ -464,7 +452,7 @@ export const Refresh = async (name: any, phase: string) => {
             console.log(de.error)
             return
         }
-        const content = de.data;
+        const content = JSON.parse(de.data);
 
         // console.log(content)
 
@@ -476,15 +464,6 @@ export const Refresh = async (name: any, phase: string) => {
 
             case "collection":
                 selCollection.SetContent(content);
-
-                // get computed collection entities and set them to 'selCollection'
-                const de = await getColEntities(name)
-                if (de.error != null) {
-                    // alert(de.error)
-                    console.log(de.error)
-                    return
-                }
-                selCollection.SetEntities(de.data);
                 break;
         }
     }
@@ -495,7 +474,7 @@ export const Refresh = async (name: any, phase: string) => {
         // alert(de.error)
         console.log(de.error)
         return
-    }
+    }    
     const clsInfo = de.data;
     selClsPath.value = clsInfo.DerivedPath;
     selChildren.value = clsInfo.Children;
