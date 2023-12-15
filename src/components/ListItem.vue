@@ -1,18 +1,20 @@
 <template>
     <div class="list_type_sel">
         <!-- same 'name', auto single selection -->
-        <input class="selection" type="radio" name="kind" value="entity" v-model="selType" checked />
+        <input class="selection" type="radio" name="type" value="entity" v-model="selType" checked />
         <label>entity</label>
-        <input class="selection" type="radio" name="kind" value="collection" v-model="selType" />
+        <input class="selection" type="radio" name="type" value="collection" v-model="selType" />
         <label>collection</label>
     </div>
     <ul v-if="selType == 'entity'" class="list-ent">
-        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)"
+            @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
     <ul v-if="selType == 'collection'" class="list-col">
-        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)"
+            @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>

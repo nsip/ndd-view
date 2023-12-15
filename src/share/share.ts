@@ -167,12 +167,12 @@ export const putLogout = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const getItemKind = async (name: string, phase: string) => {
+export const getItemType = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
         ["phase", phase],
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/kind`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/type`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -205,11 +205,11 @@ export const getClsInfo = async (name: string) => {
     };
 };
 
-export const getList = async (kind: string, phase: string) => {
+export const getList = async (type: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["phase", phase]
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/list/${kind}`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/list/${type}`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -217,11 +217,11 @@ export const getList = async (kind: string, phase: string) => {
     };
 };
 
-export const getDump = async (kind: string, phase: string) => {
+export const getDump = async (type: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["phase", phase]
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/dump/${kind}`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/dump/${type}`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -242,10 +242,10 @@ export const getSearch = async (lookfor: string) => {
     };
 };
 
-export const putApprove = async (name: string, kind: string) => {
+export const putApprove = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["kind", kind],
+        ["type", type],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/approve`, "PUT", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
@@ -255,10 +255,10 @@ export const putApprove = async (name: string, kind: string) => {
     };
 };
 
-export const delReject = async (name: string, kind: string) => {
+export const delReject = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["kind", kind],
+        ["type", type],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/reject`, "DELETE", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
@@ -277,10 +277,10 @@ export const delRemoveItem = async (name: string) => {
     };
 }
 
-export const putSubscribe = async (name: string, kind: string) => {
+export const putSubscribe = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["kind", kind],
+        ["type", type],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/subscribe`, "PUT", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
@@ -355,12 +355,12 @@ export const postSendEmail = async (
 //////////////////////////////////////////////////////////////////////////////////////
 
 // set 'lsEnt4Dic', 'lsCol4Dic' here
-export const LoadList4Dic = async (kind: string) => {
+export const LoadList4Dic = async (type: string) => {
     // get list of item
-    switch (kind) {
+    switch (type) {
         case "entity":
             {
-                const de = await getList(kind, "existing");
+                const de = await getList(type, "existing");
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -372,7 +372,7 @@ export const LoadList4Dic = async (kind: string) => {
 
         case "collection":
             {
-                const de = await getList(kind, "existing");
+                const de = await getList(type, "existing");
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -394,12 +394,12 @@ export const LoadList4Dic = async (kind: string) => {
 };
 
 // set 'lsEnt4Sub', 'lsCol4Sub' here
-export const LoadList4Sub = async (kind: string) => {
+export const LoadList4Sub = async (type: string) => {
     // get list of item
-    switch (kind) {
+    switch (type) {
         case "entity":
             {
-                const de = await getList(kind, "inbound");
+                const de = await getList(type, "inbound");
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -411,7 +411,7 @@ export const LoadList4Sub = async (kind: string) => {
 
         case "collection":
             {
-                const de = await getList(kind, "inbound");
+                const de = await getList(type, "inbound");
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -433,9 +433,9 @@ export const Refresh = async (name: any, phase: string) => {
     // selected for searching
     aim.value = name;
 
-    // selected kind
+    // selected type
     {
-        const de = await getItemKind(name, phase);
+        const de = await getItemType(name, phase);
         if (de.error != null) {
             // alert(de.error)
             console.log(de.error)
@@ -474,7 +474,7 @@ export const Refresh = async (name: any, phase: string) => {
         // alert(de.error)
         console.log(de.error)
         return
-    }    
+    }
     const clsInfo = de.data;
     selClsPath.value = clsInfo.DerivedPath;
     selChildren.value = clsInfo.Children;

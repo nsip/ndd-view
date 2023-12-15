@@ -5,7 +5,7 @@
     <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="doNew">
         <font-awesome-icon icon="plus" class="floating" />
     </a>
-    <!-- <a :href="URL_CMS + '?name=' + selItem + '&kind=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
+    <!-- <a :href="URL_CMS + '?name=' + selItem + '&type=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
     <a class="float" id="pen" :title="hintEdit" @click="ToCMS('edit')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
@@ -62,22 +62,22 @@ const ToCMS = async (flag: string) => {
 
         case 'new':
             // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?kind=${selType.value}&auth=${loginToken.value}`);
+            // location.replace(`${URL_CMS}?type=${selType.value}&auth=${loginToken.value}`);
 
-            // use 'entity' as kind if no selection
-            const kind = selType.value.length == 0 ? 'entity' : selType.value;
+            // use 'entity' as type if no selection
+            const type = selType.value.length == 0 ? 'entity' : selType.value;
 
-            // *** 'kind', now in cookie ***
-            cookies.set("kind", kind, "1d", "/", "." + Domain, false, "Lax");
+            // *** 'type', now in cookie ***
+            cookies.set("type", type, "1d", "/", "." + Domain, false, "Lax");
             cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
             break;
 
         case 'edit':
             // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?name=${selItem.value}&kind=${selType.value}&auth=${loginToken.value}`);
+            // location.replace(`${URL_CMS}?name=${selItem.value}&type=${selType.value}&auth=${loginToken.value}`);
 
-            // *** 'kind','name' now in cookie ***
-            cookies.set("kind", `${selType.value}`, "1d", "/", "." + Domain, false, "Lax");
+            // *** 'type','name' now in cookie ***
+            cookies.set("type", `${selType.value}`, "1d", "/", "." + Domain, false, "Lax");
             cookies.set("name", `${selItem.value}`, "1d", "/", "." + Domain, false, "Lax");
             break;
 
