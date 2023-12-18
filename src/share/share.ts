@@ -443,6 +443,7 @@ export const Refresh = async (name: any, phase: string) => {
         }
         selType.value = de.data;
     }
+    // alert(`into refresh, selType is [${selType.value}]`)
 
     // get content, here content is json as string
     {
@@ -454,30 +455,34 @@ export const Refresh = async (name: any, phase: string) => {
         }
         const content = JSON.parse(de.data);
 
-        // console.log(content)
+        // console.log(content)        
 
         // set content to shared variables
         switch (selType.value) {
             case "entity":
+                selEntity.Reset()
                 selEntity.SetContent(content);
                 break;
 
             case "collection":
+                selCollection.Reset()
                 selCollection.SetContent(content);
                 break;
         }
     }
 
-    // get class info
-    const de = await getClsInfo(name)
-    if (de.error != null) {
-        // alert(de.error)
-        console.log(de.error)
-        return
+    if (phase == "existing") {
+        // get class info
+        const de = await getClsInfo(name)
+        if (de.error != null) {
+            // alert(de.error)
+            console.log(de.error)
+            return
+        }
+        const clsInfo = de.data;
+        selClsPath.value = clsInfo.DerivedPath;
+        selChildren.value = clsInfo.Children;
     }
-    const clsInfo = de.data;
-    selClsPath.value = clsInfo.DerivedPath;
-    selChildren.value = clsInfo.Children;
 };
 
 export const Search = async () => {

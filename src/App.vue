@@ -7,21 +7,33 @@
 
         <div class="tab">
             <button class="tab-links" id="tab-admin" @click="showTabContent">admin</button>
+            <button class="tab-links" id="tab-approval" @click="showTabContent">approval</button>
             <button class="tab-links" id="tab-dic" @click="showTabContent">dictionary</button>
         </div>
 
-        <div id="dictionary" class="tab-content">            
-            <div v-if="fNormal || fApproval" id="container">
+        <div id="dictionary" class="tab-content">
+            <div id="container">
                 <div id="left">
-                    <ListItem v-if="fListItem" />
-                    <ListCandidate v-if="fListCandidate" />
+                    <ListItem />
                 </div>
                 <div id="right">
-                    <ClassNav v-if="fClsNav" />                                 
-                    <EntityContent v-if="entityContent" />
-                    <CollectionContent v-if="collectionContent" />
-                    <BtnApproval />
-                    <BtnView />
+                    <ClassNav />
+                    <EntityContent />
+                    <CollectionContent />
+                    <BtnView v-if="!ModalOn" />
+                </div>
+            </div>
+        </div>
+
+        <div id="approval" class="tab-content">
+            <div id="container">
+                <div id="left">
+                    <ListCandidate />
+                </div>
+                <div id="right">
+                    <EntityContent />
+                    <CollectionContent />
+                    <BtnApproval v-if="!ModalOn" />
                 </div>
             </div>
         </div>
@@ -40,7 +52,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn, Refresh } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -51,17 +63,11 @@ import BtnView from "@/components/btn-components/BtnView.vue";
 import BtnApproval from "@/components/btn-components/BtnApproval.vue";
 import UserAdmin from "@/components/UserAdmin.vue";
 import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
+import { isEmpty, isNotEmpty } from "./share/util";
 
 const { cookies } = useCookies();
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
 const display = ref(false)
-const fNormal = computed(() => Mode.value == 'normal')
-const fApproval = computed(() => Mode.value == 'approval')
-const fClsNav = computed(() => Mode.value == 'normal')
-const fListItem = computed(() => Mode.value == 'normal')
-const fListCandidate = computed(() => Mode.value == 'approval')
-const entityContent = computed(() => selType.value == 'entity')
-const collectionContent = computed(() => selType.value == 'collection')
 
 onMounted(async () => {
 
@@ -164,9 +170,11 @@ const showTabContent = async (evt: MouseEvent) => {
 
     document.getElementById(id!)!.style.display = "block";
     (evt.currentTarget! as HTMLElement).className += " active";
+
+    // extra clear work
+    selEntity.Reset()
+    selCollection.Reset()
 }
-
-
 
 </script>
 
@@ -230,7 +238,7 @@ header {
     cursor: pointer;
     padding: 11px;
     transition: 0.3s;
-    font-size: 12px;
+    font-size: 17px;
     height: 100%;
 }
 

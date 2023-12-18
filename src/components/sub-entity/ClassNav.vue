@@ -1,5 +1,5 @@
 <template>
-    <div class="class">
+    <div v-if="isNotEmpty(selEntity)" class="class">
         <span v-for="(item, idx) in selClsPath" :key="idx">
             <span class="ea" @click="Refresh(item, 'existing')"> {{ item }}</span>
             <span v-if="idx < selClsPath.length - 1"> / </span>
@@ -13,7 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { selClsPath, selChildren, Refresh } from "@/share/share";
+import { selClsPath, selChildren, Refresh, selEntity } from "@/share/share";
+import { isNotEmpty } from "@/share/util";
 
 const childSelect = ref(null);
 

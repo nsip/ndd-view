@@ -1,8 +1,8 @@
 <template>
-    <a class="float" id="check" @click="Approve()" v-if="showBtnApproval">
+    <a class="float" id="check" @click="Approve()">
         <font-awesome-icon icon="check" class="floating" />
     </a>
-    <a class="float" id="times" @click="PopupModal()" v-if="showBtnReject">
+    <a class="float" id="times" @click="PopupModal()">
         <font-awesome-icon icon="times" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
@@ -28,9 +28,6 @@ import {
     Mode,
     ModalOn
 } from "@/share/share";
-
-const showBtnApproval = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const showBtnReject = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
 const loading = ref(false);
 
