@@ -10,10 +10,7 @@ export class collectionType {
         this.Definition = object.Definition;
         this.URL = object.URL;
         this.Metadata = object.Metadata;
-    }
-
-    SetEntities(entities: string[]) {
-        this.Entities = entities;
+        this.Entities = object.Entities;
     }
 
     Reset() {

@@ -12,7 +12,8 @@
         <label>entity</label>
         <input class="selection" type="radio" name="type" value="collection" v-model="selType" />
         <label>collection</label>
-    </div>
+        <hr>
+    </div>   
 
     <ul v-if="selType == 'entity'" class="list-ent">
         <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
@@ -100,6 +101,8 @@ const style = (name: string) => {
     margin-top: 1vh;
     margin-bottom: 1vh;
     height: 1.5vh;
+    width: 90%;
+    text-align: left;
     /* background-color:burlywood; */
 }
 
@@ -127,10 +130,9 @@ ul.list-col {
     /* border-right: 2px solid #ccc; */
     border-radius: 10px;
     /* border-color: rgb(230, 230, 230); */
-    margin-top: 0vh;
+    margin-top: 0.5vh;
     padding-top: 8px;
     padding-bottom: 8px;
-
     width: 20vw;
 }
 
