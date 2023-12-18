@@ -10,11 +10,9 @@
             <button class="tab-links" id="tab-dic" @click="showTabContent">dictionary</button>
         </div>
 
-        <div id="dictionary" class="tab-content">
-            
+        <div id="dictionary" class="tab-content">            
             <div v-if="fNormal || fApproval" id="container">
                 <div id="left">
-                    <SearchFilter v-if="fSearchFilter" />
                     <ListItem v-if="fListItem" />
                     <ListCandidate v-if="fListCandidate" />
                 </div>
@@ -42,11 +40,9 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { sleep } from "@/share/util";
 import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
-import ClassNav from "@/components/ClassNav.vue";
-import SearchFilter from "@/components/SearchFilter.vue";
+import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
 import ListCandidate from "@/components/ListCandidate.vue";
 import EntityContent from "@/components/EntityContent.vue";
@@ -62,7 +58,6 @@ const display = ref(false)
 const fNormal = computed(() => Mode.value == 'normal')
 const fApproval = computed(() => Mode.value == 'approval')
 const fClsNav = computed(() => Mode.value == 'normal')
-const fSearchFilter = computed(() => Mode.value == 'normal')
 const fListItem = computed(() => Mode.value == 'normal')
 const fListCandidate = computed(() => Mode.value == 'approval')
 const entityContent = computed(() => selType.value == 'entity')
@@ -152,7 +147,7 @@ const setDefaultTab = async (id: string) => {
     }, 1000)
 }
 
-const showTabContent = async (evt: MouseEvent,) => {
+const showTabContent = async (evt: MouseEvent) => {
 
     const id = (evt.target! as HTMLElement).textContent
     console.log(id)
@@ -190,6 +185,10 @@ body {
     overflow: hidden
 }
 
+header {
+    height: 3vh;
+}
+
 #container {
     width: 100vw;
     height: v-bind("Height");
@@ -198,15 +197,14 @@ body {
 
 #left {
     width: 25vw;
-    height: 85vh;
-    /* margin-right: 1%; */
+    height: 90vh;
     background-color: rgb(240, 240, 240);
     /* List has its own scroll */
 }
 
 #right {
     width: 75vw;
-    height: 97vh;
+    height: 90vh;
     margin-left: 0.5%;
     margin-right: 0.5%;
     background-color: rgb(240, 240, 240);
@@ -220,6 +218,7 @@ body {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
+    height: 3vh;
 }
 
 /* Style the buttons inside the tab */
@@ -229,9 +228,10 @@ body {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 10px 16px;
+    padding: 11px;
     transition: 0.3s;
-    font-size: 17px;
+    font-size: 12px;
+    height: 100%;
 }
 
 /* Change background color of buttons on hover */

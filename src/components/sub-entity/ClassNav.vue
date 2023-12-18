@@ -32,6 +32,8 @@ const switchSelect = (event: any) => {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .class {
+    max-height: 1.5vh;
+    min-height: 1.5vh;
     margin-left: 1%;
     margin-top: 10px;
     margin-bottom: 1%;

@@ -1,4 +1,11 @@
 <template>
+    <div>
+        <input class="search-box" type="text" id="search" name="search" placeholder="searching ..." v-model="aim" ref="searchInput" />
+        <button class="search-btn" @click="Search()">
+            <font-awesome-icon icon="search" />
+        </button>
+    </div>
+
     <div class="list_type_sel">
         <!-- same 'name', auto single selection -->
         <input class="selection" type="radio" name="type" value="entity" v-model="selType" checked />
@@ -6,15 +13,14 @@
         <input class="selection" type="radio" name="type" value="collection" v-model="selType" />
         <label>collection</label>
     </div>
+
     <ul v-if="selType == 'entity'" class="list-ent">
-        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)"
-            @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
     <ul v-if="selType == 'collection'" class="list-col">
-        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)"
-            @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
             {{ item }}
         </li>
     </ul>
@@ -22,13 +28,16 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selType } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selType, aim, Search } from "@/share/share";
+
+const searchInput = ref();
 
 let mounted = false;
 onMounted(async () => {
     selType.value = "entity"
     await LoadList4Dic("entity")
     await LoadList4Dic("collection")
+    searchInput.value.focus()
     mounted = true;
 })
 
@@ -88,8 +97,9 @@ const style = (name: string) => {
     float: left;
     font-size: normal;
     margin-left: 2%;
-    margin-top: 1%;
-    margin-bottom: -2%;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    height: 1.5vh;
     /* background-color:burlywood; */
 }
 
@@ -117,8 +127,11 @@ ul.list-col {
     /* border-right: 2px solid #ccc; */
     border-radius: 10px;
     /* border-color: rgb(230, 230, 230); */
+    margin-top: 0vh;
     padding-top: 8px;
     padding-bottom: 8px;
+
+    width: 20vw;
 }
 
 ul.list-ent li.ellip,
@@ -166,5 +179,28 @@ ul.list-col li.ellip {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.search-box {
+    float: left;
+    width: 80%;
+    padding: 5px 0px 5px 10px;
+    margin-left: 2%;
+    margin-top: 2%;
+    background-color: rgb(230, 230, 230);
+}
+
+.search-btn {
+    float: left;
+    width: 10%;
+    margin-left: 2%;
+    margin-top: 2%;
+    padding: 5px 5px 5px 5px;
+    font-size: 14px;
+}
+
+hr {
+    margin-top: 2%;
+    margin-bottom: -1%;
 }
 </style>
