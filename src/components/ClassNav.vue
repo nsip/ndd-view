@@ -35,10 +35,10 @@ const switchSelect = (event: any) => {
     margin-left: 1%;
     margin-top: 10px;
     margin-bottom: 1%;
-    float: left;
     font-style: italic;
     font-size: smaller;
     color: rgb(120, 120, 120);
+    text-align: left;
 }
 
 .ea:hover {

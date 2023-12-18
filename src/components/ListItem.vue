@@ -101,7 +101,6 @@ ul.list-col::-webkit-scrollbar {
 ul.list-ent,
 ul.list-col {
     background-color: rgb(240, 240, 240);
-    width: 90%;
     max-height: 90%;
     margin-left: 5px;
     /* display: inline-block; */
