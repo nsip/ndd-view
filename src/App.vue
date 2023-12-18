@@ -206,7 +206,7 @@ header {
     width: 75vw;
     height: 90vh;
     margin-left: 0.5%;
-    margin-right: 0.5%;
+    margin-right: 1.5%;
     background-color: rgb(240, 240, 240);
     overflow-y: scroll;
     display: flex;

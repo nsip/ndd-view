@@ -23,20 +23,20 @@
                     </div>
                 </div>
 
-                <div v-if="isNotEmpty(item.Superclass)" class="cat-val-flex">
-                    <span class="sub-cat">Superclass:</span>
-                    <div class="sub-val">
-                        <div v-for="(subitem, i) in item.Superclass" :key="i">
-                            <span>{{ subitem }}</span>
-                            <br />
-                        </div>
-                    </div>
+                <div v-if="isNotEmpty(item.SuperClass)" class="cat-val-flex">
+                    <span class="sub-cat">SuperClass:</span>
+                    <span class="sub-val">{{ item.SuperClass }}</span>
                 </div>
 
-                <div v-if="isNotEmpty(item.CrossrefEntities)" class="cat-val-flex">
+                <div v-if="isNotEmpty(item.DefaultParent)" class="cat-val-flex">
+                    <span class="sub-cat">DefaultParent:</span>
+                    <span class="sub-val">{{ item.DefaultParent }}</span>
+                </div>
+
+                <div v-if="isNotEmpty(item.CrossRefEntities)" class="cat-val-flex">
                     <span class="sub-cat">CrossRef Entities:</span>
                     <div class="sub-val">
-                        <div v-for="(subitem, i) in item.CrossrefEntities" :key="i">
+                        <div v-for="(subitem, i) in item.CrossRefEntities" :key="i">
                             <span>{{ subitem }}</span>
                             <br />
                         </div>
