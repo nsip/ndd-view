@@ -6,12 +6,12 @@
     <main v-if="display">
 
         <div class="tab">
-            <button class="tab-links" id="tab-admin" @click="showTabContent">admin</button>
-            <button class="tab-links" id="tab-approval" @click="showTabContent">approval</button>
-            <button class="tab-links" id="tab-dic" @click="showTabContent">dictionary</button>
+            <button class="tab-links" @click="showTabContent">admin</button>
+            <button class="tab-links" @click="showTabContent">approval</button>
+            <button class="tab-links" id="tab-default" @click="showTabContent">dictionary</button>
         </div>
 
-        <div id="dictionary" class="tab-content">
+        <div v-if="mTabShown.get('dictionary')" class="tab-content">
             <div id="container">
                 <div id="left">
                     <ListItem />
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div id="approval" class="tab-content">
+        <div v-if="mTabShown.get('approval')" class="tab-content">
             <div id="container">
                 <div id="left">
                     <ListCandidate />
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div id="admin" class="tab-content">
+        <div v-if="mTabShown.get('admin')" class="tab-content">
             <UserAdmin />
             <BtnAdmin v-if="!ModalOn" />
         </div>
@@ -52,7 +52,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn, Refresh } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -63,11 +63,17 @@ import BtnView from "@/components/btn-components/BtnView.vue";
 import BtnApproval from "@/components/btn-components/BtnApproval.vue";
 import UserAdmin from "@/components/UserAdmin.vue";
 import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
-import { isEmpty, isNotEmpty } from "./share/util";
 
 const { cookies } = useCookies();
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
 const display = ref(false)
+
+// tab content shown flag, key is tab-text
+const mTabShown = ref(new Map([
+    ["dictionary", false],
+    ["approval", false],
+    ["admin", false],
+]));
 
 onMounted(async () => {
 
@@ -134,7 +140,7 @@ onMounted(async () => {
 
         Mode.value = "normal"
 
-        await setDefaultTab("tab-dic")
+        await setDefaultTab("tab-default")
     }
 });
 
@@ -158,17 +164,14 @@ const showTabContent = async (evt: MouseEvent) => {
     const id = (evt.target! as HTMLElement).textContent
     console.log(id)
 
-    let tab_content = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < tab_content.length; i++) {
-        (tab_content[i] as HTMLElement).style.display = "none";
-    }
+    mTabShown.value.forEach((flag, tab) => {
+        mTabShown.value.set(tab, tab == id ? true : false)
+    });
 
     let tab_links = document.getElementsByClassName("tab-links");
     for (let i = 0; i < tab_links.length; i++) {
         tab_links[i].className = tab_links[i].className.replace(" active", "");
     }
-
-    document.getElementById(id!)!.style.display = "block";
     (evt.currentTarget! as HTMLElement).className += " active";
 
     // extra clear work
@@ -254,7 +257,6 @@ header {
 
 /* Style the tab content */
 .tab-content {
-    display: none;
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
