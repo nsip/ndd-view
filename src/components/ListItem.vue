@@ -13,7 +13,7 @@
         <input class="selection" type="radio" name="type" value="collection" v-model="selType" />
         <label>collection</label>
         <hr>
-    </div>   
+    </div>
 
     <ul v-if="selType == 'entity'" class="list-ent">
         <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">

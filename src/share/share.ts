@@ -455,17 +455,19 @@ export const Refresh = async (name: any, phase: string) => {
         }
         const content = JSON.parse(de.data);
 
-        // console.log(content)        
+        // console.log(content)
+
+        // clear current selection
+        selEntity.Reset()
+        selCollection.Reset()
 
         // set content to shared variables
         switch (selType.value) {
             case "entity":
-                selEntity.Reset()
                 selEntity.SetContent(content);
                 break;
 
             case "collection":
-                selCollection.Reset()
                 selCollection.SetContent(content);
                 break;
         }

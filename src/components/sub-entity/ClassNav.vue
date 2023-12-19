@@ -4,8 +4,8 @@
             <span class="ea" @click="Refresh(item, 'existing')"> {{ item }}</span>
             <span v-if="idx < selClsPath.length - 1"> / </span>
         </span>
-        <span v-if="selChildren.length > 0"> / </span>
-        <select v-if="selChildren.length > 0" ref="childSelect" @change="switchSelect($event)">
+        <span v-if="selChildren?.length > 0"> / </span>
+        <select v-if="selChildren?.length > 0" ref="childSelect" @change="switchSelect($event)">
             <option value="-1" class="firstOpt">--- subclass ---</option>
             <option v-for="(item, idx) in selChildren" :key="idx">{{ item }}</option>
         </select>
@@ -39,7 +39,7 @@ const switchSelect = (event: any) => {
     margin-top: 10px;
     margin-bottom: 1%;
     font-style: italic;
-    font-size: smaller;
+    font-size: normal;
     color: rgb(120, 120, 120);
     text-align: left;
 }
