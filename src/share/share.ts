@@ -193,6 +193,19 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
+export const editItemName = async (oldName: string, newName: string) => {
+    const mQuery = new Map<string, any>([
+        ["old", oldName],
+        ["new", newName],
+    ]);
+    const rt = await fetchNoBody(`api/dictionary/auth/update-name`, "PUT", mQuery, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getClsInfo = async (name: string) => {
     const mQuery = new Map<string, any>([
         ["name", name]
@@ -498,10 +511,6 @@ export const Search = async () => {
     lsEnt4Dic.value = list.Entities;
     lsCol4Dic.value = list.Collections;
 };
-
-export const EditItemName = async (oldName: string, newName: string, type: string) => {
-    alert(oldName + " - " + newName + " - " + type)
-}
 
 //////////////////////////////////////////////////////////////////////////////////////
 

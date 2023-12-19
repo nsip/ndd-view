@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selCollection.Entity }}</span>
-            <button id="edit-btn" @click="EditItemName(selCollection.Entity, 'new collection name', 'collection')">
+            <button id="edit-btn" @click="PopupModal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -12,8 +12,50 @@
 </template>
 
 <script setup lang="ts">
-import { selCollection, EditItemName } from "@/share/share";
+import { notify } from "@kyvg/vue3-notification";
+import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
+import { selCollection, editItemName, ModalOn } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
+import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
+
+const PopupModal = async () => {
+    if (ModalOn.value) {
+        return
+    }
+    ModalOn.value = true
+
+    try {
+        const result = await renderOverlay(NameUpdateModal, {
+            props: {
+                uname: selCollection.Entity,
+            },
+        }) as any
+        // console.log(":::", result)
+        const de = await editItemName(selCollection.Entity, result.newName)
+        if (de.error != null) {
+            notify({
+                title: "Error: Edit Entity Name",
+                text: de.error,
+                type: "error"
+            })
+            ModalOn.value = false
+            return
+        }
+        notify({
+            title: `${selCollection.Entity} is updated as ${result.newName}`,
+            text: "",
+            type: "success"
+        })
+    } catch (e) {
+        switch (e) {
+            case 'cancel':
+                console.log('cancel')
+                break
+        }
+    }
+    ModalOn.value = false
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
