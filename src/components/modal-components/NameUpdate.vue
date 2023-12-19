@@ -44,7 +44,7 @@ const valUname = ref("") // input new name
 
 // for labels, etc.
 let leftColumn1 = '30px'
-let leftColumn2 = '120px'
+let leftColumn2 = '150px'
 let topRow1 = '10px'
 let topRow2 = '45px'
 let topRow3 = '80px'

@@ -52,7 +52,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn, aim } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -174,9 +174,10 @@ const showTabContent = async (evt: MouseEvent) => {
     }
     (evt.currentTarget! as HTMLElement).className += " active";
 
-    // extra clear work
+    // extra clear work when click tab
     selEntity.Reset()
     selCollection.Reset()
+    aim.value = ""
 }
 
 </script>
