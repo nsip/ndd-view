@@ -499,6 +499,10 @@ export const Search = async () => {
     lsCol4Dic.value = list.Collections;
 };
 
+export const EditItemName = async (oldName: string, newName: string, type: string) => {
+    alert(oldName + " - " + newName + " - " + type)
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 export const hasSubmission = async () => {

@@ -3,13 +3,16 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selCollection.Entity }}</span>
+            <button id="edit-btn" @click="EditItemName(selCollection.Entity, 'new collection name', 'collection')">
+                <font-awesome-icon icon="pen" />
+            </button>
         </div>
         <hr />
     </div>
 </template>
 
 <script setup lang="ts">
-import { selCollection } from "@/share/share";
+import { selCollection, EditItemName } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 </script>
 
@@ -40,5 +43,9 @@ import { isNotEmpty } from "@/share/util";
     font-weight: bold;
     text-align: left;
     font-size: 15px;
+}
+
+#edit-btn {
+    margin-right: 0.5vw;
 }
 </style>
