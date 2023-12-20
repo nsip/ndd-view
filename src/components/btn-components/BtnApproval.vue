@@ -63,6 +63,10 @@ const Approve = async () => {
 
     // do approve
     {
+        // waiting... 1
+        loading.value = true
+        document.body.style.pointerEvents = "none"
+
         const msg = flagCreate ? 'new item' : 'modified item'
         const de = await putApprove(name, selType.value)
         if (de.error != null) {
@@ -71,12 +75,15 @@ const Approve = async () => {
                 text: de.error,
                 type: "error"
             })
+
+            // release waiting...3
+            document.body.style.pointerEvents = "auto";
+            loading.value = false
+
             return
         }
 
-        // waiting...
-        loading.value = true
-        document.body.style.pointerEvents = "none"
+        // waiting... 2
         await sleep(10000)
         document.body.style.pointerEvents = "auto";
         loading.value = false

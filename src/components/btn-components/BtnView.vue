@@ -1,5 +1,6 @@
 <template>
-    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="doSubscribe">
+    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()"
+        v-if="doSubscribe">
         <font-awesome-icon icon="bookmark" class="floating" />
     </a>
     <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="doNew">
@@ -109,6 +110,10 @@ const PopupModal = async () => {
             },
         })) === 'confirm') {
             {
+                // waiting...1
+                loading.value = true
+                document.body.style.pointerEvents = "none"
+
                 const de = await delRemoveItem(delName.value)
                 if (de.error != null) {
                     notify({
@@ -117,12 +122,15 @@ const PopupModal = async () => {
                         type: "error"
                     })
                     ModalOn.value = false
+
+                    // release waiting...3
+                    document.body.style.pointerEvents = "auto";
+                    loading.value = false
+
                     return
                 }
 
-                // waiting...
-                loading.value = true
-                document.body.style.pointerEvents = "none"
+                // waiting...2
                 await sleep(10000)
                 document.body.style.pointerEvents = "auto";
                 loading.value = false
