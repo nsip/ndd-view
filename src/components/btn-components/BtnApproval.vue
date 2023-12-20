@@ -25,8 +25,7 @@ import {
     LoadList4Dic,
     LoadList4Sub,
     delReject,
-    selMode,
-    ModalOn
+    selMode
 } from "@/share/share";
 
 const loading = ref(false);
@@ -109,10 +108,7 @@ const rejName = computed(() => selType.value == "entity" ? selEntity.Entity : se
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
+
     try {
         if (String(await renderOverlay(CCModal, {
             props: {
@@ -130,7 +126,6 @@ const PopupModal = async () => {
                         text: de.error,
                         type: "error"
                     })
-                    ModalOn.value = false
                     return
                 }
                 notify({
@@ -155,7 +150,6 @@ const PopupModal = async () => {
                 break
         }
     }
-    ModalOn.value = false
 }
 
 </script>

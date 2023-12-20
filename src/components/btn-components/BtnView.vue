@@ -25,7 +25,7 @@ import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selMode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { selMode, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty, download_file, sleep } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
@@ -96,10 +96,7 @@ const delName = computed(() => selType.value == "entity" ? selEntity.Entity : se
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
+
     try {
         if (String(await renderOverlay(CCModal, {
             props: {
@@ -109,50 +106,49 @@ const PopupModal = async () => {
                 height: "10%",
             },
         })) === 'confirm') {
-            {
-                // waiting...1
-                loading.value = true
-                document.body.style.pointerEvents = "none"
 
-                const de = await delRemoveItem(delName.value)
-                if (de.error != null) {
-                    notify({
-                        title: "Error: Delete Item",
-                        text: de.error,
-                        type: "error"
-                    })
-                    ModalOn.value = false
+            // waiting...1
+            loading.value = true
+            document.body.style.pointerEvents = "none"
+            await sleep(100)
 
-                    // release waiting...3
-                    document.body.style.pointerEvents = "auto";
-                    loading.value = false
+            const de = await delRemoveItem(delName.value)
+            if (de.error != null) {
+                notify({
+                    title: "Error: Delete Item",
+                    text: de.error,
+                    type: "error"
+                })
 
-                    return
-                }
-
-                // waiting...2
-                await sleep(10000)
+                // release waiting...3
                 document.body.style.pointerEvents = "auto";
                 loading.value = false
 
-                notify({
-                    title: "Deleted OK",
-                    text: `dictionary item '${delName.value}' is removed permanently`,
-                    type: "success"
-                })
-                await LoadList4Dic("entity");
-                await LoadList4Dic("collection");
-                selEntity.Reset();
-                selCollection.Reset();
+                return
             }
+
+            // waiting...2
+            await sleep(10000)
+            document.body.style.pointerEvents = "auto";
+            loading.value = false
+
+            notify({
+                title: "Deleted OK",
+                text: `dictionary item '${delName.value}' is removed permanently`,
+                type: "success"
+            })
+            await LoadList4Dic("entity");
+            await LoadList4Dic("collection");
+            selEntity.Reset();
+            selCollection.Reset();
         }
+
     } catch (e) {
         switch (e) {
             case 'cancel':
                 break
         }
     }
-    ModalOn.value = false
 }
 
 // SUBSCRIBE style

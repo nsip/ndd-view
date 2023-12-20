@@ -8,15 +8,11 @@
 
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { ModalOn, postUserNew } from "@/share/share";
+import { postUserNew } from "@/share/share";
 import UserAddModal from '@/components/modal-components/UserAdd.vue'
 import eventBus from '@/share/util'
 
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
 
     try {
 
@@ -30,7 +26,6 @@ const PopupModal = async () => {
                 text: de.error,
                 type: "error"
             })
-            ModalOn.value = false
             return
         }
 
@@ -51,8 +46,6 @@ const PopupModal = async () => {
     /// refresh user list table from other component...
     eventBus.emit('reload-table', 'from BtnAdmin');
     ///
-
-    ModalOn.value = false
 }
 
 </script>

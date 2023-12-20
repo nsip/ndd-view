@@ -11,16 +11,12 @@
 
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, putLogout, ModalOn } from "@/share/share";
+import { loginUser, putLogout } from "@/share/share";
 import { URL_SIGN } from "@/share/ip"
 import CCModal from '@/components/shared/CCModal.vue'
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
     try {
         if (String(await renderOverlay(CCModal, {
             props: {
@@ -37,7 +33,6 @@ const PopupModal = async () => {
                     text: de.error,
                     type: "error"
                 })
-                ModalOn.value = false
                 return
             }
             location.replace(URL_SIGN);
@@ -48,7 +43,6 @@ const PopupModal = async () => {
                 break
         }
     }
-    ModalOn.value = false
 }
 
 </script>

@@ -20,7 +20,7 @@
                     <ClassNav />
                     <EntityContent />
                     <CollectionContent />
-                    <BtnView v-if="!ModalOn" />
+                    <BtnView />
                 </div>
             </div>
         </div>
@@ -33,14 +33,14 @@
                 <div id="right">
                     <EntityContent />
                     <CollectionContent />
-                    <BtnApproval v-if="!ModalOn" />
+                    <BtnApproval />
                 </div>
             </div>
         </div>
 
         <div v-if="mTabShown.get('admin')" class="tab-content">
             <UserAdmin />
-            <BtnAdmin v-if="!ModalOn" />
+            <BtnAdmin />
         </div>
 
     </main>
@@ -52,7 +52,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selType, selEntity, selCollection, ModalOn, aim } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selType, selEntity, selCollection, aim } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";

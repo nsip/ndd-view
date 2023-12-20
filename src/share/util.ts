@@ -18,7 +18,13 @@ export const isEmpty = (val: any) => {
         return true;
     }
     if (Array.isArray(val)) {
-        return val.length == 0;
+        if (val.length == 0) {
+            return true
+        }
+        if (val.length == 1) {
+            return isEmpty(val[0])
+        }
+        return;
     }
     if (typeof val === "string") {
         return val.length == 0;

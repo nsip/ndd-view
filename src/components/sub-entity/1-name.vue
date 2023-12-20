@@ -14,15 +14,11 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, editItemName, ModalOn, selMode } from "@/share/share";
+import { selEntity, editItemName, selMode } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
 
     try {
         const result = await renderOverlay(NameUpdateModal, {
@@ -38,7 +34,6 @@ const PopupModal = async () => {
                 text: de.error,
                 type: "error"
             })
-            ModalOn.value = false
             return
         }
         notify({
@@ -53,7 +48,6 @@ const PopupModal = async () => {
                 break
         }
     }
-    ModalOn.value = false
 }
 
 </script>

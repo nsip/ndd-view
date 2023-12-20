@@ -10,7 +10,6 @@ export const loginToken = ref(""); // without 'Bearer '
 export const loginAuth = ref(""); // with 'Bearer '
 export const loginAsAdmin = ref(false)
 export const selMode = ref(''); // 'dictionary' or 'approval', or 'admin'
-export const ModalOn = ref(false) // indicates Modal Window is appearing
 export const selType = ref(""); // which type of current selection, 'entity' or 'collection'
 export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
