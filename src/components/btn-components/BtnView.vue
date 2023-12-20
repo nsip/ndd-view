@@ -24,7 +24,7 @@ import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { selMode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty, download_file, sleep } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/shared/CCModal.vue'
@@ -34,11 +34,11 @@ const { cookies } = useCookies();
 const loading = ref(false);
 
 // for UI
-const doNew = computed(() => Mode.value == 'normal')
-const doSubscribe = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDelete = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDump = computed(() => Mode.value == 'normal')
+const doNew = computed(() => selMode.value == 'dictionary')
+const doSubscribe = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDump = computed(() => selMode.value == 'dictionary')
 
 const Y_BtnSubscribe = ref('250px')
 const Y_BtnEdit = ref('180px')

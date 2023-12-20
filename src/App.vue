@@ -52,7 +52,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, Mode, selType, selEntity, selCollection, ModalOn, aim } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selType, selEntity, selCollection, ModalOn, aim } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -138,8 +138,6 @@ onMounted(async () => {
 
         display.value = true
 
-        Mode.value = "normal"
-
         await setDefaultTab("tab-default")
     }
 });
@@ -174,6 +172,9 @@ const showTabContent = async (evt: MouseEvent) => {
     }
     (evt.currentTarget! as HTMLElement).className += " active";
 
+    // set selected mode
+    selMode.value = id!;
+
     // extra clear work when click tab
     selEntity.Reset()
     selCollection.Reset()
@@ -198,7 +199,7 @@ body {
 }
 
 header {
-    height: 3vh;
+    height: 5vh;
 }
 
 #container {
@@ -230,7 +231,7 @@ header {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-    height: 3vh;
+    height: 5vh;
 }
 
 /* Style the buttons inside the tab */
@@ -258,7 +259,7 @@ header {
 
 /* Style the tab content */
 .tab-content {
-    padding: 6px 12px;
+    padding: 1px 1px;
     border: 1px solid #ccc;
     border-top: none;
 }

@@ -99,7 +99,7 @@ const style = (name: string) => {
     font-size: normal;
     margin-left: 2%;
     margin-top: 1vh;
-    margin-bottom: 1vh;
+    margin-bottom: 2vh;
     height: 1.5vh;
     width: 90%;
     text-align: left;
@@ -114,8 +114,10 @@ ul.list-col::-webkit-scrollbar {
 ul.list-ent,
 ul.list-col {
     background-color: rgb(240, 240, 240);
-    max-height: 90%;
+    width: 20vw;
+    height: 75vh;
     margin-left: 5px;
+    margin-top: 0.5vh;
     /* display: inline-block; */
     overflow: scroll;
     /* scrollbar-width: none; */
@@ -129,11 +131,9 @@ ul.list-col {
     border: 0 none #ccc;
     /* border-right: 2px solid #ccc; */
     border-radius: 10px;
-    /* border-color: rgb(230, 230, 230); */
-    margin-top: 0.5vh;
+    /* border-color: rgb(230, 230, 230); */    
     padding-top: 8px;
     padding-bottom: 8px;
-    width: 20vw;
 }
 
 ul.list-ent li.ellip,

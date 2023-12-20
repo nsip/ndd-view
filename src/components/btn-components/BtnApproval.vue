@@ -25,7 +25,7 @@ import {
     LoadList4Dic,
     LoadList4Sub,
     delReject,
-    Mode,
+    selMode,
     ModalOn
 } from "@/share/share";
 
