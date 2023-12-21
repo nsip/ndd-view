@@ -18,7 +18,7 @@ import type { Header, Item } from "vue3-easy-data-table";
 import Vue3EasyDataTable from "vue3-easy-data-table";
 import "vue3-easy-data-table/dist/style.css";
 import UserEditModal from '@/components/modal-components/UserEdit.vue'
-import CCModal from '@/components/shared/CCModal.vue'
+import CCModal from '@/components/modal-components/CCModal.vue'
 
 const TableHeight = ref((window.innerHeight * 0.8).toString() + "px");
 const title = ref<any>("Registered Users:");

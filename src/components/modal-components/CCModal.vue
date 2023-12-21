@@ -41,6 +41,15 @@ const htmlText = computed(() => {
     }
 })
 
+onMounted(() => {
+    document.body.style.pointerEvents = "none";
+    document.getElementById("modal")!.style.pointerEvents = "auto";
+})
+
+onUnmounted(() => {
+    document.body.style.pointerEvents = "auto";
+})
+
 ///////////////////////////////////////////////////////
 
 // for invoker confirm using

@@ -6,8 +6,8 @@
     <main v-if="display">
 
         <div class="tab">
-            <button class="tab-links" @click="showTabContent">admin</button>
-            <button class="tab-links" @click="showTabContent">approval</button>
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">admin</button>
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">approval</button>
             <button class="tab-links" id="tab-default" @click="showTabContent">dictionary</button>
         </div>
 

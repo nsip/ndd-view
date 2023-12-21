@@ -38,6 +38,15 @@ const props = defineProps({
 
 const valUname = ref("") // input new name
 
+onMounted(() => {
+    document.body.style.pointerEvents = "none";
+    document.getElementById("modal")!.style.pointerEvents = "auto";
+})
+
+onUnmounted(() => {
+    document.body.style.pointerEvents = "auto";
+})
+
 ///////////////////////////////////////////////////////
 
 // *** style variables ***

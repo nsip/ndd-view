@@ -28,7 +28,7 @@ import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { selMode, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty, download_file, sleep } from "@/share/util";
 import { Domain, URL_CMS } from "@/share/ip";
-import CCModal from '@/components/shared/CCModal.vue'
+import CCModal from '@/components/modal-components/CCModal.vue'
 
 const { cookies } = useCookies();
 

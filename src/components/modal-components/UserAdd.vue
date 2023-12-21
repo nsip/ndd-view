@@ -44,6 +44,15 @@ const valPassword = ref("")
 
 let mounted = false;
 
+onMounted(() => {
+    document.body.style.pointerEvents = "none";
+    document.getElementById("modal")!.style.pointerEvents = "auto";
+})
+
+onUnmounted(() => {
+    document.body.style.pointerEvents = "auto";
+})
+
 ///////////////////////////////////////////////////////
 
 // *** style variables ***

@@ -12,7 +12,7 @@
 
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import CCModal from '@/components/shared/CCModal.vue'
+import CCModal from '@/components/modal-components/CCModal.vue'
 import Loader from "@/components/shared/Loader.vue"
 import { isEmpty, sleep } from "@/share/util"
 import eventBus from '@/share/util'

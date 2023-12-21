@@ -13,9 +13,9 @@ import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
 import { loginUser, putLogout } from "@/share/share";
 import { URL_SIGN } from "@/share/ip"
-import CCModal from '@/components/shared/CCModal.vue'
+import CCModal from '@/components/modal-components/CCModal.vue'
 
-// *** use "confirm-cancel" modal ***
+// *** use "confirm-cancel" modal to logout ***
 const PopupModal = async () => {
     try {
         if (String(await renderOverlay(CCModal, {
