@@ -1,13 +1,12 @@
 <template>
-    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()"
-        v-if="doSubscribe">
+    <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="doSubscribe">
         <font-awesome-icon icon="bookmark" class="floating" />
     </a>
-    <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="doNew">
+    <a class="float" id="plus" title="add new item" @click="toCMS('new', selType, selItem, 'existing')" v-if="doNew">
         <font-awesome-icon icon="plus" class="floating" />
     </a>
     <!-- <a :href="URL_CMS + '?name=' + selItem + '&type=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
-    <a class="float" id="pen" :title="hintEdit" @click="ToCMS('edit')" v-if="doEdit">
+    <a class="float" id="pen" :title="hintEdit" @click="toCMS('edit', selType, selItem, 'existing')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
     <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="doDelete">
@@ -21,16 +20,13 @@
 
 <script setup lang="ts">
 
-import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { selMode, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
-import { isEmpty, download_file, sleep } from "@/share/util";
-import { Domain, URL_CMS } from "@/share/ip";
+import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
+// import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/modal-components/CCModal.vue'
-
-const { cookies } = useCookies();
 
 const loading = ref(false);
 
@@ -55,40 +51,43 @@ const Y_BtnNew = computed(() => {
     return "320px"
 })
 
+// import { useCookies } from "vue3-cookies";
+// const { cookies } = useCookies();
+
 // NEW, EDIT ///////////////////////////////////////////////////////////////
 
-const ToCMS = async (flag: string) => {
+// const ToCMS = async (flag: string) => {
 
-    switch (flag) {
+//     switch (flag) {
 
-        case 'new':
-            // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?type=${selType.value}&auth=${loginToken.value}`);
+//         case 'new':
+//             // *** no longer use 'URL with auth' ***
+//             // location.replace(`${URL_CMS}?type=${selType.value}&auth=${loginToken.value}`);
 
-            // use 'entity' as type if no selection
-            const type = selType.value.length == 0 ? 'entity' : selType.value;
+//             // use 'entity' as type if no selection
+//             const type = selType.value.length == 0 ? 'entity' : selType.value;
 
-            // *** 'type', now in cookie ***
-            cookies.set("type", type, "1d", "/", "." + Domain, false, "Lax");
-            cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
-            break;
+//             // *** 'type', now in cookie ***
+//             cookies.set("type", type, "1d", "/", "." + Domain, false, "Lax");
+//             cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
+//             break;
 
-        case 'edit':
-            // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?name=${selItem.value}&type=${selType.value}&auth=${loginToken.value}`);
+//         case 'edit':
+//             // *** no longer use 'URL with auth' ***
+//             // location.replace(`${URL_CMS}?name=${selItem.value}&type=${selType.value}&auth=${loginToken.value}`);
 
-            // *** 'type','name' now in cookie ***
-            cookies.set("type", `${selType.value}`, "1d", "/", "." + Domain, false, "Lax");
-            cookies.set("name", `${selItem.value}`, "1d", "/", "." + Domain, false, "Lax");
-            break;
+//             // *** 'type','name' now in cookie ***
+//             cookies.set("type", `${selType.value}`, "1d", "/", "." + Domain, false, "Lax");
+//             cookies.set("name", `${selItem.value}`, "1d", "/", "." + Domain, false, "Lax");
+//             break;
 
-        default:
-            alert(`flag @${flag} is not allowed, can only be 'new' or 'edit'`)
-            return
-    }
+//         default:
+//             alert(`flag @${flag} is not allowed, can only be 'new' or 'edit'`)
+//             return
+//     }
 
-    location.replace(`${URL_CMS}`)
-};
+//     location.replace(`${URL_CMS}`)
+// };
 
 // DELETE ///////////////////////////////////////////////////////////////
 
@@ -176,7 +175,7 @@ const hintSubscription = computed(() => {
 })
 const hintEdit = computed(() => `edit '${selItem.value}'`)
 const hintDelete = computed(() => `delete '${selItem.value}'`)
-const hintDownload = computed(() => `download all items`)
+const hintDownload = computed(() => `download all`)
 
 const Subscribe = async () => {
     // alert(selType.value)

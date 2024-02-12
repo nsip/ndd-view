@@ -53,9 +53,9 @@ onUnmounted(() => {
 
 // for labels, etc.
 let leftColumn1 = '30px'
-let leftColumn2 = '150px'
+let leftColumn2 = '140px'
 let topRow1 = '10px'
-let topRow2 = '45px'
+let topRow2 = '55px'
 let topRow3 = '80px'
 
 // for buttons
@@ -73,7 +73,7 @@ let bottomRow1 = '15px'
     left: 50%;
     transform: translate(-50%, -50%);
     width: 450px;
-    height: 120px;
+    height: 130px;
     background-color: rgb(200, 200, 200);
     opacity: 0.95;
     border-radius: 20px;

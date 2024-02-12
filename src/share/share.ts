@@ -192,10 +192,11 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
-export const editItemName = async (oldName: string, newName: string) => {
+export const editItemName = async (oldName: string, newName: string, inbound: boolean) => {
     const mQuery = new Map<string, any>([
         ["old", oldName],
         ["new", newName],
+        ["inbound", inbound],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/update-name`, "PUT", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)

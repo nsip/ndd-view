@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input class="search-box" type="text" id="search" name="search" placeholder="searching ..." v-model="aim" ref="searchInput" />
+        <input class="search-box" type="text" id="search" name="search" placeholder="searching..." v-model="aim" ref="searchInput" />
         <button class="search-btn" @click="Search()">
             <font-awesome-icon icon="search" />
         </button>

@@ -1,22 +1,26 @@
 <template>
-    <a class="float" id="check" @click="Approve()">
+    <a v-if="doApproval" class="float" id="check" @click="Approve()">
         <font-awesome-icon icon="check" class="floating" />
     </a>
-    <a class="float" id="times" @click="PopupModal()">
+    <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selType, selItem, 'inbound')">
+        <font-awesome-icon icon="pen" class="floating" />
+    </a>
+    <a v-if="doReject" class="float" id="times" @click="PopupModal()">
         <font-awesome-icon icon="times" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
 </template>
- 
+
 <script setup lang="ts">
 
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/modal-components/CCModal.vue'
 import Loader from "@/components/shared/Loader.vue"
-import { isEmpty, sleep } from "@/share/util"
+import { isEmpty, sleep, toCMS } from "@/share/util"
 import eventBus from '@/share/util'
 import {
+    selMode,
     selType,
     selEntity,
     selCollection,
@@ -25,10 +29,14 @@ import {
     LoadList4Dic,
     LoadList4Sub,
     delReject,
-    selMode
+    selItem
 } from "@/share/share";
 
 const loading = ref(false);
+
+const doApproval = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
 // APPROVE /////////////////////////////////////////////////////////////////////////
 
@@ -182,11 +190,19 @@ const PopupModal = async () => {
 }
 
 #check {
-    bottom: 110px;
+    bottom: 180px;
 }
 
 #check:hover {
     background-color: rgb(34, 172, 29);
+}
+
+#pen {
+    bottom: 110px;
+}
+
+#pen:hover {
+    background-color: rgb(90, 51, 243);
 }
 
 #times {

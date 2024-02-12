@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selEntity.Entity }}</span>
-            <button v-if="selMode == 'dictionary'" id="edit-btn" @click="PopupModal()">
+            <button v-if="selMode == 'dictionary' || selMode == 'approval'" id="edit-btn" @click="PopupModal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -14,20 +14,48 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, editItemName, selMode } from "@/share/share";
+import { selEntity, editItemName, selMode, Refresh, LoadList4Sub } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
+const oriName = (name: string) => {
+    if (selMode.value == 'approval' && name.includes(')=>')) {
+        const parts = name.split('=>')
+        return parts[0].slice(0, parts[0].lastIndexOf('('))
+    }
+    return name
+}
+
+const subName = (name: string) => {
+    if (selMode.value == 'approval' && name.includes(')=>')) {
+        const parts = name.split('=>')
+        return parts[1].slice(0, parts[1].lastIndexOf('('))
+    }
+    return name
+}
+
+const idFromSubFullName = (name: string) => {
+    if (selMode.value == 'approval' && name.includes(')=>')) {
+        const parts = name.split('=>')
+        const o = parts[0].lastIndexOf('(')
+        const c = parts[0].lastIndexOf(')')
+        return parts[0].slice(o + 1, c)
+    }
+    return ''
+}
+
 const PopupModal = async () => {
+
+    let oldName = oriName(selEntity.Entity)
 
     try {
         const result = await renderOverlay(NameUpdateModal, {
             props: {
-                uname: selEntity.Entity,
+                uname: oldName,
             },
         }) as any
         // console.log(":::", result)
-        const de = await editItemName(selEntity.Entity, result.newName)
+        const de = await editItemName(oldName, result.newName, selMode.value == 'approval')
         if (de.error != null) {
             notify({
                 title: "Error: Edit Entity Name",
@@ -37,10 +65,18 @@ const PopupModal = async () => {
             return
         }
         notify({
-            title: `${selEntity.Entity} is updated as ${result.newName}`,
+            title: `${oldName} is updated as ${result.newName}`,
             text: "",
             type: "success"
         })
+
+        await LoadList4Sub('entity')
+        await LoadList4Sub('collection')
+
+        const id = idFromSubFullName(selEntity.Entity)
+        const newSubFullName = `${oldName}(${id})=>${result.newName}(${id})`
+        await Refresh(newSubFullName, "inbound")
+
     } catch (e) {
         switch (e) {
             case 'cancel':
