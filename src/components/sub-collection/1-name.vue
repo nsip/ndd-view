@@ -27,7 +27,7 @@ const PopupModal = async () => {
             },
         }) as any
         // console.log(":::", result)
-        const de = await editItemName(selCollection.Entity, result.newName, selMode.value == 'approval')
+        const de = await editItemName(selCollection.Entity, result.newName, selMode.value == 'approval', 'collection')
         if (de.error != null) {
             notify({
                 title: "Error: Edit Entity Name",

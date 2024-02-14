@@ -19,27 +19,37 @@ import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
 const oriName = (name: string) => {
-    if (selMode.value == 'approval' && name.includes(')=>')) {
-        const parts = name.split('=>')
-        return parts[0].slice(0, parts[0].lastIndexOf('('))
-    }
-    return name
-}
-
-const subName = (name: string) => {
-    if (selMode.value == 'approval' && name.includes(')=>')) {
-        const parts = name.split('=>')
-        return parts[1].slice(0, parts[1].lastIndexOf('('))
+    if (selMode.value == 'approval') {
+        if (name.includes(')=>')) {
+            const parts = name.split('=>')
+            return parts[0].slice(0, parts[0].lastIndexOf('('))
+        } else {
+            const o = name.lastIndexOf('(')
+            const c = name.lastIndexOf(')')
+            const v = name.slice(o + 1, c)
+            if (!isNaN(Number(v))) {
+                return name.slice(0, o)
+            }
+        }
     }
     return name
 }
 
 const idFromSubFullName = (name: string) => {
-    if (selMode.value == 'approval' && name.includes(')=>')) {
-        const parts = name.split('=>')
-        const o = parts[0].lastIndexOf('(')
-        const c = parts[0].lastIndexOf(')')
-        return parts[0].slice(o + 1, c)
+    if (selMode.value == 'approval') {
+        if (name.includes(')=>')) {
+            const parts = name.split('=>')
+            const o = parts[0].lastIndexOf('(')
+            const c = parts[0].lastIndexOf(')')
+            return parts[0].slice(o + 1, c)
+        } else {
+            const o = name.lastIndexOf('(')
+            const c = name.lastIndexOf(')')
+            const v = name.slice(o + 1, c)
+            if (!isNaN(Number(v))) {
+                return v
+            }
+        }
     }
     return ''
 }
@@ -55,7 +65,7 @@ const PopupModal = async () => {
             },
         }) as any
         // console.log(":::", result)
-        const de = await editItemName(oldName, result.newName, selMode.value == 'approval')
+        const de = await editItemName(oldName, result.newName, selMode.value == 'approval', 'entity')
         if (de.error != null) {
             notify({
                 title: "Error: Edit Entity Name",
