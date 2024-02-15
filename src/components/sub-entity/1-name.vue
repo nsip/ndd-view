@@ -84,7 +84,12 @@ const PopupModal = async () => {
         await LoadList4Sub('collection')
 
         const id = idFromSubFullName(selEntity.Entity)
-        const newSubFullName = `${oldName}(${id})=>${result.newName}(${id})`
+        let newSubFullName = ""
+        if (id.length > 0) {
+            newSubFullName = `${oldName}(${id})=>${result.newName}(${id})`
+        } else {
+            newSubFullName = result.newName
+        }
         await Refresh(newSubFullName, "inbound")
 
     } catch (e) {
