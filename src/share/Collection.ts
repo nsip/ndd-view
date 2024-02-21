@@ -1,6 +1,6 @@
 export class collectionType {
     Entity = "";
-    Definition = "";
+    Definition: def[] = [];
     URL: string[] = [];
     Metadata: meta = new meta();
     Entities: string[] = [];
@@ -15,11 +15,16 @@ export class collectionType {
 
     Reset() {
         this.Entity = "";
-        this.Definition = "";
+        this.Definition = [];
         this.URL = [];
         this.Metadata = new meta();
         this.Entities = [];
     }
+}
+
+class def {
+    Text = "";
+    Scope = "";
 }
 
 class meta {
