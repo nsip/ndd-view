@@ -1,13 +1,13 @@
 <template>
     <h4 v-if="lsEnt4Sub.length > 0" class="title-entity">Entity:</h4>
     <ul v-if="lsEnt4Sub.length > 0" class="list-entity">
-        <li v-for="(item, idx) in lsEnt4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'inbound')">
+        <li v-for="(item, idx) in lsEnt4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
             {{ item }}
         </li>
     </ul>
     <h4 v-if="lsCol4Sub.length > 0" class="title-collection">Collection:</h4>
     <ul v-if="lsCol4Sub.length > 0" class="list-collection">
-        <li v-for="(item, idx) in lsCol4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'inbound')">
+        <li v-for="(item, idx) in lsCol4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
             {{ item }}
         </li>
     </ul>
@@ -23,6 +23,11 @@ onMounted(async () => {
     await LoadList4Sub("entity")
     await LoadList4Sub("collection")
 });
+
+const itemClick = async (item: string, phase: string) => {
+    selItem.value = item
+    await Refresh(phase)
+}
 
 </script>
 

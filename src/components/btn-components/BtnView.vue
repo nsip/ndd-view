@@ -25,7 +25,6 @@ import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { selMode, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
-// import { Domain, URL_CMS } from "@/share/ip";
 import CCModal from '@/components/modal-components/CCModal.vue'
 
 const loading = ref(false);
@@ -50,44 +49,6 @@ const Y_BtnNew = computed(() => {
     }
     return "320px"
 })
-
-// import { useCookies } from "vue3-cookies";
-// const { cookies } = useCookies();
-
-// NEW, EDIT ///////////////////////////////////////////////////////////////
-
-// const ToCMS = async (flag: string) => {
-
-//     switch (flag) {
-
-//         case 'new':
-//             // *** no longer use 'URL with auth' ***
-//             // location.replace(`${URL_CMS}?type=${selType.value}&auth=${loginToken.value}`);
-
-//             // use 'entity' as type if no selection
-//             const type = selType.value.length == 0 ? 'entity' : selType.value;
-
-//             // *** 'type', now in cookie ***
-//             cookies.set("type", type, "1d", "/", "." + Domain, false, "Lax");
-//             cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
-//             break;
-
-//         case 'edit':
-//             // *** no longer use 'URL with auth' ***
-//             // location.replace(`${URL_CMS}?name=${selItem.value}&type=${selType.value}&auth=${loginToken.value}`);
-
-//             // *** 'type','name' now in cookie ***
-//             cookies.set("type", `${selType.value}`, "1d", "/", "." + Domain, false, "Lax");
-//             cookies.set("name", `${selItem.value}`, "1d", "/", "." + Domain, false, "Lax");
-//             break;
-
-//         default:
-//             alert(`flag @${flag} is not allowed, can only be 'new' or 'edit'`)
-//             return
-//     }
-
-//     location.replace(`${URL_CMS}`)
-// };
 
 // DELETE ///////////////////////////////////////////////////////////////
 

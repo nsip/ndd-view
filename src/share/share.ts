@@ -269,6 +269,15 @@ export const putApprove = async (name: string, type: string) => {
     };
 };
 
+export const getItemIsEditable = async (name: string) => {
+    const rt = await fetchNoBody(`api/dictionary/pub/is-editable/${name}`, "GET", mEmpty, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const delReject = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -437,19 +446,16 @@ export const LoadList4Sub = async (type: string) => {
     }
 };
 
-// set 'selItem', 'aim', 'selType' etc. here etc.
-export const Refresh = async (name: any, phase: string) => {
-    // alert(`into refresh, name is [${name}], phase is [${phase}]`)
-
-    // set current selected item
-    selItem.value = name;
+// use selItem to refresh page content
+// so, before invoking Refresh, need "selItem.value = ***"
+export const Refresh = async (phase: string) => {
 
     // selected for searching
-    aim.value = name;
+    aim.value = selItem.value;
 
     // selected type
     {
-        const de = await getItemType(name, phase);
+        const de = await getItemType(selItem.value, phase);
         if (de.error != null) {
             // alert(de.error)
             console.log(de.error)
@@ -461,7 +467,7 @@ export const Refresh = async (name: any, phase: string) => {
 
     // get content, here content is json as string
     {
-        const de = await getContent(name, phase);
+        const de = await getContent(selItem.value, phase);
         if (de.error != null) {
             // alert(de.error)
             console.log(de.error)
@@ -489,7 +495,7 @@ export const Refresh = async (name: any, phase: string) => {
 
     if (phase == "existing") {
         // get class info
-        const de = await getClsInfo(name)
+        const de = await getClsInfo(selItem.value)
         if (de.error != null) {
             // alert(de.error)
             console.log(de.error)

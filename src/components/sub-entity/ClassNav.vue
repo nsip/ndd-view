@@ -1,7 +1,7 @@
 <template>
     <div v-if="isNotEmpty(selEntity)" class="class">
         <span v-for="(item, idx) in selClsPath" :key="idx">
-            <span class="ea" @click="Refresh(item, 'existing')"> {{ item }}</span>
+            <span class="ea" @click="itemClick(item, 'existing')"> {{ item }}</span>
             <span v-if="idx < selClsPath.length - 1"> / </span>
         </span>
         <span v-if="selChildren?.length > 0"> / </span>
@@ -13,14 +13,14 @@
 </template>
 
 <script setup lang="ts">
-import { selClsPath, selChildren, Refresh, selEntity } from "@/share/share";
+import { selClsPath, selChildren, Refresh, selEntity, selItem } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const childSelect = ref(null);
 
 const switchSelect = (event: any) => {
     if (event.target.value != "-1") {
-        Refresh(event.target.value, "existing");
+        itemClick(event.target.value, "existing");
 
         const select = childSelect.value as HTMLSelectElement | null;
         if (select != null) {
@@ -28,6 +28,12 @@ const switchSelect = (event: any) => {
         }
     }
 };
+
+const itemClick = async (item: string, phase: string) => {
+    selItem.value = item
+    await Refresh(phase)
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

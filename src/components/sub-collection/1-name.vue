@@ -19,7 +19,6 @@ import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
 const PopupModal = async () => {
-
     try {
         const result = await renderOverlay(NameUpdateModal, {
             props: {
@@ -41,6 +40,7 @@ const PopupModal = async () => {
             text: "",
             type: "success"
         })
+        
     } catch (e) {
         switch (e) {
             case 'cancel':

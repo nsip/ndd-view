@@ -16,12 +16,12 @@
     </div>
 
     <ul v-if="selType == 'entity'" class="list-ent">
-        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
             {{ item }}
         </li>
     </ul>
     <ul v-if="selType == 'collection'" class="list-col">
-        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
             {{ item }}
         </li>
     </ul>
@@ -49,15 +49,20 @@ watchEffect(async () => {
             await LoadList4Dic(t)
             switch (t) {
                 case "entity":
-                    await Refresh(lsEnt4Dic.value[0], 'existing')
+                    await itemClick(lsEnt4Dic.value[0], 'existing')
                     break
                 case "collection":
-                    await Refresh(lsCol4Dic.value[0], 'existing')
+                    await itemClick(lsCol4Dic.value[0], 'existing')
                     break
             }
         }
     }
 })
+
+const itemClick = async (item: string, phase: string) => {
+    selItem.value = item
+    await Refresh(phase)
+}
 
 const default_style = ref("default-style");
 const sel_style = ref("selected-style");
@@ -131,7 +136,7 @@ ul.list-col {
     border: 0 none #ccc;
     /* border-right: 2px solid #ccc; */
     border-radius: 10px;
-    /* border-color: rgb(230, 230, 230); */    
+    /* border-color: rgb(230, 230, 230); */
     padding-top: 8px;
     padding-bottom: 8px;
 }
