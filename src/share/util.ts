@@ -6,6 +6,9 @@ import mitt from "mitt"
 const eventBus = mitt();
 export default eventBus;
 
+import { IsItemEditable, selMode } from "./share";
+import { notify } from "@kyvg/vue3-notification";
+
 export const space4html = (n: number) => {
     let rt = ""
     for (let i = 0; i < n; i++) {
@@ -118,6 +121,17 @@ export const sleep = async (ms: number): Promise<void> => {
 }
 
 export const toCMS = async (flag: string, selType: string, selItem: string, phase: string) => {
+
+    if (selMode.value == "dictionary" && flag == 'edit') {
+        if (!await IsItemEditable(selItem)) {
+            notify({
+                title: "",
+                text: `[ ${selItem} ] is pending, cannot do further edit until approved or rejected`,
+                type: "warn"
+            })
+            return
+        }
+    }
 
     switch (flag) {
 

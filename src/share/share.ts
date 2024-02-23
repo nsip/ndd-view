@@ -519,6 +519,15 @@ export const Search = async () => {
     lsCol4Dic.value = list.Collections;
 };
 
+export const IsItemEditable = async (item: string) => {
+    const de = await getItemIsEditable(item);
+    if (de.error != null) {
+        console.log(de.error)
+        return false
+    }
+    return de.data
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 export const hasSubmission = async () => {
