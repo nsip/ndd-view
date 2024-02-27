@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, editItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable } from "@/share/share";
+import { selEntity, editItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
@@ -104,7 +104,10 @@ const PopupModal = async () => {
         await LoadList4Sub('entity')
         await LoadList4Sub('collection')
 
-        const id = idFromSubFullName(selEntity.Entity)
+        let id = idFromSubFullName(selEntity.Entity)
+        if (id.trim().length == 0) {
+            id = await PeekID(selEntity.Entity)
+        }
 
         console.log("1", id, " - ", selEntity.Entity)
 

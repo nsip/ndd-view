@@ -278,6 +278,15 @@ export const getItemIsEditable = async (name: string) => {
     };
 }
 
+export const getPeekID = async (name: string) => {
+    const rt = await fetchNoBody(`api/dictionary/auth/peek-id/${name}`, "GET", mEmpty, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const delReject = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -524,6 +533,15 @@ export const IsItemEditable = async (item: string) => {
     if (de.error != null) {
         console.log(de.error)
         return false
+    }
+    return de.data
+}
+
+export const PeekID = async (item: string) => {
+    const de = await getPeekID(item);
+    if (de.error != null) {
+        console.log(de.error)
+        return ""
     }
     return de.data
 }
