@@ -76,6 +76,16 @@ const PopupModal = async () => {
             },
         }) as any
         // console.log(":::", result)
+
+        if ((result.newName as string).trim().length == 0) {
+            notify({
+                title: "Error: Empty Entity Name",
+                text: "",
+                type: "error"
+            })
+            return
+        }
+
         const de = await editItemName(oldName, result.newName, selMode.value == 'approval', 'entity')
         if (de.error != null) {
             notify({
@@ -95,6 +105,9 @@ const PopupModal = async () => {
         await LoadList4Sub('collection')
 
         const id = idFromSubFullName(selEntity.Entity)
+
+        console.log("1", id, " - ", selEntity.Entity)
+
         let newSubFullName = ""
         if (id.length > 0) {
             newSubFullName = `${oldName}(${id})=>${result.newName}(${id})`
@@ -102,6 +115,9 @@ const PopupModal = async () => {
             newSubFullName = result.newName
         }
         if (selMode.value == 'approval') {
+
+            console.log("2", newSubFullName)
+
             selItem.value = newSubFullName
         }
         await Refresh("inbound")

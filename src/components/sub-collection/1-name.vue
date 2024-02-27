@@ -38,6 +38,16 @@ const PopupModal = async () => {
             },
         }) as any
         // console.log(":::", result)
+
+        if ((result.newName as string).trim().length == 0) {
+            notify({
+                title: "Error: Empty Collection Name",
+                text: "",
+                type: "error"
+            })
+            return
+        }
+
         const de = await editItemName(selCollection.Entity, result.newName, selMode.value == 'approval', 'collection')
         if (de.error != null) {
             notify({
