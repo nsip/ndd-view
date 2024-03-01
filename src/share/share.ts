@@ -9,15 +9,16 @@ export const loginUser = ref("");
 export const loginToken = ref(""); // without 'Bearer '
 export const loginAuth = ref(""); // with 'Bearer '
 export const loginAsAdmin = ref(false)
-export const Mode = ref("normal"); // 'normal' or 'approval', or 'admin'
-export const ModalOn = ref(false) // indicates Modal Window is appearing
+export const selMode = ref(''); // 'dictionary' or 'approval', or 'admin'
 export const selType = ref(""); // which type of current selection, 'entity' or 'collection'
 export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
 export const selCollection = reactive(new collectionType()); // collection content
 export const aim = ref(""); // what item want to be search
-export const lsEnt = ref([]); // name list of entity
-export const lsCol = ref([]); // name list of collection
+export const lsEnt4Dic = ref([]); // name list of entity in dictionary
+export const lsCol4Dic = ref([]); // name list of collection in dictionary
+export const lsEnt4Sub = ref([]); // name list of entity in candidates
+export const lsCol4Sub = ref([]); // name list of collection in candidates
 export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
@@ -50,6 +51,15 @@ export const getSelfName = async () => {
         'error': err
     };
 };
+
+export const getSelfAdminStatus = async () => {
+    const rt = await fetchNoBody("api/user/auth/is-admin", "GET", mEmpty, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
 
 export const getUserInfoList = async (uname: string, fields: string) => {
     // means list all fields. 
@@ -156,12 +166,12 @@ export const putLogout = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const getItemKind = async (name: string, phase: string) => {
+export const getItemType = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
         ["phase", phase],
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/kind`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/type`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -182,23 +192,26 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
-export const getColEntities = async (name: string) => {
+export const editItemName = async (oldName: string, newName: string, inbound: boolean, type: string) => {
     const mQuery = new Map<string, any>([
-        ["colname", name]
+        ["old", oldName],
+        ["new", newName],
+        ["inbound", inbound],
+        ["type", type],
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/colentities`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/auth/update-name`, "PUT", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
         'error': err
     };
-};
+}
 
 export const getClsInfo = async (name: string) => {
     const mQuery = new Map<string, any>([
-        ["entname", name]
+        ["name", name]
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/entclasses`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/branch`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -206,11 +219,11 @@ export const getClsInfo = async (name: string) => {
     };
 };
 
-export const getList = async (kind: string, phase: string) => {
+export const getList = async (type: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["phase", phase]
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/list/${kind}`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/list/${type}`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -218,11 +231,11 @@ export const getList = async (kind: string, phase: string) => {
     };
 };
 
-export const getDump = async (kind: string, phase: string) => {
+export const getDump = async (type: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["phase", phase]
     ]);
-    const rt = await fetchNoBody(`api/dictionary/pub/dump/${kind}`, "GET", mQuery, "");
+    const rt = await fetchNoBody(`api/dictionary/pub/dump/${type}`, "GET", mQuery, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -243,10 +256,10 @@ export const getSearch = async (lookfor: string) => {
     };
 };
 
-export const putApprove = async (name: string, kind: string) => {
+export const putApprove = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["kind", kind],
+        ["type", type],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/approve`, "PUT", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
@@ -256,10 +269,28 @@ export const putApprove = async (name: string, kind: string) => {
     };
 };
 
-export const delReject = async (name: string, kind: string) => {
+export const getItemIsEditable = async (name: string) => {
+    const rt = await fetchNoBody(`api/dictionary/pub/is-editable/${name}`, "GET", mEmpty, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const getPeekID = async (name: string) => {
+    const rt = await fetchNoBody(`api/dictionary/auth/peek-id/${name}`, "GET", mEmpty, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const delReject = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["kind", kind],
+        ["type", type],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/reject`, "DELETE", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
@@ -278,10 +309,10 @@ export const delRemoveItem = async (name: string) => {
     };
 }
 
-export const putSubscribe = async (name: string, kind: string) => {
+export const putSubscribe = async (name: string, type: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
-        ["kind", kind],
+        ["type", type],
     ]);
     const rt = await fetchNoBody(`api/dictionary/auth/subscribe`, "PUT", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
@@ -355,29 +386,31 @@ export const postSendEmail = async (
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// set 'lsEnt', 'lsCol' here
-export const LoadCurrentList = async (kind: string, phase: string) => {
+// set 'lsEnt4Dic', 'lsCol4Dic' here
+export const LoadList4Dic = async (type: string) => {
     // get list of item
-    switch (kind) {
+    switch (type) {
         case "entity":
             {
-                const de = await getList(kind, phase);
+                const de = await getList(type, "existing");
                 if (de.error != null) {
-                    alert(de.error)
+                    // alert(de.error)
+                    console.log(de.error)
                     break
                 }
-                lsEnt.value = de.data
+                lsEnt4Dic.value = de.data
             }
             break;
 
         case "collection":
             {
-                const de = await getList(kind, phase);
+                const de = await getList(type, "existing");
                 if (de.error != null) {
-                    alert(de.error)
+                    // alert(de.error)
+                    console.log(de.error)
                     break
                 }
-                lsCol.value = de.data
+                lsCol4Dic.value = de.data
             }
             break;
     }
@@ -385,42 +418,77 @@ export const LoadCurrentList = async (kind: string, phase: string) => {
     // get list of subscribed item
     const de = await getListSubscription();
     if (de.error != null) {
-        alert(de.error)
+        // alert(de.error)
+        console.log(de.error)
         return
     }
     lsSubscribed.value = de.data
 };
 
-// set 'selItem', 'aim', 'selType' etc. here etc.
-export const Refresh = async (name: any, phase: string) => {
-    // alert(`into refresh, name is [${name}], phase is [${phase}]`)
+// set 'lsEnt4Sub', 'lsCol4Sub' here
+export const LoadList4Sub = async (type: string) => {
+    // get list of item
+    switch (type) {
+        case "entity":
+            {
+                const de = await getList(type, "inbound");
+                if (de.error != null) {
+                    // alert(de.error)
+                    console.log(de.error)
+                    break
+                }
+                lsEnt4Sub.value = de.data
+            }
+            break;
 
-    // set current selected item
-    selItem.value = name;
+        case "collection":
+            {
+                const de = await getList(type, "inbound");
+                if (de.error != null) {
+                    // alert(de.error)
+                    console.log(de.error)
+                    break
+                }
+                lsCol4Sub.value = de.data
+            }
+            break;
+    }
+};
+
+// use selItem to refresh page content
+// so, before invoking Refresh, need "selItem.value = ***"
+export const Refresh = async (phase: string) => {
 
     // selected for searching
-    aim.value = name;
+    aim.value = selItem.value;
 
-    // selected kind
+    // selected type
     {
-        const de = await getItemKind(name, phase);
+        const de = await getItemType(selItem.value, phase);
         if (de.error != null) {
-            alert(de.error)
+            // alert(de.error)
+            console.log(de.error)
             return
         }
         selType.value = de.data;
     }
+    // alert(`into refresh, selType is [${selType.value}]`)
 
-    // get content
+    // get content, here content is json as string
     {
-        const de = await getContent(name, phase);
+        const de = await getContent(selItem.value, phase);
         if (de.error != null) {
-            alert(de.error)
+            // alert(de.error)
+            console.log(de.error)
             return
         }
-        const content = de.data;
+        const content = JSON.parse(de.data);
 
         // console.log(content)
+
+        // clear current selection
+        selEntity.Reset()
+        selCollection.Reset()
 
         // set content to shared variables
         switch (selType.value) {
@@ -430,62 +498,58 @@ export const Refresh = async (name: any, phase: string) => {
 
             case "collection":
                 selCollection.SetContent(content);
-
-                // get computed collection entities and set them to 'selCollection'
-                const de = await getColEntities(name)
-                if (de.error != null) {
-                    alert(de.error)
-                    return
-                }
-                selCollection.SetEntities(de.data);
                 break;
         }
     }
 
-    // get class info
-    const de = await getClsInfo(name)
-    if (de.error != null) {
-        alert(de.error)
-        return
+    if (phase == "existing") {
+        // get class info
+        const de = await getClsInfo(selItem.value)
+        if (de.error != null) {
+            // alert(de.error)
+            console.log(de.error)
+            return
+        }
+        const clsInfo = de.data;
+        selClsPath.value = clsInfo.DerivedPath;
+        selChildren.value = clsInfo.Children;
     }
-    const clsInfo = de.data;
-    selClsPath.value = clsInfo.DerivedPath;
-    selChildren.value = clsInfo.Children;
 };
 
 export const Search = async () => {
     const de = await getSearch(aim.value.trim());
     if (de.error != null) {
-        alert(de.error)
+        // alert(de.error)
+        console.log(de.error)
         return
     }
     const list = de.data;
-    lsEnt.value = list.Entities;
-    lsCol.value = list.Collections;
+    lsEnt4Dic.value = list.Entities;
+    lsCol4Dic.value = list.Collections;
 };
+
+export const IsItemEditable = async (item: string) => {
+    const de = await getItemIsEditable(item);
+    if (de.error != null) {
+        console.log(de.error)
+        return false
+    }
+    return de.data
+}
+
+export const PeekID = async (item: string) => {
+    const de = await getPeekID(item);
+    if (de.error != null) {
+        console.log(de.error)
+        return ""
+    }
+    return de.data
+}
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const isSubmitListEmpty = ref(true);
-
-export const UpdateSubmitListStatus = async () => {
-    let lsEnt: string | any[];
-    let lsCol: string | any[];
-    {
-        const de = await getList("entity", "inbound");
-        if (de.error != null) {
-            alert(de.error)
-            return
-        }
-        lsEnt = de.data;
-    }
-    {
-        const de = await getList("collection", "inbound");
-        if (de.error != null) {
-            alert(de.error)
-            return
-        }
-        lsCol = de.data
-    }
-    isSubmitListEmpty.value = lsEnt.length == 0 && lsCol.length == 0;
-};
+export const hasSubmission = async () => {
+    await LoadList4Sub("entity");
+    await LoadList4Sub("collection");
+    return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+}

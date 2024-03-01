@@ -1,36 +1,42 @@
 <template>
-    <a class="float" id="check" @click="Approve()" v-if="showBtnApproval">
+    <a v-if="doApproval" class="float" id="check" @click="Approve()">
         <font-awesome-icon icon="check" class="floating" />
     </a>
-    <a class="float" id="times" @click="PopupModal()" v-if="showBtnReject">
+    <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selType, selItem, 'inbound')">
+        <font-awesome-icon icon="pen" class="floating" />
+    </a>
+    <a v-if="doReject" class="float" id="times" @click="PopupModal()">
         <font-awesome-icon icon="times" class="floating" />
     </a>
+    <Loader id="loader" v-if="loading" />
 </template>
- 
+
 <script setup lang="ts">
 
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import CCModal from '@/components/shared/CCModal.vue'
-import { isEmpty } from "@/share/util"
+import CCModal from '@/components/modal-components/CCModal.vue'
+import Loader from "@/components/shared/Loader.vue"
+import { isEmpty, sleep, toCMS } from "@/share/util"
+import eventBus from '@/share/util'
 import {
+    selMode,
     selType,
     selEntity,
     selCollection,
     putApprove,
-    getUserListAll,
-    getUserListSubscribedAt,
-    postSendEmail,
     getList,
-    LoadCurrentList,
-    UpdateSubmitListStatus,
+    LoadList4Dic,
+    LoadList4Sub,
     delReject,
-    Mode,
-    ModalOn
+    selItem
 } from "@/share/share";
 
-const showBtnApproval = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const showBtnReject = computed(() => Mode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const loading = ref(false);
+
+const doApproval = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
 // APPROVE /////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +70,10 @@ const Approve = async () => {
 
     // do approve
     {
+        // waiting... 1
+        loading.value = true
+        document.body.style.pointerEvents = "none"
+
         const msg = flagCreate ? 'new item' : 'modified item'
         const de = await putApprove(name, selType.value)
         if (de.error != null) {
@@ -72,8 +82,18 @@ const Approve = async () => {
                 text: de.error,
                 type: "error"
             })
+
+            // release waiting...3
+            document.body.style.pointerEvents = "auto";
+            loading.value = false
+
             return
         }
+
+        // waiting... 2
+        await sleep(10000)
+        document.body.style.pointerEvents = "auto";
+        loading.value = false
 
         notify({
             title: `Approval`,
@@ -81,74 +101,13 @@ const Approve = async () => {
             type: "success"
         })
     }
-
-    // TODO: should append sending email function to the API side.
-    //
-
-    // const content = flagCreate ? `new item [${name}] has been added` : `item [${name}] has been updated`;
-    // const de = await getUserListAll("uname")
-    // if (de.error != null) {
-    //     notify({
-    //         title: "Error: Get User List",
-    //         text: de.error,
-    //         type: "error"
-    //     })
-    //     return
-    // }
-    // const users = de.data as any[];
-    // users.forEach(async (user) => {
-
-    //     const uname = user.UName;
-    //     // console.log(uname)
-
-    //     if (flagCreate) {
-
-    //         // inform subscriber new item have been added
-    //         const de = await postSendEmail("National Education Data Dictionary Info", content, uname)
-    //         if (de.error != null) {
-    //             notify({
-    //                 title: "Error: Send Email (New)",
-    //                 text: de.error,
-    //                 type: "error"
-    //             })
-    //             return
-    //         }
-
-    //     } else {
-    //         // inform subscriber his subscribed item has been updated
-
-    //         const de = await getUserListSubscribedAt(uname)
-    //         if (de.error != null) {
-    //             notify({
-    //                 title: "Error: Get Subscribed User List",
-    //                 text: de.error,
-    //                 type: "error"
-    //             })
-    //             return
-    //         }
-    //         const subs = de.data as string[];
-    //         console.log("getAdminListSubscription:", uname, subs)
-
-    //         if (subs.includes(name)) {
-    //             const de = await postSendEmail("notice:", content, uname)
-    //             if (de.error != null) {
-    //                 notify({
-    //                     title: "Error: Send Email (Update)",
-    //                     text: de.error,
-    //                     type: "error"
-    //                 })
-    //                 return
-    //             }
-    //         }
-    //     }
-    // });
-
-    LoadCurrentList("entity", "inbound");
-    LoadCurrentList("collection", "inbound");
+    await LoadList4Sub("entity");
+    await LoadList4Sub("collection");
+    await LoadList4Dic("entity");
+    await LoadList4Dic("collection");
     selEntity.Reset();
     selCollection.Reset();
-    UpdateSubmitListStatus();
-
+    eventBus.emit('check-submission', 'from BtnApproval');
 };
 
 // REJECT /////////////////////////////////////////////////////////////////////////
@@ -157,10 +116,7 @@ const rejName = computed(() => selType.value == "entity" ? selEntity.Entity : se
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
+
     try {
         if (String(await renderOverlay(CCModal, {
             props: {
@@ -178,7 +134,6 @@ const PopupModal = async () => {
                         text: de.error,
                         type: "error"
                     })
-                    ModalOn.value = false
                     return
                 }
                 notify({
@@ -188,11 +143,13 @@ const PopupModal = async () => {
                 })
 
                 // 'inbound' db-col for candidates list
-                await LoadCurrentList("entity", "inbound");
-                await LoadCurrentList("collection", "inbound");
+                await LoadList4Sub("entity");
+                await LoadList4Sub("collection");
+                await LoadList4Dic("entity");
+                await LoadList4Dic("collection");
                 selEntity.Reset();
                 selCollection.Reset();
-                await UpdateSubmitListStatus(); // indicates any candidates are there for approval
+                eventBus.emit('check-submission', 'from BtnReject');
             }
         }
     } catch (e) {
@@ -201,7 +158,6 @@ const PopupModal = async () => {
                 break
         }
     }
-    ModalOn.value = false
 }
 
 </script>
@@ -234,11 +190,19 @@ const PopupModal = async () => {
 }
 
 #check {
-    bottom: 110px;
+    bottom: 180px;
 }
 
 #check:hover {
     background-color: rgb(34, 172, 29);
+}
+
+#pen {
+    bottom: 110px;
+}
+
+#pen:hover {
+    background-color: rgb(90, 51, 243);
 }
 
 #times {

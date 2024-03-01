@@ -12,13 +12,13 @@
 import eventBus from '@/share/util';
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
-import { getUserInfoList, getUserOnline, putUserUpdate, delUser, putResetUserPWD, ModalOn } from "@/share/share";
+import { getUserInfoList, getUserOnline, putUserUpdate, delUser, putResetUserPWD } from "@/share/share";
 import TextLine from "@/components/shared/TextLine.vue";
 import type { Header, Item } from "vue3-easy-data-table";
 import Vue3EasyDataTable from "vue3-easy-data-table";
 import "vue3-easy-data-table/dist/style.css";
 import UserEditModal from '@/components/modal-components/UserEdit.vue'
-import CCModal from '@/components/shared/CCModal.vue'
+import CCModal from '@/components/modal-components/CCModal.vue'
 
 const TableHeight = ref((window.innerHeight * 0.8).toString() + "px");
 const title = ref<any>("Registered Users:");
@@ -138,9 +138,6 @@ type ClickRowArgument = Item & {
 const PopupModal = async (item: ClickRowArgument) => {
     // console.log(item);
 
-    if (ModalOn.value) {
-        return
-    }
     if (item['online']) {
         notify({
             title: "Notice: Admin User",
@@ -149,7 +146,6 @@ const PopupModal = async (item: ClickRowArgument) => {
         })
         return
     }
-    ModalOn.value = true
 
     try {
         // result is a struct {...}, updated user
@@ -183,7 +179,6 @@ const PopupModal = async (item: ClickRowArgument) => {
                             text: de.error,
                             type: "error"
                         })
-                        ModalOn.value = false
                         return
                     }
                 }
@@ -224,7 +219,6 @@ const PopupModal = async (item: ClickRowArgument) => {
                                 text: de.error,
                                 type: "error"
                             })
-                            ModalOn.value = false
                             return
                         }
                     }
@@ -236,7 +230,6 @@ const PopupModal = async (item: ClickRowArgument) => {
                             text: de.error,
                             type: "error"
                         })
-                        ModalOn.value = false
                         return
                     }
                 }
@@ -256,8 +249,6 @@ const PopupModal = async (item: ClickRowArgument) => {
                 break
         }
     }
-
-    ModalOn.value = false
 };
 
 ////////////////////////////////////////////////////////////

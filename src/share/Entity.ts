@@ -1,7 +1,7 @@
 export class entityType {
     Entity = "";
     OtherNames: string[] = [];
-    Definition = "";
+    Definition: def[] = [];
     SIF: sif[] = [];
     OtherStandards: otherStd[] = [];
     LegalDefinitions: legalDef[] = [];
@@ -24,7 +24,7 @@ export class entityType {
     Reset() {
         this.Entity = "";
         this.OtherNames = [];
-        this.Definition = "";
+        this.Definition = [];
         this.SIF = [];
         this.OtherStandards = [];
         this.LegalDefinitions = [];
@@ -32,6 +32,11 @@ export class entityType {
         this.Collections = [];
         this.Metadata = new meta();
     }
+}
+
+class def {
+    Text = "";
+    Scope = "";
 }
 
 class sif {
@@ -77,6 +82,7 @@ class meta {
     Identifier = "";
     Type = "";
     ExpectedAttributes: string[] = [];
-    Superclass: string[] = [];
-    CrossrefEntities: string[] = [];
+    SuperClass = "";
+    DefaultParent = "";
+    CrossRefEntities: string[] = [];
 }

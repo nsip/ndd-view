@@ -1,5 +1,5 @@
 <template>
-    <div class="area">
+    <div v-if="isNotEmpty(selCollection.Metadata)" class="area">
         <span class="category">Metadata:</span>
         <span class="content-flex">
             <div v-for="(item, idx) in [selCollection.Metadata]" :key="idx">

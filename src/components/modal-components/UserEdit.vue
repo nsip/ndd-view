@@ -57,6 +57,15 @@ const { visible, resolve, reject } = useOverlayMeta({
     animation: 100
 })
 
+onMounted(() => {
+    document.body.style.pointerEvents = "none";
+    document.getElementById("modal")!.style.pointerEvents = "auto";
+})
+
+onUnmounted(() => {
+    document.body.style.pointerEvents = "auto";
+})
+
 ///////////////////////////////////////////////////////
 
 // for invoker confirm using

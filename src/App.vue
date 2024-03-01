@@ -1,32 +1,49 @@
 <template>
-    <header v-if="display">
+    <header>
         <PageTitle />
-        <ModeSel />
     </header>
 
     <main v-if="display">
-        <ClassNav v-if="fClsNav" />
-        <div v-if="fNormal || fApproval" id="container">
-            <div id="left">
-                <SearchFilter v-if="fSearchFilter" />
-                <ListItem v-if="fListItem" />
-                <ListCandidate v-if="fListCandidate" />
-            </div>
-            <div id="right">
-                <EntityContent v-if="entityContent" />
-                <CollectionContent v-if="collectionContent" />
-                <BtnApproval />
-                <BtnView />
-            </div>
-        </div>
-        <div v-if="fAdmin">
-            <UserAdmin />
-            <BtnAdmin v-if="!ModalOn" />
-        </div>
-    </main>
 
-    <footer v-if="display">
-    </footer>
+        <div class="tab">
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">admin</button>
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">approval</button>
+            <button class="tab-links" id="tab-default" @click="showTabContent">dictionary</button>
+        </div>
+
+        <div v-if="mTabShown.get('dictionary')" class="tab-content">
+            <div id="container">
+                <div id="left">
+                    <ListItem />
+                </div>
+                <div id="right">
+                    <ClassNav />
+                    <EntityContent />
+                    <CollectionContent />
+                    <BtnView />
+                </div>
+            </div>
+        </div>
+
+        <div v-if="mTabShown.get('approval')" class="tab-content">
+            <div id="container">
+                <div id="left">
+                    <ListCandidate />
+                </div>
+                <div id="right">
+                    <EntityContent />
+                    <CollectionContent />
+                    <BtnApproval />
+                </div>
+            </div>
+        </div>
+
+        <div v-if="mTabShown.get('admin')" class="tab-content">
+            <UserAdmin />
+            <BtnAdmin />
+        </div>
+
+    </main>
 
     <notifications position="top center" :speed="2000" :duration="6000" :closeOnClick="false" />
 </template>
@@ -35,11 +52,9 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getUserInfoList, Mode, selType, selEntity, selCollection, ModalOn } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selType, selEntity, selCollection, aim } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
-import ClassNav from "@/components/ClassNav.vue";
-import ModeSel from "@/components/ModeSel.vue";
-import SearchFilter from "@/components/SearchFilter.vue";
+import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
 import ListCandidate from "@/components/ListCandidate.vue";
 import EntityContent from "@/components/EntityContent.vue";
@@ -52,17 +67,13 @@ import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
 const { cookies } = useCookies();
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
 const display = ref(false)
-const fNormal = computed(() => Mode.value == 'normal')
-const fApproval = computed(() => Mode.value == 'approval')
-const fAdmin = computed(() => Mode.value == 'admin')
-const fClsNav = computed(() => Mode.value == 'normal')
-const fSearchFilter = computed(() => Mode.value == 'normal')
-const fListItem = computed(() => Mode.value == 'normal')
-const fListCandidate = computed(() => Mode.value == 'approval')
-const entityContent = computed(() => selType.value == 'entity')
-const collectionContent = computed(() => selType.value == 'collection')
 
-let mounted = false;
+// tab content shown flag, key is tab-text
+const mTabShown = ref(new Map([
+    ["dictionary", false],
+    ["approval", false],
+    ["admin", false],
+]));
 
 onMounted(async () => {
 
@@ -111,30 +122,64 @@ onMounted(async () => {
             }
             loginUser.value = de.data
         }
-
         {
-            const de = await getUserInfoList(loginUser.value, "")
+            const de = await getSelfAdminStatus();
             if (de.error != null) {
                 notify({
-                    title: "Error: Cannot Get Self Info",
+                    title: "Error: Cannot Get Self Admin Status",
                     text: de.error,
                     type: "error"
                 })
                 display.value = false
                 return
             }
-            loginAsAdmin.value = de.data[0].role == 'admin' ? true : false
+            loginAsAdmin.value = de.data
         }
-
-        await new Promise((f) => setTimeout(f, 500));
 
         display.value = true
 
-        Mode.value = "normal"
+        await setDefaultTab("tab-default")
     }
-
-    mounted = true
 });
+
+const setDefaultTab = async (id: string) => {
+    let ranDefault = false
+    const iid = window.setInterval(() => {
+        if (display.value && !ranDefault) {
+            document.getElementById(id)!.click();
+            ranDefault = true
+        }
+    }, 50)
+    window.setTimeout(() => {
+        if (display.value && ranDefault) {
+            window.clearInterval(iid)
+        }
+    }, 1000)
+}
+
+const showTabContent = async (evt: MouseEvent) => {
+
+    const id = (evt.target! as HTMLElement).textContent
+    console.log(id)
+
+    mTabShown.value.forEach((flag, tab) => {
+        mTabShown.value.set(tab, tab == id ? true : false)
+    });
+
+    let tab_links = document.getElementsByClassName("tab-links");
+    for (let i = 0; i < tab_links.length; i++) {
+        tab_links[i].className = tab_links[i].className.replace(" active", "");
+    }
+    (evt.currentTarget! as HTMLElement).className += " active";
+
+    // set selected mode
+    selMode.value = id!;
+
+    // extra clear work when click tab
+    selEntity.Reset()
+    selCollection.Reset()
+    aim.value = ""
+}
 
 </script>
 
@@ -145,36 +190,77 @@ onMounted(async () => {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 10px;
 }
 
 html,
 body {
-    margin: 0;
-    height: 100%;
+    margin-top: 0.5vh;
     overflow: hidden
 }
 
+header {
+    height: 5vh;
+}
+
 #container {
-    width: 100%;
+    width: 100vw;
     height: v-bind("Height");
     display: flex;
 }
 
 #left {
-    width: 25%;
-    height: 92%;
-    /* margin-right: 1%; */
-    /* background-color: rgb(230, 230, 230); */
+    width: 25vw;
+    height: 90vh;
+    background-color: rgb(240, 240, 240);
     /* List has its own scroll */
 }
 
 #right {
-    width: 75%;
-    height: 93%;
+    width: 75vw;
+    height: 90vh;
     margin-left: 0.5%;
-    margin-right: 0.5%;
+    margin-right: 1.5%;
     background-color: rgb(240, 240, 240);
     overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    height: 5vh;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: right;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 11px;
+    transition: 0.3s;
+    font-size: 17px;
+    height: 100%;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tab-content {
+    padding: 1px 1px;
+    border: 1px solid #ccc;
+    border-top: none;
 }
 </style>

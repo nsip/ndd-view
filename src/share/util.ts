@@ -1,6 +1,13 @@
+import { useCookies } from "vue3-cookies";
+const { cookies } = useCookies();
+import { Domain, URL_CMS } from "@/share/ip";
+
 import mitt from "mitt"
 const eventBus = mitt();
 export default eventBus;
+
+import { IsItemEditable, selMode } from "./share";
+import { notify } from "@kyvg/vue3-notification";
 
 export const space4html = (n: number) => {
     let rt = ""
@@ -18,7 +25,13 @@ export const isEmpty = (val: any) => {
         return true;
     }
     if (Array.isArray(val)) {
-        return val.length == 0;
+        if (val.length == 0) {
+            return true
+        }
+        if (val.length == 1) {
+            return isEmpty(val[0])
+        }
+        return;
     }
     if (typeof val === "string") {
         return val.length == 0;
@@ -102,3 +115,53 @@ export const download_file = (url: string, file_name: string) => {
     anchor.click();
     document.body.removeChild(anchor);
 }
+
+export const sleep = async (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export const toCMS = async (flag: string, selType: string, selItem: string, phase: string) => {
+
+    if (selMode.value == "dictionary" && flag == 'edit') {
+        if (!await IsItemEditable(selItem)) {
+            notify({
+                title: "",
+                text: `[ ${selItem} ] is pending, cannot do further edit until approved or rejected`,
+                type: "warn"
+            })
+            return
+        }
+    }
+
+    switch (flag) {
+
+        case 'new':
+            // *** no longer use 'URL with auth' ***
+            // location.replace(`${URL_CMS}?type=${selType}&auth=${loginToken.value}`);
+
+            // use 'entity' as type if no selection
+            const type = selType.length == 0 ? 'entity' : selType;
+
+            // *** 'type', now in cookie ***
+            cookies.set("type", type, "1d", "/", "." + Domain, false, "Lax");
+            cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
+            cookies.set("phase", phase, "1d", "/", "." + Domain, false, "Lax");
+            break;
+
+        case 'edit':
+            // *** no longer use 'URL with auth' ***
+            // location.replace(`${URL_CMS}?name=${selItem}&type=${selType}&auth=${loginToken.value}`);
+
+            // *** 'type','name' now in cookie ***
+            cookies.set("type", `${selType}`, "1d", "/", "." + Domain, false, "Lax");
+            cookies.set("name", `${selItem}`, "1d", "/", "." + Domain, false, "Lax");
+            cookies.set("phase", `${phase}`, "1d", "/", "." + Domain, false, "Lax");
+            break;
+
+        default:
+            alert(`flag @${flag} is not allowed, can only be 'new' or 'edit'`)
+            return
+    }
+
+    location.replace(`${URL_CMS}`)
+};

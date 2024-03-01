@@ -1,7 +1,8 @@
 <template>
     <div>
-        <span class="title"> National Education Data Dictionary </span>
-        <button class="btn-as-link" title="logout?" @click="PopupModal()">{{ loginUser }}</button>
+        <span class="title">National Education Data Dictionary</span>
+        <button class="btn-exit" title="logout?" @click="PopupModal()">Exit</button>
+        <span class="user-name">{{ loginUser }}</span>
         <hr class="sep" />
     </div>
 </template>
@@ -10,22 +11,18 @@
 
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, putLogout, ModalOn } from "@/share/share";
+import { loginUser, putLogout } from "@/share/share";
 import { URL_SIGN } from "@/share/ip"
-import CCModal from '@/components/shared/CCModal.vue'
+import CCModal from '@/components/modal-components/CCModal.vue'
 
-// *** use "confirm-cancel" modal ***
+// *** use "confirm-cancel" modal to logout ***
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
     try {
         if (String(await renderOverlay(CCModal, {
             props: {
                 text: "Logout ?",
                 fontsize: "14px",
-                width: "12%",
+                width: "10%",
                 height: "9%",
             },
         })) === 'confirm') {
@@ -36,7 +33,6 @@ const PopupModal = async () => {
                     text: de.error,
                     type: "error"
                 })
-                ModalOn.value = false
                 return
             }
             location.replace(URL_SIGN);
@@ -47,7 +43,6 @@ const PopupModal = async () => {
                 break
         }
     }
-    ModalOn.value = false
 }
 
 </script>
@@ -61,12 +56,31 @@ const PopupModal = async () => {
     font-weight: bold;
 }
 
-.btn-as-link {
+.user-name {
     float: right;
-    margin-top: 0.4%;
-    margin-right: 1%;
+    margin-top: 0.3%;
+    margin-right: 0.8%;
     background: none;
     border: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-exit {
+    float: right;
+    margin-top: 0.2%;
+    margin-right: 1%;
+    padding: 2px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #7a7e81;
+    color: #fff;
+    transition: background-color 0.3s ease;
 }
 
 .sep {

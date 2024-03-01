@@ -2,11 +2,11 @@
     <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="doSubscribe">
         <font-awesome-icon icon="bookmark" class="floating" />
     </a>
-    <a class="float" id="plus" title="add new item" @click="ToCMS('new')" v-if="doNew">
+    <a class="float" id="plus" title="add new item" @click="toCMS('new', selType, selItem, 'existing')" v-if="doNew">
         <font-awesome-icon icon="plus" class="floating" />
     </a>
-    <!-- <a :href="URL_CMS + '?name=' + selItem + '&kind=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
-    <a class="float" id="pen" :title="hintEdit" @click="ToCMS('edit')" v-if="doEdit">
+    <!-- <a :href="URL_CMS + '?name=' + selItem + '&type=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
+    <a class="float" id="pen" :title="hintEdit" @click="toCMS('edit', selType, selItem, 'existing')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
     <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="doDelete">
@@ -15,26 +15,26 @@
     <a class="float" id="download" :title="hintDownload" @click="Dump()" v-if="doDump">
         <font-awesome-icon icon="download" class="floating" />
     </a>
+    <Loader id="loader" v-if="loading" />
 </template>
 
 <script setup lang="ts">
 
-import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
+import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { Mode, ModalOn, selType, selItem, selEntity, selCollection, delRemoveItem, LoadCurrentList, lsSubscribed, putSubscribe, getDump } from "@/share/share";
-import { isEmpty, download_file } from "@/share/util";
-import { Domain, URL_CMS } from "@/share/ip";
-import CCModal from '@/components/shared/CCModal.vue'
+import { selMode, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
+import CCModal from '@/components/modal-components/CCModal.vue'
 
-const { cookies } = useCookies();
+const loading = ref(false);
 
 // for UI
-const doNew = computed(() => Mode.value == 'normal')
-const doSubscribe = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDelete = computed(() => Mode.value == 'normal' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDump = computed(() => Mode.value == 'normal')
+const doNew = computed(() => selMode.value == 'dictionary')
+const doSubscribe = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDump = computed(() => selMode.value == 'dictionary')
 
 const Y_BtnSubscribe = ref('250px')
 const Y_BtnEdit = ref('180px')
@@ -50,51 +50,13 @@ const Y_BtnNew = computed(() => {
     return "320px"
 })
 
-// NEW, EDIT ///////////////////////////////////////////////////////////////
-
-const ToCMS = async (flag: string) => {
-
-    switch (flag) {
-
-        case 'new':
-            // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?kind=${selType.value}&auth=${loginToken.value}`);
-
-            // use 'entity' as kind if no selection
-            const kind = selType.value.length == 0 ? 'entity' : selType.value;
-
-            // *** 'kind', now in cookie ***
-            cookies.set("kind", kind, "1d", "/", "." + Domain, false, "Lax");
-            cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
-            break;
-
-        case 'edit':
-            // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?name=${selItem.value}&kind=${selType.value}&auth=${loginToken.value}`);
-
-            // *** 'kind','name' now in cookie ***
-            cookies.set("kind", `${selType.value}`, "1d", "/", "." + Domain, false, "Lax");
-            cookies.set("name", `${selItem.value}`, "1d", "/", "." + Domain, false, "Lax");
-            break;
-
-        default:
-            alert(`flag @${flag} is not allowed, can only be 'new' or 'edit'`)
-            return
-    }
-
-    location.replace(`${URL_CMS}`)
-};
-
 // DELETE ///////////////////////////////////////////////////////////////
 
 const delName = computed(() => selType.value == "entity" ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
-    if (ModalOn.value) {
-        return
-    }
-    ModalOn.value = true
+
     try {
         if (String(await renderOverlay(CCModal, {
             props: {
@@ -104,35 +66,49 @@ const PopupModal = async () => {
                 height: "10%",
             },
         })) === 'confirm') {
-            {
-                const de = await delRemoveItem(delName.value)
-                if (de.error != null) {
-                    notify({
-                        title: "Error: Delete Item",
-                        text: de.error,
-                        type: "error"
-                    })
-                    ModalOn.value = false
-                    return
-                }
+
+            // waiting...1
+            loading.value = true
+            document.body.style.pointerEvents = "none"
+            await sleep(100)
+
+            const de = await delRemoveItem(delName.value)
+            if (de.error != null) {
                 notify({
-                    title: "Deleted OK",
-                    text: `dictionary item '${delName.value}' is removed permanently`,
-                    type: "success"
+                    title: "Error: Delete Item",
+                    text: de.error,
+                    type: "error"
                 })
-                await LoadCurrentList("entity", "existing");
-                await LoadCurrentList("collection", "existing");
-                selEntity.Reset();
-                selCollection.Reset();
+
+                // release waiting...3
+                document.body.style.pointerEvents = "auto";
+                loading.value = false
+
+                return
             }
+
+            // waiting...2
+            await sleep(10000)
+            document.body.style.pointerEvents = "auto";
+            loading.value = false
+
+            notify({
+                title: "Deleted OK",
+                text: `dictionary item '${delName.value}' is removed permanently`,
+                type: "success"
+            })
+            await LoadList4Dic("entity");
+            await LoadList4Dic("collection");
+            selEntity.Reset();
+            selCollection.Reset();
         }
+
     } catch (e) {
         switch (e) {
             case 'cancel':
                 break
         }
     }
-    ModalOn.value = false
 }
 
 // SUBSCRIBE style
@@ -160,7 +136,7 @@ const hintSubscription = computed(() => {
 })
 const hintEdit = computed(() => `edit '${selItem.value}'`)
 const hintDelete = computed(() => `delete '${selItem.value}'`)
-const hintDownload = computed(() => `download all items`)
+const hintDownload = computed(() => `download all`)
 
 const Subscribe = async () => {
     // alert(selType.value)
@@ -194,8 +170,8 @@ const Subscribe = async () => {
     })
 
     // reload list for changing item color
-    LoadCurrentList("entity", "existing");
-    LoadCurrentList("collection", "existing");
+    await LoadList4Dic("entity");
+    await LoadList4Dic("collection");
 };
 
 const Dump = async () => {

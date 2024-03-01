@@ -3,14 +3,75 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selCollection.Entity }}</span>
+            <button v-if="selMode == 'dictionary'" id="edit-btn" @click="PopupModal()">
+                <font-awesome-icon icon="pen" />
+            </button>
         </div>
         <hr />
     </div>
 </template>
 
 <script setup lang="ts">
-import { selCollection } from "@/share/share";
+import { notify } from "@kyvg/vue3-notification";
+import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
+import { selCollection, editItemName, selMode, IsItemEditable } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
+import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
+
+const PopupModal = async () => {
+
+    if (selMode.value == "dictionary") {
+        if (!await IsItemEditable(selCollection.Entity)) {
+            notify({
+                title: "",
+                text: `[ ${selCollection.Entity} ] is pending, cannot do further edit until approved or rejected`,
+                type: "warn"
+            })
+            return
+        }
+    }
+
+    try {
+        const result = await renderOverlay(NameUpdateModal, {
+            props: {
+                uname: selCollection.Entity,
+            },
+        }) as any
+        // console.log(":::", result)
+
+        if ((result.newName as string).trim().length == 0) {
+            notify({
+                title: "Error: Empty Collection Name",
+                text: "",
+                type: "error"
+            })
+            return
+        }
+
+        const de = await editItemName(selCollection.Entity, result.newName, selMode.value == 'approval', 'collection')
+        if (de.error != null) {
+            notify({
+                title: "Error: Edit Entity Name",
+                text: de.error,
+                type: "error"
+            })
+            return
+        }
+        notify({
+            title: `${selCollection.Entity} is updated as ${result.newName}`,
+            text: "",
+            type: "success"
+        })
+
+    } catch (e) {
+        switch (e) {
+            case 'cancel':
+                console.log('cancel')
+                break
+        }
+    }
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -40,5 +101,9 @@ import { isNotEmpty } from "@/share/util";
     font-weight: bold;
     text-align: left;
     font-size: 15px;
+}
+
+#edit-btn {
+    margin-right: 0.5vw;
 }
 </style>

@@ -1,26 +1,34 @@
 <template>
-    <h4 v-if="lsEnt.length > 0" class="title-entity">Entity:</h4>
-    <ul v-if="lsEnt.length > 0" class="list-entity">
-        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'inbound')">
+    <h4 v-if="lsEnt4Sub.length > 0" class="title-entity">Entity:</h4>
+    <ul v-if="lsEnt4Sub.length > 0" class="list-entity">
+        <li v-for="(item, idx) in lsEnt4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
             {{ item }}
         </li>
     </ul>
-    <h4 v-if="lsCol.length > 0" class="title-collection">Collection:</h4>
-    <ul v-if="lsCol.length > 0" class="list-collection">
-        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="Refresh(item, 'inbound')">
+    <h4 v-if="lsCol4Sub.length > 0" class="title-collection">Collection:</h4>
+    <ul v-if="lsCol4Sub.length > 0" class="list-collection">
+        <li v-for="(item, idx) in lsCol4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
             {{ item }}
         </li>
     </ul>
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt, lsCol, LoadCurrentList, Refresh } from "@/share/share";
+import { selItem, lsEnt4Sub, lsCol4Sub, Refresh, LoadList4Sub } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
 
-LoadCurrentList("entity", "inbound");
-LoadCurrentList("collection", "inbound");
+onMounted(async () => {
+    await LoadList4Sub("entity")
+    await LoadList4Sub("collection")
+});
+
+const itemClick = async (item: string, phase: string) => {
+    selItem.value = item
+    await Refresh(phase)
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -1,18 +1,27 @@
 <template>
+    <div>
+        <input class="search-box" type="text" id="search" name="search" placeholder="searching..." v-model="aim" ref="searchInput" />
+        <button class="search-btn" @click="Search()">
+            <font-awesome-icon icon="search" />
+        </button>
+    </div>
+
     <div class="list_type_sel">
         <!-- same 'name', auto single selection -->
-        <input class="selection" type="radio" name="kind" value="entity" v-model="selType" checked />
+        <input class="selection" type="radio" name="type" value="entity" v-model="selType" checked />
         <label>entity</label>
-        <input class="selection" type="radio" name="kind" value="collection" v-model="selType" />
+        <input class="selection" type="radio" name="type" value="collection" v-model="selType" />
         <label>collection</label>
+        <hr>
     </div>
+
     <ul v-if="selType == 'entity'" class="list-ent">
-        <li v-for="(item, idx) in lsEnt" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
             {{ item }}
         </li>
     </ul>
     <ul v-if="selType == 'collection'" class="list-col">
-        <li v-for="(item, idx) in lsCol" :key="idx" :title="item" class="ellip" :class="style(item)" @click="Refresh(item, 'existing')">
+        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
             {{ item }}
         </li>
     </ul>
@@ -20,12 +29,16 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt, lsCol, lsSubscribed, LoadCurrentList, Refresh, selType } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selType, aim, Search } from "@/share/share";
+
+const searchInput = ref();
 
 let mounted = false;
-
 onMounted(async () => {
     selType.value = "entity"
+    await LoadList4Dic("entity")
+    await LoadList4Dic("collection")
+    searchInput.value.focus()
     mounted = true;
 })
 
@@ -33,18 +46,23 @@ watchEffect(async () => {
     const t = selType.value;
     if (mounted) {
         if (t.length > 0) {
-            await LoadCurrentList(t, "existing")
+            await LoadList4Dic(t)
             switch (t) {
                 case "entity":
-                    await Refresh(lsEnt.value[0], 'existing')
+                    await itemClick(lsEnt4Dic.value[0], 'existing')
                     break
                 case "collection":
-                    await Refresh(lsCol.value[0], 'existing')
+                    await itemClick(lsCol4Dic.value[0], 'existing')
                     break
             }
         }
     }
 })
+
+const itemClick = async (item: string, phase: string) => {
+    selItem.value = item
+    await Refresh(phase)
+}
 
 const default_style = ref("default-style");
 const sel_style = ref("selected-style");
@@ -77,9 +95,6 @@ const style = (name: string) => {
     }
 };
 
-LoadCurrentList("entity", "existing");
-LoadCurrentList("collection", "existing");
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -88,8 +103,11 @@ LoadCurrentList("collection", "existing");
     float: left;
     font-size: normal;
     margin-left: 2%;
-    margin-top: 1%;
-    margin-bottom: -2%;
+    margin-top: 1vh;
+    margin-bottom: 2vh;
+    height: 1.5vh;
+    width: 90%;
+    text-align: left;
     /* background-color:burlywood; */
 }
 
@@ -101,9 +119,10 @@ ul.list-col::-webkit-scrollbar {
 ul.list-ent,
 ul.list-col {
     background-color: rgb(240, 240, 240);
-    width: 90%;
-    max-height: 90%;
+    width: 20vw;
+    height: 75vh;
     margin-left: 5px;
+    margin-top: 0.5vh;
     /* display: inline-block; */
     overflow: scroll;
     /* scrollbar-width: none; */
@@ -167,5 +186,28 @@ ul.list-col li.ellip {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.search-box {
+    float: left;
+    width: 80%;
+    padding: 5px 0px 5px 10px;
+    margin-left: 2%;
+    margin-top: 2%;
+    background-color: rgb(230, 230, 230);
+}
+
+.search-btn {
+    float: left;
+    width: 10%;
+    margin-left: 2%;
+    margin-top: 2%;
+    padding: 5px 5px 5px 5px;
+    font-size: 14px;
+}
+
+hr {
+    margin-top: 2%;
+    margin-bottom: -1%;
 }
 </style>

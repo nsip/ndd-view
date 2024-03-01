@@ -1,19 +1,13 @@
 <template>
     <div id="modal">
 
-        <span id="prefix-user"></span>
-        <span id="value-user">creating a new user</span>
+        <span id="prefix-user">old name: </span>
+        <span id="value-user">{{ props.uname }}</span>
 
-        <span id="prefix-set-uname">uname:</span>
+        <span id="prefix-set-uname">new name:</span>
         <input id="value-set-uname" type="text" v-model="valUname">
 
-        <span id="prefix-set-email">email:</span>
-        <input id="value-set-email" type="text" v-model="valEmail">
-
-        <span id="prefix-set-pwd">password:</span>
-        <input id="value-set-pwd" type="text" v-model="valPassword">
-
-        <button id="btn-confirm" @click="resolve({ uname: valUname, email: valEmail, password: valPassword })">confirm</button>
+        <button id="btn-confirm" @click="resolve({ newName: valUname })">confirm</button>
         <button id="btn-cancel" @click="reject('cancel')">cancel</button>
 
     </div>
@@ -38,11 +32,11 @@ const { visible, resolve, reject } = useOverlayMeta({
 
 // for invoker confirm using
 
-const valUname = ref("")
-const valEmail = ref("")
-const valPassword = ref("")
+const props = defineProps({
+    uname: String, // old name
+})
 
-let mounted = false;
+const valUname = ref("") // input new name
 
 onMounted(() => {
     document.body.style.pointerEvents = "none";
@@ -59,12 +53,10 @@ onUnmounted(() => {
 
 // for labels, etc.
 let leftColumn1 = '30px'
-let leftColumn2 = '120px'
-let leftColumn3 = '210px'
+let leftColumn2 = '140px'
 let topRow1 = '10px'
-let topRow2 = '45px'
+let topRow2 = '55px'
 let topRow3 = '80px'
-let topRow4 = '115px'
 
 // for buttons
 let rightColumn1 = '15px'
@@ -74,14 +66,15 @@ let bottomRow1 = '15px'
 </script>
 
 <style scoped>
+
 #modal {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 450px;
-    height: 200px;
-    background-color: rgb(230, 230, 230);
+    height: 130px;
+    background-color: rgb(200, 200, 200);
     opacity: 0.95;
     border-radius: 20px;
 }
@@ -98,7 +91,7 @@ let bottomRow1 = '15px'
 
 #value-user {
     position: absolute;
-    left: v-bind('leftColumn1');
+    left: v-bind('leftColumn2');
     top: v-bind('topRow1');
     margin-top: 5px;
     font-size: medium;
@@ -121,44 +114,6 @@ let bottomRow1 = '15px'
     position: absolute;
     left: v-bind('leftColumn2');
     top: v-bind('topRow2');
-    margin-top: 0px;
-    font-size: 10;
-}
-
-/* 3rd line */
-
-#prefix-set-email {
-    position: absolute;
-    left: v-bind('leftColumn1');
-    top: v-bind('topRow3');
-    margin-top: 2px;
-    font-size: large;
-    font-style: italic;
-}
-
-#value-set-email {
-    position: absolute;
-    left: v-bind('leftColumn2');
-    top: v-bind('topRow3');
-    margin-top: 0px;
-    font-size: 10;
-}
-
-/* 4th line */
-
-#prefix-set-pwd {
-    position: absolute;
-    left: v-bind('leftColumn1');
-    top: v-bind('topRow4');
-    margin-top: 2px;
-    font-size: large;
-    font-style: italic;
-}
-
-#value-set-pwd {
-    position: absolute;
-    left: v-bind('leftColumn2');
-    top: v-bind('topRow4');
     margin-top: 0px;
     font-size: 10;
 }

@@ -16,6 +16,9 @@
             "@/*": [
                 "./src/*"
             ]
-        }
+        },
+        "allowJs": true,
+        "verbatimModuleSyntax": false,
+        "noImplicitAny": false
     }
 }
