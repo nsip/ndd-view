@@ -28,9 +28,14 @@
                     <span class="sub-val">{{ item.SuperClass }}</span>
                 </div>
 
-                <div v-if="isNotEmpty(item.DefaultParent)" class="cat-val-flex">
-                    <span class="sub-cat">DefaultParent:</span>
-                    <span class="sub-val">{{ item.DefaultParent }}</span>
+                <div v-if="isNotEmpty(item.IsAttributeOf)" class="cat-val-flex">
+                    <span class="sub-cat">Is Attribute Of:</span>
+                    <div class="sub-val">
+                        <div v-for="(subitem, i) in item.IsAttributeOf" :key="i">
+                            <span>{{ subitem }}</span>
+                            <br />
+                        </div>
+                    </div>
                 </div>
 
                 <div v-if="isNotEmpty(item.CrossRefEntities)" class="cat-val-flex">

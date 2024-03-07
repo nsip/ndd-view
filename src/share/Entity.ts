@@ -83,6 +83,6 @@ class meta {
     Type = "";
     ExpectedAttributes: string[] = [];
     SuperClass = "";
-    DefaultParent = "";
+    IsAttributeOf: string[] = [];
     CrossRefEntities: string[] = [];
 }
