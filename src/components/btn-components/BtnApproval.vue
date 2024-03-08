@@ -17,7 +17,7 @@ import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/modal-components/CCModal.vue'
 import Loader from "@/components/shared/Loader.vue"
-import { isEmpty, sleep, toCMS } from "@/share/util"
+import { isEmpty, sleep, toCMS, download_file, isUrl } from "@/share/util"
 import eventBus from '@/share/util'
 import {
     selMode,
@@ -42,15 +42,15 @@ const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEnti
 
 const Approve = async () => {
 
-    const name = selType.value == "entity" ? selEntity.Entity : selCollection.Entity;
+    const type = selType.value
+    const name = type == "entity" ? selEntity.Entity : selCollection.Entity;
 
-    // check New item OR Updated item to be approved
+    // check to be approved item is New OR Updated
     // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
 
     let flagCreate = true;
-
     {
-        const de = await getList(selType.value, "existing")
+        const de = await getList(type, "existing")
         if (de.error != null) {
             notify({
                 title: "Error: Get Existing List",
@@ -75,18 +75,26 @@ const Approve = async () => {
         document.body.style.pointerEvents = "none"
 
         const msg = flagCreate ? 'new item' : 'modified item'
-        const de = await putApprove(name, selType.value)
+        const de = await putApprove(name, type)
         if (de.error != null) {
-            notify({
-                title: `Error: Approval ${msg}`,
-                text: de.error,
-                type: "error"
-            })
+            if (isUrl(de.error, "http:", "https:")) {
+                download_file(de.error, "report.log");
+                notify({
+                    title: "Validation Failed",
+                    text: "refer to downloaded report for issues",
+                    type: "error"
+                })
+            } else {
+                notify({
+                    title: `Approval Failed on ${msg}`,
+                    text: de.error,
+                    type: "error"
+                })
+            }
 
             // release waiting...3
             document.body.style.pointerEvents = "auto";
             loading.value = false
-
             return
         }
 

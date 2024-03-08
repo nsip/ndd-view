@@ -120,6 +120,23 @@ export const sleep = async (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+export const isUrl = (url: string, ...prefixes: string[]) => {
+    try {
+        new URL(url);
+        if (prefixes.length == 0) {
+            return true
+        }
+        for (const prefix of prefixes) {
+            if (url.startsWith(prefix)) {
+                return true
+            }
+        }
+        return false
+    } catch (error) {
+        return false
+    }
+}
+
 export const toCMS = async (flag: string, selType: string, selItem: string, phase: string) => {
 
     if (selMode.value == "dictionary" && flag == 'edit') {
