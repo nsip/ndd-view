@@ -13,16 +13,6 @@
                     <span class="sub-val">{{ item.Type }}</span>
                 </div>
 
-                <div v-if="isNotEmpty(item.ExpectedAttributes)" class="cat-val-flex">
-                    <span class="sub-cat">Expected Attributes:</span>
-                    <div class="sub-val">
-                        <div v-for="(subitem, i) in item.ExpectedAttributes" :key="i" class="cat-val-flex">
-                            <span>{{ subitem }}</span>
-                            <br />
-                        </div>
-                    </div>
-                </div>
-
                 <div v-if="isNotEmpty(item.SuperClass)" class="cat-val-flex">
                     <span class="sub-cat">SuperClass:</span>
                     <span class="sub-val">{{ item.SuperClass }}</span>

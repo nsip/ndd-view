@@ -81,7 +81,6 @@ class col {
 class meta {
     Identifier = "";
     Type = "";
-    ExpectedAttributes: string[] = [];
     SuperClass = "";
     IsAttributeOf: string[] = [];
     CrossRefEntities: string[] = [];
