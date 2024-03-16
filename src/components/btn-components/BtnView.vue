@@ -2,11 +2,11 @@
     <a class="float" id="bookmark" :title="hintSubscription" :class="styleSubscription" @click="Subscribe()" v-if="doSubscribe">
         <font-awesome-icon icon="bookmark" class="floating" />
     </a>
-    <a class="float" id="plus" title="add new item" @click="toCMS('new', selType, selItem, 'existing')" v-if="doNew">
+    <a class="float" id="plus" title="add new item" @click="toCMS('new', selCat, selItem, 'existing')" v-if="doNew">
         <font-awesome-icon icon="plus" class="floating" />
     </a>
-    <!-- <a :href="URL_CMS + '?name=' + selItem + '&type=' + selType + '&auth=' + loginToken" target="_blank" class="float"> -->
-    <a class="float" id="pen" :title="hintEdit" @click="toCMS('edit', selType, selItem, 'existing')" v-if="doEdit">
+    <!-- <a :href="URL_CMS + '?name=' + selItem + '&cat=' + selCat + '&auth=' + loginToken" target="_blank" class="float"> -->
+    <a class="float" id="pen" :title="hintEdit" @click="toCMS('edit', selCat, selItem, 'existing')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
     <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="doDelete">
@@ -23,7 +23,7 @@
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selMode, selType, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
 import CCModal from '@/components/modal-components/CCModal.vue'
 
@@ -42,9 +42,9 @@ const Y_BtnDelete = ref('110px')
 const Y_BtnDownload = ref('40px')
 
 const Y_BtnNew = computed(() => {
-    if (selType.value.length == 0 ||
-        (selType.value == 'entity' && isEmpty(selEntity)) ||
-        (selType.value == 'collection' && isEmpty(selCollection))) {
+    if (selCat.value.length == 0 ||
+        (selCat.value == 'entity' && isEmpty(selEntity)) ||
+        (selCat.value == 'collection' && isEmpty(selCollection))) {
         return Y_BtnDelete.value
     }
     return "320px"
@@ -52,7 +52,7 @@ const Y_BtnNew = computed(() => {
 
 // DELETE ///////////////////////////////////////////////////////////////
 
-const delName = computed(() => selType.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const delName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
@@ -139,10 +139,10 @@ const hintDelete = computed(() => `delete '${selItem.value}'`)
 const hintDownload = computed(() => `download all`)
 
 const Subscribe = async () => {
-    // alert(selType.value)
+    // alert(selCat.value)
 
     let name = "";
-    switch (selType.value) {
+    switch (selCat.value) {
         case "entity":
             name = selEntity.Entity;
             break;
@@ -153,7 +153,7 @@ const Subscribe = async () => {
             alert(`select one item before subscribing`);
             return;
     }
-    const de = await putSubscribe(name, selType.value);
+    const de = await putSubscribe(name, selCat.value);
     if (de.error != null) {
         notify({
             title: "Error: Subscribe",
@@ -175,7 +175,7 @@ const Subscribe = async () => {
 };
 
 const Dump = async () => {
-    const de = await getDump(selType.value, "existing")
+    const de = await getDump(selCat.value, "existing")
     if (de.error != null) {
         notify({
             title: "Error: Download All",

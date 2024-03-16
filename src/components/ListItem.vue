@@ -8,19 +8,19 @@
 
     <div class="list_type_sel">
         <!-- same 'name', auto single selection -->
-        <input class="selection" type="radio" name="type" value="entity" v-model="selType" checked />
+        <input class="selection" type="radio" name="type" value="entity" v-model="selCat" checked />
         <label>entity</label>
-        <input class="selection" type="radio" name="type" value="collection" v-model="selType" />
+        <input class="selection" type="radio" name="type" value="collection" v-model="selCat" />
         <label>collection</label>
         <hr>
     </div>
 
-    <ul v-if="selType == 'entity'" class="list-ent">
+    <ul v-if="selCat == 'entity'" class="list-ent">
         <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
             {{ item }}
         </li>
     </ul>
-    <ul v-if="selType == 'collection'" class="list-col">
+    <ul v-if="selCat == 'collection'" class="list-col">
         <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
             {{ item }}
         </li>
@@ -29,13 +29,13 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selType, aim, Search } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search } from "@/share/share";
 
 const searchInput = ref();
 
 let mounted = false;
 onMounted(async () => {
-    selType.value = "entity"
+    selCat.value = "entity"
     await LoadList4Dic("entity")
     await LoadList4Dic("collection")
     searchInput.value.focus()
@@ -43,11 +43,11 @@ onMounted(async () => {
 })
 
 watchEffect(async () => {
-    const t = selType.value;
+    const cat = selCat.value;
     if (mounted) {
-        if (t.length > 0) {
-            await LoadList4Dic(t)
-            switch (t) {
+        if (cat.length > 0) {
+            await LoadList4Dic(cat)
+            switch (cat) {
                 case "entity":
                     await itemClick(lsEnt4Dic.value[0], 'existing')
                     break

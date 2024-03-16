@@ -2,7 +2,7 @@
     <a v-if="doApproval" class="float" id="check" @click="Approve()">
         <font-awesome-icon icon="check" class="floating" />
     </a>
-    <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selType, selItem, 'inbound')">
+    <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selCat, selItem, 'inbound')">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
     <a v-if="doReject" class="float" id="times" @click="PopupModal()">
@@ -21,7 +21,7 @@ import { isEmpty, sleep, toCMS, download_file, isUrl } from "@/share/util"
 import eventBus from '@/share/util'
 import {
     selMode,
-    selType,
+    selCat,
     selEntity,
     selCollection,
     putApprove,
@@ -42,15 +42,15 @@ const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEnti
 
 const Approve = async () => {
 
-    const type = selType.value
-    const name = type == "entity" ? selEntity.Entity : selCollection.Entity;
+    const cat = selCat.value
+    const name = cat == "entity" ? selEntity.Entity : selCollection.Entity;
 
     // check to be approved item is New OR Updated
     // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
 
     let flagCreate = true;
     {
-        const de = await getList(type, "existing")
+        const de = await getList(cat, "existing")
         if (de.error != null) {
             notify({
                 title: "Error: Get Existing List",
@@ -75,7 +75,7 @@ const Approve = async () => {
         document.body.style.pointerEvents = "none"
 
         const msg = flagCreate ? 'new item' : 'modified item'
-        const de = await putApprove(name, type)
+        const de = await putApprove(name, cat)
         if (de.error != null) {
             if (isUrl(de.error, "http:", "https:")) {
                 download_file(de.error, "report.log");
@@ -120,7 +120,7 @@ const Approve = async () => {
 
 // REJECT /////////////////////////////////////////////////////////////////////////
 
-const rejName = computed(() => selType.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const rejName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
@@ -135,7 +135,7 @@ const PopupModal = async () => {
             },
         })) === 'confirm') {
             {
-                const de = await delReject(rejName.value, selType.value)
+                const de = await delReject(rejName.value, selCat.value)
                 if (de.error != null) {
                     notify({
                         title: "Error: Reject Item",
