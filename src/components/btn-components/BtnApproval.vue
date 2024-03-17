@@ -74,28 +74,35 @@ const Approve = async () => {
         loading.value = true
         document.body.style.pointerEvents = "none"
 
+        let validation_ok = true;
+
         const msg = flagCreate ? 'new item' : 'modified item'
         const de = await putApprove(name, cat)
         if (de.error != null) {
+
             if (isUrl(de.error, "http:", "https:")) {
+
                 download_file(de.error, "report.log");
                 notify({
-                    title: "Validation Failed",
+                    title: "Approved with Validation Issue",
                     text: "refer to downloaded report for issues",
-                    type: "error"
+                    type: "warn"
                 })
+                validation_ok = false;
+
             } else {
+
                 notify({
                     title: `Approval Failed on ${msg}`,
                     text: de.error,
                     type: "error"
                 })
-            }
 
-            // release waiting...3
-            document.body.style.pointerEvents = "auto";
-            loading.value = false
-            return
+                // release waiting...3
+                document.body.style.pointerEvents = "auto";
+                loading.value = false
+                return
+            }
         }
 
         // waiting... 2
@@ -103,16 +110,20 @@ const Approve = async () => {
         document.body.style.pointerEvents = "auto";
         loading.value = false
 
-        notify({
-            title: `Approval`,
-            text: `${name} is approved to dictionary`,
-            type: "success"
-        })
+        if (validation_ok) {
+            notify({
+                title: `Approval`,
+                text: `${name} is approved to dictionary`,
+                type: "success"
+            })
+        }
     }
+    
     await LoadList4Sub("entity");
     await LoadList4Sub("collection");
     await LoadList4Dic("entity");
     await LoadList4Dic("collection");
+
     selEntity.Reset();
     selCollection.Reset();
     eventBus.emit('check-submission', 'from BtnApproval');
