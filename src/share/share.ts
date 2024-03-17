@@ -166,6 +166,18 @@ export const putLogout = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
+export const getAttributes = async (name: string) => {
+    const mQuery = new Map<string, any>([
+        ["name", name],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/attributes`, "GET", mQuery, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getCategory = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -552,4 +564,8 @@ export const hasSubmission = async () => {
     await LoadList4Sub("entity");
     await LoadList4Sub("collection");
     return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+}
+
+export const attributes = async () => {
+    return (await getAttributes(selItem.value)).data as string[]
 }

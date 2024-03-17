@@ -3,6 +3,7 @@
         <span class="category">Metadata:</span>
         <span class="content-flex">
             <div v-for="(item, idx) in [selEntity.Metadata]" :key="idx">
+
                 <div v-if="isNotEmpty(item.Identifier)" class="cat-val-flex">
                     <span class="sub-cat">Identifier:</span>
                     <span class="sub-val">{{ item.Identifier }}</span>
@@ -29,7 +30,7 @@
                 </div>
 
                 <div v-if="isNotEmpty(item.CrossRefEntities)" class="cat-val-flex">
-                    <span class="sub-cat">CrossRef Entities:</span>
+                    <span class="sub-cat">Cross Reference Entities:</span>
                     <div class="sub-val">
                         <div v-for="(subitem, i) in item.CrossRefEntities" :key="i">
                             <span>{{ subitem }}</span>
@@ -37,14 +38,32 @@
                         </div>
                     </div>
                 </div>
+
+                <div v-if="isNotEmpty(attrs)" class="cat-val-flex">
+                    <span class="sub-cat">Expected Attributes*:</span>
+                    <div class="sub-val">
+                        <div v-for="(subitem, i) in attrs" :key="i">
+                            <span>{{ subitem }}</span>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </span>
     </div>
 </template>
 
 <script setup lang="ts">
-import { selEntity } from "@/share/share";
+
+import { selEntity, attributes } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
+
+const attrs = ref();
+watchEffect(async () => {
+    attrs.value = await attributes();
+});
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
