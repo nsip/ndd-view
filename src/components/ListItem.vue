@@ -8,10 +8,10 @@
 
     <div class="list_type_sel">
         <!-- same 'name', auto single selection -->
-        <input class="selection" type="radio" name="type" value="entity" v-model="selCat" checked />
-        <label>entity</label>
-        <input class="selection" type="radio" name="type" value="collection" v-model="selCat" />
-        <label>collection</label>
+        <span class="cat-input" v-for="choice in choices">
+            <input v-model="selCat" type="radio" name="cat" :value="choice" @change="select" />
+            <label class="rb-lbl">{{ choice }}</label>
+        </span>
         <hr>
     </div>
 
@@ -94,6 +94,13 @@ const style = (name: string) => {
         return default_style.value;
     }
 };
+
+const choices = reactive([
+    "entity",
+    "collection"
+]);
+
+const select = () => { };
 
 </script>
 
@@ -209,5 +216,13 @@ ul.list-col li.ellip {
 hr {
     margin-top: 2%;
     margin-bottom: -1%;
+}
+
+.cat-input {
+    font-weight: bold;
+}
+
+.rb-lbl {
+    margin-right: 5px;
 }
 </style>
