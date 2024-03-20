@@ -81,8 +81,7 @@ class col {
 class meta {
     Identifier = "";
     Type = "";
-    ExpectedAttributes: string[] = [];
     SuperClass = "";
-    DefaultParent = "";
+    IsAttributeOf: string[] = [];
     CrossRefEntities: string[] = [];
 }

@@ -120,7 +120,24 @@ export const sleep = async (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const toCMS = async (flag: string, selType: string, selItem: string, phase: string) => {
+export const isUrl = (url: string, ...prefixes: string[]) => {
+    try {
+        new URL(url);
+        if (prefixes.length == 0) {
+            return true
+        }
+        for (const prefix of prefixes) {
+            if (url.startsWith(prefix)) {
+                return true
+            }
+        }
+        return false
+    } catch (error) {
+        return false
+    }
+}
+
+export const toCMS = async (flag: string, selCat: string, selItem: string, phase: string) => {
 
     if (selMode.value == "dictionary" && flag == 'edit') {
         if (!await IsItemEditable(selItem)) {
@@ -137,23 +154,23 @@ export const toCMS = async (flag: string, selType: string, selItem: string, phas
 
         case 'new':
             // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?type=${selType}&auth=${loginToken.value}`);
+            // location.replace(`${URL_CMS}?cat=${selCat}&auth=${loginToken.value}`);
 
-            // use 'entity' as type if no selection
-            const type = selType.length == 0 ? 'entity' : selType;
+            // use 'entity' as category if no selection
+            const cat = selCat.length == 0 ? 'entity' : selCat;
 
-            // *** 'type', now in cookie ***
-            cookies.set("type", type, "1d", "/", "." + Domain, false, "Lax");
+            // *** 'cat', now in cookie ***
+            cookies.set("cat", cat, "1d", "/", "." + Domain, false, "Lax");
             cookies.set("name", ``, "1d", "/", "." + Domain, false, "Lax");
             cookies.set("phase", phase, "1d", "/", "." + Domain, false, "Lax");
             break;
 
         case 'edit':
             // *** no longer use 'URL with auth' ***
-            // location.replace(`${URL_CMS}?name=${selItem}&type=${selType}&auth=${loginToken.value}`);
+            // location.replace(`${URL_CMS}?name=${selItem}&cat=${selCat}&auth=${loginToken.value}`);
 
-            // *** 'type','name' now in cookie ***
-            cookies.set("type", `${selType}`, "1d", "/", "." + Domain, false, "Lax");
+            // *** 'cat','name' now in cookie ***
+            cookies.set("cat", `${selCat}`, "1d", "/", "." + Domain, false, "Lax");
             cookies.set("name", `${selItem}`, "1d", "/", "." + Domain, false, "Lax");
             cookies.set("phase", `${phase}`, "1d", "/", "." + Domain, false, "Lax");
             break;

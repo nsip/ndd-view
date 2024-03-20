@@ -52,7 +52,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selType, selEntity, selCollection, aim } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim } from "@/share/share";
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -94,7 +94,7 @@ onMounted(async () => {
     // *** only domain page can send correct token
 
     // console.log("[App.vue] Token:", window.location.hostname, " -- ", cookies.get("token"))
-    console.log("[App.vue] selected type:", selType.value)
+    console.log("[App.vue] selected category:", selCat.value)
     console.log("[App.vue] selected entity name:", selEntity.Entity)
     console.log("[App.vue] selected collection name:", selCollection.Entity)
 

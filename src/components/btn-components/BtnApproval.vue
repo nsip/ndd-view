@@ -2,7 +2,7 @@
     <a v-if="doApproval" class="float" id="check" @click="Approve()">
         <font-awesome-icon icon="check" class="floating" />
     </a>
-    <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selType, selItem, 'inbound')">
+    <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selCat, selItem, 'inbound')">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
     <a v-if="doReject" class="float" id="times" @click="PopupModal()">
@@ -17,11 +17,11 @@ import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/modal-components/CCModal.vue'
 import Loader from "@/components/shared/Loader.vue"
-import { isEmpty, sleep, toCMS } from "@/share/util"
+import { isEmpty, sleep, toCMS, download_file, isUrl } from "@/share/util"
 import eventBus from '@/share/util'
 import {
     selMode,
-    selType,
+    selCat,
     selEntity,
     selCollection,
     putApprove,
@@ -42,15 +42,15 @@ const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEnti
 
 const Approve = async () => {
 
-    const name = selType.value == "entity" ? selEntity.Entity : selCollection.Entity;
+    const cat = selCat.value
+    const name = cat == "entity" ? selEntity.Entity : selCollection.Entity;
 
-    // check New item OR Updated item to be approved
+    // check to be approved item is New OR Updated
     // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
 
     let flagCreate = true;
-
     {
-        const de = await getList(selType.value, "existing")
+        const de = await getList(cat, "existing")
         if (de.error != null) {
             notify({
                 title: "Error: Get Existing List",
@@ -74,20 +74,35 @@ const Approve = async () => {
         loading.value = true
         document.body.style.pointerEvents = "none"
 
+        let validation_ok = true;
+
         const msg = flagCreate ? 'new item' : 'modified item'
-        const de = await putApprove(name, selType.value)
+        const de = await putApprove(name, cat)
         if (de.error != null) {
-            notify({
-                title: `Error: Approval ${msg}`,
-                text: de.error,
-                type: "error"
-            })
 
-            // release waiting...3
-            document.body.style.pointerEvents = "auto";
-            loading.value = false
+            if (isUrl(de.error, "http:", "https:")) {
 
-            return
+                download_file(de.error, "report.log");
+                notify({
+                    title: "Approved with Validation Issue",
+                    text: "refer to downloaded report for issues",
+                    type: "warn"
+                })
+                validation_ok = false;
+
+            } else {
+
+                notify({
+                    title: `Approval Failed on ${msg}`,
+                    text: de.error,
+                    type: "error"
+                })
+
+                // release waiting...3
+                document.body.style.pointerEvents = "auto";
+                loading.value = false
+                return
+            }
         }
 
         // waiting... 2
@@ -95,16 +110,20 @@ const Approve = async () => {
         document.body.style.pointerEvents = "auto";
         loading.value = false
 
-        notify({
-            title: `Approval`,
-            text: `${name} is approved to dictionary`,
-            type: "success"
-        })
+        if (validation_ok) {
+            notify({
+                title: `Approval`,
+                text: `${name} is approved to dictionary`,
+                type: "success"
+            })
+        }
     }
+    
     await LoadList4Sub("entity");
     await LoadList4Sub("collection");
     await LoadList4Dic("entity");
     await LoadList4Dic("collection");
+
     selEntity.Reset();
     selCollection.Reset();
     eventBus.emit('check-submission', 'from BtnApproval');
@@ -112,7 +131,7 @@ const Approve = async () => {
 
 // REJECT /////////////////////////////////////////////////////////////////////////
 
-const rejName = computed(() => selType.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const rejName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
@@ -127,7 +146,7 @@ const PopupModal = async () => {
             },
         })) === 'confirm') {
             {
-                const de = await delReject(rejName.value, selType.value)
+                const de = await delReject(rejName.value, selCat.value)
                 if (de.error != null) {
                     notify({
                         title: "Error: Reject Item",
