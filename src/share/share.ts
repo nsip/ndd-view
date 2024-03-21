@@ -41,6 +41,15 @@ export const getPing = async () => {
     };
 };
 
+// export const getFile = async (url: string) => {
+//     const rt = await fetchNoBody(url, "GET", mEmpty, "");
+//     const err = await fetchErr(rt, onExpired)
+//     return {
+//         'data': err == null ? (rt as any[])[0] : null,
+//         'error': err
+//     };
+// };
+
 // fill loginUser
 
 export const getSelfName = async () => {

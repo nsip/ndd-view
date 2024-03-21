@@ -191,6 +191,8 @@ export const fetchNoBody = async (
     mQuery: Map<string, any>,
     auth: string
 ) => {
+
+    // let url = path.includes(ip) ? path : ip + path.replace(/^\/+/, "");
     let url = ip + path.replace(/^\/+/, "");
 
     if (mQuery.size > 0) {

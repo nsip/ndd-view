@@ -82,6 +82,12 @@ const Approve = async () => {
 
             if (isUrl(de.error, "http:", "https:")) {
 
+                // only testing now
+                // {
+                //     const de_download = await getFile(de.error);
+                //     console.log(de_download.data);
+                // }
+
                 download_file(de.error, "report.log");
                 notify({
                     title: "Approved with Validation Issue",
