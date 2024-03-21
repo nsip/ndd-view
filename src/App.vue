@@ -6,12 +6,12 @@
     <main v-if="display">
 
         <div class="tab">
-            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">admin</button>
-            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">approval</button>
-            <button class="tab-links" id="tab-default" @click="showTabContent">dictionary</button>
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[2] }}</button>
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[1] }}</button>
+            <button class="tab-links" id="tab-default" @click="showTabContent">{{ choices[0] }}</button>
         </div>
 
-        <div v-if="mTabShown.get('dictionary')" class="tab-content">
+        <div v-if="mTabShown.get(choices[0])" class="tab-content">
             <div id="container">
                 <div id="left">
                     <ListItem />
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <div v-if="mTabShown.get('approval')" class="tab-content">
+        <div v-if="mTabShown.get(choices[1])" class="tab-content">
             <div id="container">
                 <div id="left">
                     <ListCandidate />
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div v-if="mTabShown.get('admin')" class="tab-content">
+        <div v-if="mTabShown.get(choices[2])" class="tab-content">
             <UserAdmin />
             <BtnAdmin />
         </div>
@@ -68,11 +68,17 @@ const { cookies } = useCookies();
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
 const display = ref(false)
 
+const choices = reactive([
+    'Dictionary',
+    'Approval',
+    'Admin'
+]);
+
 // tab content shown flag, key is tab-text
 const mTabShown = ref(new Map([
-    ["dictionary", false],
-    ["approval", false],
-    ["admin", false],
+    [choices[0], false],
+    [choices[1], false],
+    [choices[2], false],
 ]));
 
 onMounted(async () => {
@@ -231,7 +237,7 @@ header {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-    height: 5vh;
+    height: 4vh;
 }
 
 /* Style the buttons inside the tab */

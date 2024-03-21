@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selEntity.Entity }}</span>
-            <button v-if="selMode == 'dictionary' || selMode == 'approval'" id="edit-btn" @click="PopupModal()">
+            <button v-if="selMode == 'Dictionary' || selMode == 'Approval'" id="edit-btn" @click="PopupModal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -19,7 +19,7 @@ import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
 const oriName = (name: string) => {
-    if (selMode.value == 'approval') {
+    if (selMode.value == 'Approval') {
         if (name.includes(')=>')) {
             const parts = name.split('=>')
             return parts[0].slice(0, parts[0].lastIndexOf('('))
@@ -36,7 +36,7 @@ const oriName = (name: string) => {
 }
 
 const idFromSubFullName = (name: string) => {
-    if (selMode.value == 'approval') {
+    if (selMode.value == 'Approval') {
         if (name.includes(')=>')) {
             const parts = name.split('=>')
             const o = parts[0].lastIndexOf('(')
@@ -58,7 +58,7 @@ const PopupModal = async () => {
 
     let oldName = oriName(selEntity.Entity)
 
-    if (selMode.value == "dictionary") {
+    if (selMode.value == 'Dictionary') {
         if (!await IsItemEditable(oldName)) {
             notify({
                 title: "",
@@ -86,7 +86,7 @@ const PopupModal = async () => {
             return
         }
 
-        const de = await editItemName(oldName, result.newName, selMode.value == 'approval', 'entity')
+        const de = await editItemName(oldName, result.newName, selMode.value == 'Approval', 'entity')
         if (de.error != null) {
             notify({
                 title: "Error: Edit Entity Name",
@@ -117,7 +117,7 @@ const PopupModal = async () => {
         } else {
             newSubFullName = result.newName
         }
-        if (selMode.value == 'approval') {
+        if (selMode.value == 'Approval') {
 
             console.log("2", newSubFullName)
 

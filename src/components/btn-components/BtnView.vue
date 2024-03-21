@@ -30,11 +30,11 @@ import CCModal from '@/components/modal-components/CCModal.vue'
 const loading = ref(false);
 
 // for UI
-const doNew = computed(() => selMode.value == 'dictionary')
-const doSubscribe = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDelete = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDump = computed(() => selMode.value == 'dictionary')
+const doNew = computed(() => selMode.value == 'Dictionary')
+const doSubscribe = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDump = computed(() => selMode.value == 'Dictionary')
 
 const Y_BtnSubscribe = ref('250px')
 const Y_BtnEdit = ref('180px')
@@ -52,7 +52,7 @@ const Y_BtnNew = computed(() => {
 
 // DELETE ///////////////////////////////////////////////////////////////
 
-const delName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const delName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
@@ -97,8 +97,8 @@ const PopupModal = async () => {
                 text: `dictionary item '${delName.value}' is removed permanently`,
                 type: "success"
             })
-            await LoadList4Dic("entity");
-            await LoadList4Dic("collection");
+            await LoadList4Dic('entity');
+            await LoadList4Dic('collection');
             selEntity.Reset();
             selCollection.Reset();
         }
@@ -143,10 +143,10 @@ const Subscribe = async () => {
 
     let name = "";
     switch (selCat.value) {
-        case "entity":
+        case 'entity':
             name = selEntity.Entity;
             break;
-        case "collection":
+        case 'collection':
             name = selCollection.Entity;
             break;
         default:
@@ -170,8 +170,8 @@ const Subscribe = async () => {
     })
 
     // reload list for changing item color
-    await LoadList4Dic("entity");
-    await LoadList4Dic("collection");
+    await LoadList4Dic('entity');
+    await LoadList4Dic('collection');
 };
 
 const Dump = async () => {

@@ -9,7 +9,7 @@ export const loginUser = ref("");
 export const loginToken = ref(""); // without 'Bearer '
 export const loginAuth = ref(""); // with 'Bearer '
 export const loginAsAdmin = ref(false)
-export const selMode = ref(''); // 'dictionary' or 'approval', or 'admin'
+export const selMode = ref(''); // 'Dictionary' or 'Approval', or 'Admin'
 export const selCat = ref(""); // which category of current selection, 'entity' or 'collection'
 export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
@@ -402,7 +402,7 @@ export const postSendEmail = async (
 export const LoadList4Dic = async (cat: string) => {
     // get list of item
     switch (cat) {
-        case "entity":
+        case 'entity':
             {
                 const de = await getList(cat, "existing");
                 if (de.error != null) {
@@ -414,7 +414,7 @@ export const LoadList4Dic = async (cat: string) => {
             }
             break;
 
-        case "collection":
+        case 'collection':
             {
                 const de = await getList(cat, "existing");
                 if (de.error != null) {
@@ -441,7 +441,7 @@ export const LoadList4Dic = async (cat: string) => {
 export const LoadList4Sub = async (cat: string) => {
     // get list of item
     switch (cat) {
-        case "entity":
+        case 'entity':
             {
                 const de = await getList(cat, "inbound");
                 if (de.error != null) {
@@ -453,7 +453,7 @@ export const LoadList4Sub = async (cat: string) => {
             }
             break;
 
-        case "collection":
+        case 'collection':
             {
                 const de = await getList(cat, "inbound");
                 if (de.error != null) {
@@ -504,11 +504,11 @@ export const Refresh = async (phase: string) => {
 
         // set content to shared variables
         switch (selCat.value) {
-            case "entity":
+            case 'entity':
                 selEntity.SetContent(content);
                 break;
 
-            case "collection":
+            case 'collection':
                 selCollection.SetContent(content);
                 break;
         }
@@ -561,8 +561,8 @@ export const PeekID = async (item: string) => {
 //////////////////////////////////////////////////////////////////////////////////////
 
 export const hasSubmission = async () => {
-    await LoadList4Sub("entity");
-    await LoadList4Sub("collection");
+    await LoadList4Sub('entity');
+    await LoadList4Sub('collection');
     return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
 }
 

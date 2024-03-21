@@ -34,16 +34,16 @@ import {
 
 const loading = ref(false);
 
-const doApproval = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doApproval = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doReject = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
 // APPROVE /////////////////////////////////////////////////////////////////////////
 
 const Approve = async () => {
 
     const cat = selCat.value
-    const name = cat == "entity" ? selEntity.Entity : selCollection.Entity;
+    const name = cat == 'entity' ? selEntity.Entity : selCollection.Entity;
 
     // check to be approved item is New OR Updated
     // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
@@ -118,11 +118,11 @@ const Approve = async () => {
             })
         }
     }
-    
-    await LoadList4Sub("entity");
-    await LoadList4Sub("collection");
-    await LoadList4Dic("entity");
-    await LoadList4Dic("collection");
+
+    await LoadList4Sub('entity');
+    await LoadList4Sub('collection');
+    await LoadList4Dic('entity');
+    await LoadList4Dic('collection');
 
     selEntity.Reset();
     selCollection.Reset();
@@ -131,7 +131,7 @@ const Approve = async () => {
 
 // REJECT /////////////////////////////////////////////////////////////////////////
 
-const rejName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const rejName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const PopupModal = async () => {
@@ -162,10 +162,10 @@ const PopupModal = async () => {
                 })
 
                 // 'inbound' db-col for candidates list
-                await LoadList4Sub("entity");
-                await LoadList4Sub("collection");
-                await LoadList4Dic("entity");
-                await LoadList4Dic("collection");
+                await LoadList4Sub('entity');
+                await LoadList4Sub('collection');
+                await LoadList4Dic('entity');
+                await LoadList4Dic('collection');
                 selEntity.Reset();
                 selCollection.Reset();
                 eventBus.emit('check-submission', 'from BtnReject');

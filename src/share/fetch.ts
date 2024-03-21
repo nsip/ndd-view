@@ -75,7 +75,7 @@ export const fetchBodyForm = async (
 
 // const mForm = new Map<string, any>()
 // mForm.set("database", "myDb")
-// mForm.set("collection", "myCol")
+// mForm.set('collection', "myCol")
 // let rt = await fetchBodyForm("api/entity/db", "PUT", mEmpty, mForm, "")
 // console.log(rt)
 

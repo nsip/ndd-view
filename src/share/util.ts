@@ -139,7 +139,7 @@ export const isUrl = (url: string, ...prefixes: string[]) => {
 
 export const toCMS = async (flag: string, selCat: string, selItem: string, phase: string) => {
 
-    if (selMode.value == "dictionary" && flag == 'edit') {
+    if (selMode.value == 'Dictionary' && flag == 'edit') {
         if (!await IsItemEditable(selItem)) {
             notify({
                 title: "",
