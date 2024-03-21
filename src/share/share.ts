@@ -514,6 +514,13 @@ export const Refresh = async (phase: string) => {
         }
     }
 
+    // reset scroll position
+    ["ent-content", "col-content"].forEach((id) => {
+        const content = document.getElementById(id) as HTMLElement;
+        content.scrollTop = 0;
+    })
+
+    // update class path
     if (phase == "existing") {
         // get class info
         const de = await getClsInfo(selItem.value)

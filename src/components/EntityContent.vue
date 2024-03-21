@@ -1,13 +1,15 @@
 <template>
-    <ItemName />
-    <OtherNames />
-    <ItemDef />
-    <ItemSIF />
-    <OtherStds />
-    <LegalDefs />
-    <ItemSensi />
-    <ItemCols />
-    <MetaData />
+    <div id="ent-content">
+        <ItemName />
+        <OtherNames />
+        <ItemDef />
+        <ItemSIF />
+        <OtherStds />
+        <LegalDefs />
+        <ItemSensi />
+        <ItemCols />
+        <MetaData />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +26,7 @@ import MetaData from "@/components/sub-entity/9-meta.vue";
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h2 {
-    text-align: center;
+#ent-content {
+    overflow-y: scroll;
 }
 </style>

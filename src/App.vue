@@ -227,7 +227,8 @@ header {
     margin-left: 0.5%;
     margin-right: 1.5%;
     background-color: rgb(240, 240, 240);
-    overflow-y: scroll;
+    /* Content has its own scroll */
+    /* overflow-y: scroll; */
     display: flex;
     flex-direction: column;
 }
