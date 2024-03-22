@@ -20,5 +20,6 @@ import ColEntities from "@/components/sub-collection/5-entities.vue";
 <style scoped>
 #col-content {
     overflow-y: scroll;
+    scrollbar-width: none;
 }
 </style>

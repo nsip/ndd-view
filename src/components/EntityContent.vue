@@ -28,5 +28,6 @@ import MetaData from "@/components/sub-entity/9-meta.vue";
 <style scoped>
 #ent-content {
     overflow-y: scroll;
+    scrollbar-width: none;
 }
 </style>

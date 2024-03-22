@@ -169,7 +169,7 @@ ul.list-ent,
 ul.list-col {
     background-color: rgb(240, 240, 240);
     width: 20vw;
-    height: 80vh;
+    height: 78vh;
     margin-left: 5px;
     margin-top: 0.5vh;
     /* display: inline-block; */
@@ -239,7 +239,7 @@ ul.list-col li.ellip {
 
 .search-box {
     float: left;
-    width: 89%;
+    width: 88%;
     padding: 5px 0px 5px 10px;
     background-color: rgb(230, 230, 230);
 }
@@ -275,7 +275,7 @@ hr {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-    height: 3vh;
+    height: 4vh;
 }
 
 /* Style the buttons inside the tab */

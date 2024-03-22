@@ -89,6 +89,7 @@ const Approve = async () => {
                 // }
 
                 download_file(de.error, "report.log");
+
                 notify({
                     title: "Approved with Validation Issue",
                     text: "refer to downloaded report for issues",
@@ -112,7 +113,7 @@ const Approve = async () => {
         }
 
         // waiting... 2
-        await sleep(10000)
+        await sleep(3000)
         document.body.style.pointerEvents = "auto";
         loading.value = false
 
