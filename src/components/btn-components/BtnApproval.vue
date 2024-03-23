@@ -5,7 +5,7 @@
     <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selCat, selItem, 'inbound')">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
-    <a v-if="doReject" class="float" id="times" @click="PopupModal()">
+    <a v-if="doReject" class="float" id="times" @click="Modal()">
         <font-awesome-icon icon="times" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
@@ -155,8 +155,8 @@ const Approve = async () => {
 
 const rejName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
 
-// *** use "confirm-cancel" modal ***
-const PopupModal = async () => {
+// *** use "confirm-cancel" modal box ***
+const Modal = async () => {
 
     try {
         if (String(await renderOverlay(CCModal, {

@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selEntity.Entity }}</span>
-            <button v-if="selMode == 'Dictionary' || selMode == 'Approval'" id="edit-btn" @click="PopupModal()">
+            <button v-if="selMode == 'Dictionary' || selMode == 'Approval'" id="edit-btn" @click="Modal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -54,7 +54,7 @@ const idFromSubFullName = (name: string) => {
     return ''
 }
 
-const PopupModal = async () => {
+const Modal = async () => {
 
     let oldName = oriName(selEntity.Entity)
 

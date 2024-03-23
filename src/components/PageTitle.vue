@@ -1,7 +1,7 @@
 <template>
     <div>
         <span class="title">National Education Data Dictionary</span>
-        <button class="btn-exit" title="logout?" @click="PopupModal()">Exit</button>
+        <button class="btn-exit" title="logout?" @click="Modal()">Exit</button>
         <span class="user-name">{{ loginUser }}</span>
         <hr class="sep" />
     </div>
@@ -16,7 +16,7 @@ import { URL_SIGN } from "@/share/ip"
 import CCModal from '@/components/modal-components/CCModal.vue'
 
 // *** use "confirm-cancel" modal to logout ***
-const PopupModal = async () => {
+const Modal = async () => {
     try {
         if (String(await renderOverlay(CCModal, {
             props: {

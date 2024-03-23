@@ -1,7 +1,7 @@
 <template>
     <div class="tbl">
         <TextLine :text="title" textAlign="left" textColor="gray" lineColor="gray" lineHeight="0px" />
-        <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="PopupModal" alternating :fixed-header="true" />
+        <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="Modal" alternating :fixed-header="true" />
     </div>
 </template>
 
@@ -135,7 +135,7 @@ type ClickRowArgument = Item & {
 // };
 
 // click real action
-const PopupModal = async (item: ClickRowArgument) => {
+const Modal = async (item: ClickRowArgument) => {
     // console.log(item);
 
     if (item['online']) {

@@ -9,10 +9,10 @@
     <a class="float" id="pen" :title="hintEdit" @click="toCMS('edit', selCat, selItem, 'existing')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
-    <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="doDelete">
+    <a class="float" id="times" :title="hintDelete" @click="Modal4Del()" v-if="doDelete">
         <font-awesome-icon icon="times" class="floating" />
     </a>
-    <a class="float" id="download" :title="hintDownload" @click="Dump()" v-if="doDump">
+    <a class="float" id="download" :title="hintDownload" @click="Modal4Download()" v-if="doDump">
         <font-awesome-icon icon="download" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
@@ -23,9 +23,10 @@
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump, loginAsAdmin } from "@/share/share";
+import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDumpJSON, getDumpCSV, loginAsAdmin } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
 import CCModal from '@/components/modal-components/CCModal.vue'
+import DownloadTypeSel from "../modal-components/DownloadTypeSel.vue";
 
 const loading = ref(false);
 
@@ -55,7 +56,7 @@ const Y_BtnNew = computed(() => {
 const delName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
-const PopupModal = async () => {
+const Modal4Del = async () => {
 
     try {
         if (String(await renderOverlay(CCModal, {
@@ -174,11 +175,32 @@ const Subscribe = async () => {
     await LoadList4Dic('collection');
 };
 
-const Dump = async () => {
-    const de = await getDump(selCat.value, "existing")
+const Modal4Download = async () => {
+    try {
+        const type = String(await renderOverlay(DownloadTypeSel, {}));
+        switch (type) {
+            case 'JSON':
+                await DownloadJSON()
+                break;
+            case 'CSV':
+                await DownloadCSV()
+                break;
+            default:
+                alert('select one type to dump')
+        }
+    } catch (e) {
+        switch (e) {
+            case 'cancel':
+                break
+        }
+    }
+}
+
+const DownloadJSON = async () => {
+    const de = await getDumpJSON(selCat.value, "existing")
     if (de.error != null) {
         notify({
-            title: "Error: Download All",
+            title: "Error: Dump All JSON",
             text: de.error,
             type: "error"
         })
@@ -186,6 +208,20 @@ const Dump = async () => {
     }
     const url = de.data
     download_file(url, "dump-dic.zip");
+}
+
+const DownloadCSV = async () => {
+    const de = await getDumpCSV()
+    if (de.error != null) {
+        notify({
+            title: "Error: Export CSV",
+            text: de.error,
+            type: "error"
+        })
+        return
+    }
+    const url = de.data
+    download_file(url, "dump-dic.csv");
 }
 
 </script>

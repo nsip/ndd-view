@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selCollection.Entity }}</span>
-            <button v-if="selMode == 'Dictionary'" id="edit-btn" @click="PopupModal()">
+            <button v-if="selMode == 'Dictionary'" id="edit-btn" @click="Modal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -18,7 +18,7 @@ import { selCollection, editItemName, selMode, IsItemEditable } from "@/share/sh
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
-const PopupModal = async () => {
+const Modal = async () => {
 
     if (selMode.value == 'Dictionary') {
         if (!await IsItemEditable(selCollection.Entity)) {

@@ -1,5 +1,5 @@
 <template>
-    <a class="float" id="plus" @click="PopupModal()" title="add new user">
+    <a class="float" id="plus" @click="Modal()" title="add new user">
         <font-awesome-icon icon="plus" class="floating" />
     </a>
 </template>
@@ -12,7 +12,7 @@ import { postUserNew } from "@/share/share";
 import UserAddModal from '@/components/modal-components/UserAdd.vue'
 import eventBus from '@/share/util'
 
-const PopupModal = async () => {
+const Modal = async () => {
 
     try {
 

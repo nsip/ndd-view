@@ -264,11 +264,23 @@ export const getList = async (cat: string, phase: string) => {
     };
 };
 
-export const getDump = async (cat: string, phase: string) => {
+export const getDumpJSON = async (cat: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["phase", phase]
     ]);
     const rt = await fetchNoBody(`api/dic/pub/dump/${cat}`, "GET", mQuery, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const getDumpCSV = async () => {
+
+    alert("TODO: GET api/dic/pub/export/csv")
+
+    const rt = await fetchNoBody(`api/dic/pub/export/csv`, "GET", mEmpty, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
