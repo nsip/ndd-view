@@ -137,6 +137,11 @@ export const isUrl = (url: string, ...prefixes: string[]) => {
     }
 }
 
+export const lastUrlPathSegment = (url: string) => {
+    const segments = url.replace(/\/+$/, '').split('/');
+    return segments.pop() || null;
+}
+
 export const toCMS = async (flag: string, selCat: string, selItem: string, phase: string) => {
 
     if (selMode.value == 'Dictionary' && flag == 'edit') {

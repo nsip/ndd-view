@@ -16,8 +16,9 @@
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/modal-components/CCModal.vue'
+import MsgModal from '@/components/modal-components/MsgModal.vue'
 import Loader from "@/components/shared/Loader.vue"
-import { isEmpty, sleep, toCMS, download_file, isUrl } from "@/share/util"
+import { isEmpty, sleep, toCMS, download_file, isUrl, lastUrlPathSegment } from "@/share/util"
 import eventBus from '@/share/util'
 import {
     selMode,
@@ -29,7 +30,8 @@ import {
     LoadList4Dic,
     LoadList4Sub,
     delReject,
-    selItem
+    selItem,
+    FileText
 } from "@/share/share";
 
 const loading = ref(false);
@@ -82,19 +84,32 @@ const Approve = async () => {
 
             if (isUrl(de.error, "http:", "https:")) {
 
-                // only testing now
-                // {
-                //     const de_download = await getFile(de.error);
-                //     console.log(de_download.data);
-                // }
-
-                download_file(de.error, "report.log");
+                // *** download as a file, but some browsers open it in a tab :(
+                //
+                // download_file(de.error, "report.log");
 
                 notify({
-                    title: "Approved with Validation Issue",
-                    text: "refer to downloaded report for issues",
+                    title: "Approved, BUT validation issues exist",
+                    text: "refer to message to fix them",
                     type: "warn"
                 })
+
+                // *** so fetch remote file text content and display it in a popup window
+                // 
+                const file = lastUrlPathSegment(de.error);
+                const text = await FileText(file!)
+                if (text.length > 0) {
+                    if (String(await renderOverlay(MsgModal, {
+                        props: {
+                            text: text,
+                            fontsize: "15px",
+                            width: "62%",
+                            height: "60%",
+                        },
+                    })) === 'confirm') {
+                    }
+                }
+
                 validation_ok = false;
 
             } else {
@@ -113,7 +128,7 @@ const Approve = async () => {
         }
 
         // waiting... 2
-        await sleep(3000)
+        await sleep(2000)
         document.body.style.pointerEvents = "auto";
         loading.value = false
 

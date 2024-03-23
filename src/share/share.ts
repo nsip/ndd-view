@@ -175,6 +175,18 @@ export const putLogout = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
+export const getFileText = async (file: string) => {
+    const mQuery = new Map<string, any>([
+        ["file", file],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/file-text`, "GET", mQuery, loginAuth.value, false); // response as text, not json
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getAttributes = async (name: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -576,12 +588,16 @@ export const PeekID = async (item: string) => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const hasSubmission = async () => {
+export const HasSubmission = async () => {
     await LoadList4Sub('entity');
     await LoadList4Sub('collection');
     return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
 }
 
-export const attributes = async () => {
+export const Attributes = async () => {
     return (await getAttributes(selItem.value)).data as string[]
+}
+
+export const FileText = async (file: string) => {
+    return (await getFileText(file)).data as string
 }
