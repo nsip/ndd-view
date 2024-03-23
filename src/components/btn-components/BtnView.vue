@@ -23,7 +23,7 @@
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump, loginAsAdmin } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
 import CCModal from '@/components/modal-components/CCModal.vue'
 
@@ -33,11 +33,11 @@ const loading = ref(false);
 const doNew = computed(() => selMode.value == 'Dictionary')
 const doSubscribe = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 const doEdit = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDelete = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => loginAsAdmin.value && selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 const doDump = computed(() => selMode.value == 'Dictionary')
 
-const Y_BtnSubscribe = ref('250px')
-const Y_BtnEdit = ref('180px')
+const Y_BtnEdit = ref('250px')
+const Y_BtnSubscribe = ref('180px')
 const Y_BtnDelete = ref('110px')
 const Y_BtnDownload = ref('40px')
 
