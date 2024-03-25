@@ -1,7 +1,7 @@
 <template>
     <div id="modal">
 
-        <label id="prefix-selection">Download Type Selection: </label>
+        <label id="prefix-selection">Download Type: </label>
 
         <div class="type-input">
             <span v-for="choice in choices">
@@ -62,7 +62,7 @@ onUnmounted(() => {
 
 // for labels, etc.
 let leftColumn1 = '30px'
-let leftColumn2 = '240px'
+let leftColumn2 = '180px'
 let topRow1 = '10px'
 let topRow2 = '55px'
 let topRow3 = '80px'
@@ -80,7 +80,7 @@ let bottomRow1 = '15px'
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 450px;
+    width: 350px;
     height: 100px;
     background-color: rgb(200, 200, 200);
     opacity: 0.95;

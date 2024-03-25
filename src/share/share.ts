@@ -277,9 +277,6 @@ export const getDumpJSON = async (cat: string, phase: string) => {
 }
 
 export const getDumpCSV = async () => {
-
-    alert("TODO: GET api/dic/pub/export/csv")
-
     const rt = await fetchNoBody(`api/dic/pub/export/csv`, "GET", mEmpty, "");
     const err = await fetchErr(rt, onExpired)
     return {
