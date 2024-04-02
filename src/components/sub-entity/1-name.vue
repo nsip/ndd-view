@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, editItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID } from "@/share/share";
+import { selEntity, editItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID, UpdatePendingStatus } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
@@ -109,8 +109,6 @@ const Modal = async () => {
             id = await PeekID(selEntity.Entity)
         }
 
-        console.log("1", id, " - ", selEntity.Entity)
-
         let newSubFullName = ""
         if (id.length > 0) {
             newSubFullName = `${oldName}(${id})=>${result.newName}(${id})`
@@ -118,9 +116,6 @@ const Modal = async () => {
             newSubFullName = result.newName
         }
         if (selMode.value == 'Approval') {
-
-            console.log("2", newSubFullName)
-
             selItem.value = newSubFullName
         }
         await Refresh("inbound")
@@ -132,6 +127,8 @@ const Modal = async () => {
                 break
         }
     }
+
+    await UpdatePendingStatus();
 }
 
 </script>

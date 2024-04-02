@@ -7,7 +7,7 @@
 
         <div class="tab">
             <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[2] }}</button>
-            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[1] }}</button>
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin && hasPending">{{ choices[1] }}</button>
             <button class="tab-links" id="tab-default" @click="showTabContent">{{ choices[0] }}</button>
         </div>
 
@@ -52,7 +52,8 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending } from "@/share/share";
+import eventBus from '@/share/util';
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
 import ListItem from "@/components/ListItem.vue";
@@ -145,6 +146,11 @@ onMounted(async () => {
         display.value = true
 
         await setDefaultTab("tab-default")
+        eventBus.on('default-tab', async (msg) => {
+            await setDefaultTab("tab-default")
+        })
+
+        await UpdatePendingStatus()
     }
 });
 

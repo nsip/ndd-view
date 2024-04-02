@@ -2,6 +2,7 @@ import { fetchNoBody, fetchBodyForm, mEmpty, fetchErr } from "@/share/fetch";
 import { entityType } from "@/share/Entity";
 import { collectionType } from "@/share/Collection";
 import { URL_SIGN } from "./ip";
+import eventBus from "./util";
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +23,7 @@ export const lsCol4Sub = ref([]); // name list of collection in candidates
 export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
+export const hasPending = ref(false);
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -597,10 +599,13 @@ export const PeekID = async (item: string) => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const HasSubmission = async () => {
+export const UpdatePendingStatus = async () => {
     await LoadList4Sub('entity');
     await LoadList4Sub('collection');
-    return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+    hasPending.value = lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+    if (!hasPending.value) {
+        eventBus.emit('default-tab', 'from UpdatePendingStatus');
+    }
 }
 
 export const Attributes = async () => {

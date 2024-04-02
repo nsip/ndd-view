@@ -28,10 +28,10 @@ import {
     putApprove,
     getList,
     LoadList4Dic,
-    LoadList4Sub,
     delReject,
     selItem,
-    FileText
+    FileText,
+    UpdatePendingStatus
 } from "@/share/share";
 
 const loading = ref(false);
@@ -141,10 +141,9 @@ const Approve = async () => {
         }
     }
 
-    await LoadList4Sub('entity');
-    await LoadList4Sub('collection');
     await LoadList4Dic('entity');
     await LoadList4Dic('collection');
+    await UpdatePendingStatus();
 
     selEntity.Reset();
     selCollection.Reset();
@@ -184,10 +183,9 @@ const Modal = async () => {
                 })
 
                 // 'inbound' db-col for candidates list
-                await LoadList4Sub('entity');
-                await LoadList4Sub('collection');
                 await LoadList4Dic('entity');
                 await LoadList4Dic('collection');
+
                 selEntity.Reset();
                 selCollection.Reset();
                 eventBus.emit('check-submission', 'from BtnReject');
@@ -199,6 +197,8 @@ const Modal = async () => {
                 break
         }
     }
+
+    await UpdatePendingStatus();
 }
 
 </script>
