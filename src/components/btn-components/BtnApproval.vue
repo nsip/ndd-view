@@ -177,7 +177,7 @@ const Modal = async () => {
                     return
                 }
                 notify({
-                    title: "Reject Done",
+                    title: "Rejected",
                     text: `candidate item ${rejName} has been rejected`,
                     type: "success"
                 })
