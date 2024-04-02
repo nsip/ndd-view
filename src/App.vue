@@ -6,6 +6,7 @@
     <main v-if="display">
 
         <div class="tab">
+            <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[3] }}</button>
             <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[2] }}</button>
             <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin && hasPending">{{ choices[1] }}</button>
             <button class="tab-links" id="tab-default" @click="showTabContent">{{ choices[0] }}</button>
@@ -43,6 +44,11 @@
             <BtnAdmin />
         </div>
 
+        <div v-if="mTabShown.get(choices[3])" class="tab-content">
+            Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data
+            <BtnMaintain />
+        </div>
+
     </main>
 
     <notifications position="top center" :speed="2000" :duration="6000" :closeOnClick="false" />
@@ -62,8 +68,9 @@ import EntityContent from "@/components/EntityContent.vue";
 import CollectionContent from "@/components/CollectionContent.vue";
 import BtnView from "@/components/btn-components/BtnView.vue";
 import BtnApproval from "@/components/btn-components/BtnApproval.vue";
+import BtnAdmin from "@/components/btn-components/BtnAdmin.vue";
+import BtnMaintain from "@/components/btn-components/BtnMaintain.vue";
 import UserAdmin from "@/components/UserAdmin.vue";
-import BtnAdmin from "@/components/btn-components/BtnAdmin.vue"
 
 const { cookies } = useCookies();
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
@@ -72,7 +79,8 @@ const display = ref(false)
 const choices = reactive([
     'Dictionary',
     'Approval',
-    'Admin'
+    'Admin',
+    'Maintain'
 ]);
 
 // tab content shown flag, key is tab-text
@@ -80,6 +88,7 @@ const mTabShown = ref(new Map([
     [choices[0], false],
     [choices[1], false],
     [choices[2], false],
+    [choices[3], false],
 ]));
 
 onMounted(async () => {
