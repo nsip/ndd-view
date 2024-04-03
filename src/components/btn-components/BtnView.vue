@@ -89,7 +89,7 @@ const Modal4Del = async () => {
             }
 
             // waiting...2
-            await sleep(10000)
+            await sleep(200)
             document.body.style.pointerEvents = "auto";
             loading.value = false
 

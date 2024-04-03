@@ -227,7 +227,7 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
-export const editItemName = async (oldName: string, newName: string, inbound: boolean, cat: string) => {
+export const putEditItemName = async (oldName: string, newName: string, inbound: boolean, cat: string) => {
     const mQuery = new Map<string, any>([
         ["old", oldName],
         ["new", newName],
@@ -235,6 +235,30 @@ export const editItemName = async (oldName: string, newName: string, inbound: bo
         ["cat", cat],
     ]);
     const rt = await fetchNoBody(`api/dic/auth/update-name`, "PUT", mQuery, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const patchValidation = async (msg: string) => {
+    const mQuery = new Map<string, any>([
+        ["msg", msg],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/validate`, "PATCH", mQuery, loginAuth.value, false);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const patchReCom = async (msg: string) => {
+    const mQuery = new Map<string, any>([
+        ["msg", msg],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/restructure`, "PATCH", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,

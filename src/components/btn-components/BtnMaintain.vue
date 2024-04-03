@@ -2,19 +2,90 @@
     <a class="float" id="check-square" @click="validate" title="validate backend data">
         <font-awesome-icon icon="check-square" class="floating" />
     </a>
-    <a class="float" id="file-circle-check" @click="construct" title="re-construct backend data">
+    <a class="float" id="file-circle-check" @click="reconstruct" title="re-construct backend data">
         <font-awesome-icon icon="file-circle-check" class="floating" />
     </a>
+    <Loader id="loader" v-if="loading" />
 </template>
 
 <script setup lang="ts">
+import { FileText } from '@/share/share';
+import { patchReCom, patchValidation } from '@/share/share';
+import MsgModal from '@/components/modal-components/MsgModal.vue'
+import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
+import { notify } from "@kyvg/vue3-notification";
+import { sleep } from "@/share/util";
+import Loader from "@/components/shared/Loader.vue"
+
+const loading = ref(false);
 
 const validate = async () => {
-    alert('TODO: validation')
+
+    // waiting... 1
+    loading.value = true
+    document.body.style.pointerEvents = "none"
+
+    const de = await patchValidation("")
+    if (de.error != null) {
+        if (de.error.toString().endsWith('log')) {
+            const text = await FileText(de.error.toString())
+            if (text.length > 0) {
+                if (String(await renderOverlay(MsgModal, {
+                    props: {
+                        text: text,
+                        fontsize: "15px",
+                        width: "62%",
+                        height: "56%",
+                    },
+                })) === 'confirm') {
+                }
+            }
+        } else {
+            notify({
+                title: `Validation Failed`,
+                text: de.error,
+                type: "warn"
+            })
+        }
+    } else {
+        notify({
+            title: `Validation Passed`,
+            text: "",
+            type: "success"
+        })
+    }
+
+    // waiting... 2
+    await sleep(200)
+    document.body.style.pointerEvents = "auto";
+    loading.value = false
 }
 
-const construct = async () => {
-    alert('TODO: construct')
+const reconstruct = async () => {
+
+    // waiting... 1
+    loading.value = true
+    document.body.style.pointerEvents = "none"
+
+    const de = await patchReCom("")
+    if (de.error != null) {
+        notify({
+            title: `Restructure Failed`,
+            text: de.error,
+            type: "warn"
+        })
+    } else {
+        notify({
+            title: `Restructure Finished`,
+            text: "",
+            type: "success"
+        })
+    }
+
+    // waiting... 2
+    await sleep(200)
+    document.body.style.pointerEvents = "auto";
+    loading.value = false
 }
 
 </script>
