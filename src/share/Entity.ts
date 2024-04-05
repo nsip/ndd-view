@@ -1,5 +1,6 @@
 export class entityType {
     Entity = "";
+    Values: string[] = [];
     OtherNames: string[] = [];
     Definition: def[] = [];
     SIF: sif[] = [];
@@ -11,6 +12,7 @@ export class entityType {
 
     SetContent(object: any) {
         this.Entity = object.Entity;
+        this.Values = object.Values;
         this.OtherNames = object.OtherNames;
         this.Definition = object.Definition;
         this.SIF = object.SIF;
@@ -23,6 +25,7 @@ export class entityType {
 
     Reset() {
         this.Entity = "";
+        this.Values = [];
         this.OtherNames = [];
         this.Definition = [];
         this.SIF = [];
@@ -76,6 +79,8 @@ class col {
     Elements: string[] = [];
     BusinessRules: string[] = [];
     DefinitionModification = "";
+    ElementName = "";
+    Values: string[] = [];
 }
 
 class meta {
