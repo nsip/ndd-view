@@ -21,7 +21,8 @@ export const fetchBodyForm = async (
     method: string,
     mQuery: Map<string, any>,
     mForm: Map<string, any>,
-    auth: string
+    auth: string,
+    respAsJson: boolean = true,
 ) => {
     let url = ip + path.replace(/^\/+/, "");
     let payload: any;
@@ -62,20 +63,21 @@ export const fetchBodyForm = async (
             });
         }
 
-        const json = await resp.json();
+        const respData = await (respAsJson ? resp.json() : resp.text());
         return new Promise((resolve, reject) => {
-            resolve([json, resp.status]);
+            resolve([respData, resp.status]);
         });
+
     } catch (e) {
         return {
-            'error': e + "\nnetwork error: " + url
+            'error': e + "\nnetwork or response-parsing error: " + url
         }
     }
 };
 
 // const mForm = new Map<string, any>()
 // mForm.set("database", "myDb")
-// mForm.set("collection", "myCol")
+// mForm.set('collection', "myCol")
 // let rt = await fetchBodyForm("api/entity/db", "PUT", mEmpty, mForm, "")
 // console.log(rt)
 
@@ -84,7 +86,8 @@ export const fetchBodyJsonStr = async (
     method: string,
     mQuery: Map<string, any>,
     payload: string,
-    auth: string
+    auth: string,
+    respAsJson: boolean = true
 ) => {
     let url = ip + path.replace(/^\/+/, "");
 
@@ -117,13 +120,14 @@ export const fetchBodyJsonStr = async (
             });
         }
 
-        const json = await resp.json();
+        const respData = await (respAsJson ? resp.json() : resp.text());
         return new Promise((resolve, reject) => {
-            resolve([json, resp.status]);
+            resolve([respData, resp.status]);
         });
+
     } catch (e) {
         return {
-            'error': e + "\nnetwork error: " + url
+            'error': e + "\nnetwork or response-parsing error: " + url
         }
     }
 };
@@ -133,7 +137,8 @@ export const fetchBodyObject = async (
     method: string,
     mQuery: Map<string, any>,
     body: any,
-    auth: string
+    auth: string,
+    respAsJson: boolean = true
 ) => {
     let url = ip + path.replace(/^\/+/, "");
     let payload: any;
@@ -174,13 +179,14 @@ export const fetchBodyObject = async (
             });
         }
 
-        const json = await resp.json();
+        const respData = await (respAsJson ? resp.json() : resp.text());
         return new Promise((resolve, reject) => {
-            resolve([json, resp.status]);
+            resolve([respData, resp.status]);
         });
+
     } catch (e) {
         return {
-            'error': e + "\nnetwork error: " + url
+            'error': e + "\nnetwork or response-parsing error: " + url
         }
     }
 };
@@ -189,8 +195,11 @@ export const fetchNoBody = async (
     path: string,
     method: string,
     mQuery: Map<string, any>,
-    auth: string
+    auth: string,
+    respAsJson: boolean = true,
 ) => {
+
+    // let url = path.includes(ip) ? path : ip + path.replace(/^\/+/, "");
     let url = ip + path.replace(/^\/+/, "");
 
     if (mQuery.size > 0) {
@@ -220,13 +229,14 @@ export const fetchNoBody = async (
             });
         }
 
-        const json = await resp.json();
+        const respData = await (respAsJson ? resp.json() : resp.text());
         return new Promise((resolve, reject) => {
-            resolve([json, resp.status]);
+            resolve([respData, resp.status]);
         });
+
     } catch (e) {
         return {
-            'error': e + "\nnetwork error: " + url
+            'error': e + "\nnetwork or response-parsing error: " + url
         }
     }
 };

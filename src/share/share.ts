@@ -2,6 +2,7 @@ import { fetchNoBody, fetchBodyForm, mEmpty, fetchErr } from "@/share/fetch";
 import { entityType } from "@/share/Entity";
 import { collectionType } from "@/share/Collection";
 import { URL_SIGN } from "./ip";
+import eventBus from "./util";
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -9,7 +10,7 @@ export const loginUser = ref("");
 export const loginToken = ref(""); // without 'Bearer '
 export const loginAuth = ref(""); // with 'Bearer '
 export const loginAsAdmin = ref(false)
-export const selMode = ref(''); // 'dictionary' or 'approval', or 'admin'
+export const selMode = ref(''); // 'Dictionary' or 'Approval', or 'Admin'
 export const selCat = ref(""); // which category of current selection, 'entity' or 'collection'
 export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
@@ -22,6 +23,7 @@ export const lsCol4Sub = ref([]); // name list of collection in candidates
 export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
+export const hasPending = ref(false);
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,6 +42,15 @@ export const getPing = async () => {
         'error': err
     };
 };
+
+// export const getFile = async (url: string) => {
+//     const rt = await fetchNoBody(url, "GET", mEmpty, "");
+//     const err = await fetchErr(rt, onExpired)
+//     return {
+//         'data': err == null ? (rt as any[])[0] : null,
+//         'error': err
+//     };
+// };
 
 // fill loginUser
 
@@ -166,6 +177,18 @@ export const putLogout = async () => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
+export const getFileText = async (file: string) => {
+    const mQuery = new Map<string, any>([
+        ["file", file],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/file-text`, "GET", mQuery, loginAuth.value, false); // response as text, not json
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getAttributes = async (name: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -204,7 +227,7 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
-export const editItemName = async (oldName: string, newName: string, inbound: boolean, cat: string) => {
+export const putEditItemName = async (oldName: string, newName: string, inbound: boolean, cat: string) => {
     const mQuery = new Map<string, any>([
         ["old", oldName],
         ["new", newName],
@@ -212,6 +235,30 @@ export const editItemName = async (oldName: string, newName: string, inbound: bo
         ["cat", cat],
     ]);
     const rt = await fetchNoBody(`api/dic/auth/update-name`, "PUT", mQuery, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const patchValidation = async (msg: string) => {
+    const mQuery = new Map<string, any>([
+        ["msg", msg],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/validate`, "PATCH", mQuery, loginAuth.value, false);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const patchReCom = async (msg: string) => {
+    const mQuery = new Map<string, any>([
+        ["msg", msg],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/restructure`, "PATCH", mQuery, loginAuth.value);
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -243,11 +290,20 @@ export const getList = async (cat: string, phase: string) => {
     };
 };
 
-export const getDump = async (cat: string, phase: string) => {
+export const getDumpJSON = async (cat: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["phase", phase]
     ]);
     const rt = await fetchNoBody(`api/dic/pub/dump/${cat}`, "GET", mQuery, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
+export const getDumpCSV = async () => {
+    const rt = await fetchNoBody(`api/dic/pub/export/csv`, "GET", mEmpty, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
@@ -402,7 +458,7 @@ export const postSendEmail = async (
 export const LoadList4Dic = async (cat: string) => {
     // get list of item
     switch (cat) {
-        case "entity":
+        case 'entity':
             {
                 const de = await getList(cat, "existing");
                 if (de.error != null) {
@@ -414,7 +470,7 @@ export const LoadList4Dic = async (cat: string) => {
             }
             break;
 
-        case "collection":
+        case 'collection':
             {
                 const de = await getList(cat, "existing");
                 if (de.error != null) {
@@ -441,7 +497,7 @@ export const LoadList4Dic = async (cat: string) => {
 export const LoadList4Sub = async (cat: string) => {
     // get list of item
     switch (cat) {
-        case "entity":
+        case 'entity':
             {
                 const de = await getList(cat, "inbound");
                 if (de.error != null) {
@@ -453,7 +509,7 @@ export const LoadList4Sub = async (cat: string) => {
             }
             break;
 
-        case "collection":
+        case 'collection':
             {
                 const de = await getList(cat, "inbound");
                 if (de.error != null) {
@@ -504,16 +560,23 @@ export const Refresh = async (phase: string) => {
 
         // set content to shared variables
         switch (selCat.value) {
-            case "entity":
+            case 'entity':
                 selEntity.SetContent(content);
                 break;
 
-            case "collection":
+            case 'collection':
                 selCollection.SetContent(content);
                 break;
         }
     }
 
+    // reset scroll position
+    ["ent-content", "col-content"].forEach((id) => {
+        const content = document.getElementById(id) as HTMLElement;
+        content.scrollTop = 0;
+    })
+
+    // update class path
     if (phase == "existing") {
         // get class info
         const de = await getClsInfo(selItem.value)
@@ -560,12 +623,19 @@ export const PeekID = async (item: string) => {
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const hasSubmission = async () => {
-    await LoadList4Sub("entity");
-    await LoadList4Sub("collection");
-    return lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+export const UpdatePendingStatus = async () => {
+    await LoadList4Sub('entity');
+    await LoadList4Sub('collection');
+    hasPending.value = lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+    if (!hasPending.value) {
+        eventBus.emit('default-tab', 'from UpdatePendingStatus');
+    }
 }
 
-export const attributes = async () => {
+export const Attributes = async () => {
     return (await getAttributes(selItem.value)).data as string[]
+}
+
+export const FileText = async (file: string) => {
+    return (await getFileText(file)).data as string
 }

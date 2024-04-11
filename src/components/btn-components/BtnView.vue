@@ -9,10 +9,10 @@
     <a class="float" id="pen" :title="hintEdit" @click="toCMS('edit', selCat, selItem, 'existing')" v-if="doEdit">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
-    <a class="float" id="times" :title="hintDelete" @click="PopupModal()" v-if="doDelete">
+    <a class="float" id="times" :title="hintDelete" @click="Modal4Del()" v-if="doDelete">
         <font-awesome-icon icon="times" class="floating" />
     </a>
-    <a class="float" id="download" :title="hintDownload" @click="Dump()" v-if="doDump">
+    <a class="float" id="download" :title="hintDownload" @click="Modal4Download()" v-if="doDump">
         <font-awesome-icon icon="download" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
@@ -23,21 +23,22 @@
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDump } from "@/share/share";
+import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDumpJSON, getDumpCSV, loginAsAdmin } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
 import CCModal from '@/components/modal-components/CCModal.vue'
+import DownloadTypeSel from "../modal-components/DownloadTypeSel.vue";
 
 const loading = ref(false);
 
 // for UI
-const doNew = computed(() => selMode.value == 'dictionary')
-const doSubscribe = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDelete = computed(() => selMode.value == 'dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDump = computed(() => selMode.value == 'dictionary')
+const doNew = computed(() => selMode.value == 'Dictionary')
+const doSubscribe = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => loginAsAdmin.value && selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDump = computed(() => selMode.value == 'Dictionary')
 
-const Y_BtnSubscribe = ref('250px')
-const Y_BtnEdit = ref('180px')
+const Y_BtnEdit = ref('250px')
+const Y_BtnSubscribe = ref('180px')
 const Y_BtnDelete = ref('110px')
 const Y_BtnDownload = ref('40px')
 
@@ -52,10 +53,10 @@ const Y_BtnNew = computed(() => {
 
 // DELETE ///////////////////////////////////////////////////////////////
 
-const delName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const delName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
-const PopupModal = async () => {
+const Modal4Del = async () => {
 
     try {
         if (String(await renderOverlay(CCModal, {
@@ -88,7 +89,7 @@ const PopupModal = async () => {
             }
 
             // waiting...2
-            await sleep(10000)
+            await sleep(200)
             document.body.style.pointerEvents = "auto";
             loading.value = false
 
@@ -97,8 +98,8 @@ const PopupModal = async () => {
                 text: `dictionary item '${delName.value}' is removed permanently`,
                 type: "success"
             })
-            await LoadList4Dic("entity");
-            await LoadList4Dic("collection");
+            await LoadList4Dic('entity');
+            await LoadList4Dic('collection');
             selEntity.Reset();
             selCollection.Reset();
         }
@@ -143,10 +144,10 @@ const Subscribe = async () => {
 
     let name = "";
     switch (selCat.value) {
-        case "entity":
+        case 'entity':
             name = selEntity.Entity;
             break;
-        case "collection":
+        case 'collection':
             name = selCollection.Entity;
             break;
         default:
@@ -170,15 +171,36 @@ const Subscribe = async () => {
     })
 
     // reload list for changing item color
-    await LoadList4Dic("entity");
-    await LoadList4Dic("collection");
+    await LoadList4Dic('entity');
+    await LoadList4Dic('collection');
 };
 
-const Dump = async () => {
-    const de = await getDump(selCat.value, "existing")
+const Modal4Download = async () => {
+    try {
+        const type = String(await renderOverlay(DownloadTypeSel, {}));
+        switch (type) {
+            case 'JSON':
+                await DownloadJSON()
+                break;
+            case 'CSV':
+                await DownloadCSV()
+                break;
+            default:
+                alert('select one type to dump')
+        }
+    } catch (e) {
+        switch (e) {
+            case 'cancel':
+                break
+        }
+    }
+}
+
+const DownloadJSON = async () => {
+    const de = await getDumpJSON(selCat.value, "existing")
     if (de.error != null) {
         notify({
-            title: "Error: Download All",
+            title: "Error: Dump All JSON",
             text: de.error,
             type: "error"
         })
@@ -186,6 +208,20 @@ const Dump = async () => {
     }
     const url = de.data
     download_file(url, "dump-dic.zip");
+}
+
+const DownloadCSV = async () => {
+    const de = await getDumpCSV()
+    if (de.error != null) {
+        notify({
+            title: "Error: Export CSV",
+            text: de.error,
+            type: "error"
+        })
+        return
+    }
+    const url = de.data
+    download_file(url, "dump-dic.csv");
 }
 
 </script>

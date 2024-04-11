@@ -21,6 +21,11 @@
                         <span class="sub-val">{{ item.Standard }}</span>
                     </div>
 
+                    <div v-if="isNotEmpty(item.ElementName)" class="cat-val-flex">
+                        <span class="sub-cat">ElementName:</span>
+                        <span class="sub-val">{{ item.ElementName }}</span>
+                    </div>
+
                     <div v-if="isNotEmpty(item.Elements)" class="cat-val-flex">
                         <span class="sub-cat">Elements:</span>
                         <div class="sub-val">
@@ -45,6 +50,12 @@
                         <span class="sub-cat">Definition Modification:</span>
                         <span class="sub-val" v-html="item.DefinitionModification"></span>
                     </div>
+
+                    <div v-if="isNotEmpty(item.Values)" class="cat-val-flex">
+                        <span class="sub-cat">Values:</span>
+                        <div class="sub-val" v-html="item.Values"> </div>
+                    </div>
+
                 </div>
             </span>
         </div>

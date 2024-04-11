@@ -1,13 +1,16 @@
 <template>
-    <ItemName />
-    <OtherNames />
-    <ItemDef />
-    <ItemSIF />
-    <OtherStds />
-    <LegalDefs />
-    <ItemSensi />
-    <ItemCols />
-    <MetaData />
+    <div id="ent-content">
+        <ItemName />
+        <ItemValues />
+        <OtherNames />
+        <ItemDef />
+        <ItemSIF />
+        <OtherStds />
+        <LegalDefs />
+        <ItemSensi />
+        <ItemCols />
+        <MetaData />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -20,11 +23,13 @@ import LegalDefs from "@/components/sub-entity/6-legal-def.vue";
 import ItemSensi from "@/components/sub-entity/7-sensitivity.vue";
 import ItemCols from "@/components/sub-entity/8-collections.vue";
 import MetaData from "@/components/sub-entity/9-meta.vue";
+import ItemValues from "@/components/sub-entity/10-values.vue"
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h2 {
-    text-align: center;
+#ent-content {
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 </style>

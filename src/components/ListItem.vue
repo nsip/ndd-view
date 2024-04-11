@@ -1,30 +1,37 @@
 <template>
-    <div>
-        <input class="search-box" type="text" id="search" name="search" placeholder="searching..." v-model="aim" ref="searchInput" />
-        <button class="search-btn" @click="Search()">
-            <font-awesome-icon icon="search" />
-        </button>
+
+    <div class="container">
+
+        <div>
+            <input class="search-box" type="text" id="search" name="search" placeholder="searching..." v-model="aim" ref="searchInput" />
+            <button class="search-btn" @click="Search()">
+                <font-awesome-icon icon="search" />
+            </button>
+        </div>
+
+        <div class="tab">
+            <button class="tab-links-cat" id="tab-default-cat" @click="showTabContent">{{ choices[0] }}</button>
+            <button class="tab-links-cat" @click="showTabContent">{{ choices[1] }}</button>
+        </div>
+
+        <div v-if="mTabShown.get(choices[0])" class="tab-content">
+            <ul class="list-ent">
+                <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
+                    {{ item }}
+                </li>
+            </ul>
+        </div>
+
+        <div v-if="mTabShown.get(choices[1])" class="tab-content">
+            <ul class="list-col">
+                <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
+                    {{ item }}
+                </li>
+            </ul>
+        </div>
+
     </div>
 
-    <div class="list_type_sel">
-        <!-- same 'name', auto single selection -->
-        <span class="cat-input" v-for="choice in choices">
-            <input v-model="selCat" type="radio" name="cat" :value="choice" @change="select" />
-            <label class="rb-lbl">{{ choice }}</label>
-        </span>
-        <hr>
-    </div>
-
-    <ul v-if="selCat == 'entity'" class="list-ent">
-        <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
-            {{ item }}
-        </li>
-    </ul>
-    <ul v-if="selCat == 'collection'" class="list-col">
-        <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
-            {{ item }}
-        </li>
-    </ul>
 </template>
 
 <script setup lang="ts">
@@ -33,11 +40,53 @@ import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, sel
 
 const searchInput = ref();
 
+const choices = reactive([
+    'entity',
+    'collection',
+]);
+
+// tab content shown flag, key is tab-text
+const mTabShown = ref(new Map([
+    [choices[0], false],
+    [choices[1], false],
+]));
+
+const showTabContent = async (evt: MouseEvent) => {
+
+    const id = (evt.target! as HTMLElement).textContent
+    console.log(id)
+
+    mTabShown.value.forEach((flag, tab) => {
+        mTabShown.value.set(tab, tab == id ? true : false)
+    });
+
+    let tab_links = document.getElementsByClassName("tab-links-cat");
+    for (let i = 0; i < tab_links.length; i++) {
+        tab_links[i].className = tab_links[i].className.replace(" active", "");
+    }
+    (evt.currentTarget! as HTMLElement).className += " active";
+
+    /////////////////////////
+
+    selCat.value = id!;
+}
+
+const setDefaultTab = async (id: string) => {
+    const iid = window.setInterval(() => {
+        document.getElementById(id)!.click();
+    }, 50)
+    window.setTimeout(() => {
+        window.clearInterval(iid)
+    }, 1000)
+}
+
 let mounted = false;
+
 onMounted(async () => {
-    selCat.value = "entity"
-    await LoadList4Dic("entity")
-    await LoadList4Dic("collection")
+    selCat.value = choices[0]
+    await LoadList4Dic(choices[0])
+    await LoadList4Dic(choices[1])
+    await setDefaultTab("tab-default-cat")
     searchInput.value.focus()
     mounted = true;
 })
@@ -48,10 +97,10 @@ watchEffect(async () => {
         if (cat.length > 0) {
             await LoadList4Dic(cat)
             switch (cat) {
-                case "entity":
+                case choices[0]:
                     await itemClick(lsEnt4Dic.value[0], 'existing')
                     break
-                case "collection":
+                case choices[1]:
                     await itemClick(lsCol4Dic.value[0], 'existing')
                     break
             }
@@ -95,13 +144,6 @@ const style = (name: string) => {
     }
 };
 
-const choices = reactive([
-    "entity",
-    "collection"
-]);
-
-const select = () => { };
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -127,7 +169,7 @@ ul.list-ent,
 ul.list-col {
     background-color: rgb(240, 240, 240);
     width: 20vw;
-    height: 75vh;
+    height: 78vh;
     margin-left: 5px;
     margin-top: 0.5vh;
     /* display: inline-block; */
@@ -197,20 +239,16 @@ ul.list-col li.ellip {
 
 .search-box {
     float: left;
-    width: 80%;
+    width: 88%;
     padding: 5px 0px 5px 10px;
-    margin-left: 2%;
-    margin-top: 2%;
     background-color: rgb(230, 230, 230);
 }
 
 .search-btn {
-    float: left;
-    width: 10%;
-    margin-left: 2%;
-    margin-top: 2%;
+    float: right;
+    width: 8%;
     padding: 5px 5px 5px 5px;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 hr {
@@ -224,5 +262,49 @@ hr {
 
 .rb-lbl {
     margin-right: 5px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    /* Stacks elements vertically */
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    height: 4vh;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 11px;
+    transition: 0.3s;
+    font-size: 17px;
+    height: 100%;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tab-content {
+    padding: 1px 1px;
+    border: 1px solid #ccc;
+    border-top: none;
 }
 </style>

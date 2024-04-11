@@ -56,12 +56,12 @@
 
 <script setup lang="ts">
 
-import { selEntity, attributes } from "@/share/share";
+import { selEntity, Attributes } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const attrs = ref();
 watchEffect(async () => {
-    attrs.value = await attributes();
+    attrs.value = await Attributes();
 });
 
 </script>

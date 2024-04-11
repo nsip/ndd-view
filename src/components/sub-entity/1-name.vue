@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selEntity.Entity }}</span>
-            <button v-if="selMode == 'dictionary' || selMode == 'approval'" id="edit-btn" @click="PopupModal()">
+            <button v-if="selMode == 'Dictionary' || selMode == 'Approval'" id="edit-btn" @click="Modal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -14,12 +14,12 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, editItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID } from "@/share/share";
+import { selEntity, putEditItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID, UpdatePendingStatus } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
 const oriName = (name: string) => {
-    if (selMode.value == 'approval') {
+    if (selMode.value == 'Approval') {
         if (name.includes(')=>')) {
             const parts = name.split('=>')
             return parts[0].slice(0, parts[0].lastIndexOf('('))
@@ -36,7 +36,7 @@ const oriName = (name: string) => {
 }
 
 const idFromSubFullName = (name: string) => {
-    if (selMode.value == 'approval') {
+    if (selMode.value == 'Approval') {
         if (name.includes(')=>')) {
             const parts = name.split('=>')
             const o = parts[0].lastIndexOf('(')
@@ -54,11 +54,11 @@ const idFromSubFullName = (name: string) => {
     return ''
 }
 
-const PopupModal = async () => {
+const Modal = async () => {
 
     let oldName = oriName(selEntity.Entity)
 
-    if (selMode.value == "dictionary") {
+    if (selMode.value == 'Dictionary') {
         if (!await IsItemEditable(oldName)) {
             notify({
                 title: "",
@@ -86,7 +86,7 @@ const PopupModal = async () => {
             return
         }
 
-        const de = await editItemName(oldName, result.newName, selMode.value == 'approval', 'entity')
+        const de = await putEditItemName(oldName, result.newName, selMode.value == 'Approval', 'entity')
         if (de.error != null) {
             notify({
                 title: "Error: Edit Entity Name",
@@ -109,18 +109,13 @@ const PopupModal = async () => {
             id = await PeekID(selEntity.Entity)
         }
 
-        console.log("1", id, " - ", selEntity.Entity)
-
         let newSubFullName = ""
         if (id.length > 0) {
             newSubFullName = `${oldName}(${id})=>${result.newName}(${id})`
         } else {
             newSubFullName = result.newName
         }
-        if (selMode.value == 'approval') {
-
-            console.log("2", newSubFullName)
-
+        if (selMode.value == 'Approval') {
             selItem.value = newSubFullName
         }
         await Refresh("inbound")
@@ -132,6 +127,8 @@ const PopupModal = async () => {
                 break
         }
     }
+
+    await UpdatePendingStatus();
 }
 
 </script>

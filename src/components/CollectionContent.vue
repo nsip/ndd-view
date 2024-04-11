@@ -1,9 +1,11 @@
 <template>
-    <ItemName />
-    <ItemDef />
-    <URL />
-    <MetaData />
-    <ColEntities />
+    <div id="col-content">
+        <ItemName />
+        <ItemDef />
+        <URL />
+        <MetaData />
+        <ColEntities />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -16,7 +18,8 @@ import ColEntities from "@/components/sub-collection/5-entities.vue";
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h2 {
-    text-align: center;
+#col-content {
+    overflow-y: scroll;
+    scrollbar-width: none;
 }
 </style>

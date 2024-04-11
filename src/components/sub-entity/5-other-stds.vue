@@ -4,6 +4,7 @@
             <span class="category">Other Standards:</span>
             <span class="content-flex">
                 <div v-for="(item, idx) in selEntity.OtherStandards" :key="idx">
+
                     <hr v-if="idx != selEntity.OtherStandards.length && idx != 0" class="sub-sep-line" />
 
                     <div v-if="isNotEmpty(item.Standard)" class="cat-val-flex">
@@ -40,6 +41,7 @@
                         <span class="sub-cat">Commentary:</span>
                         <span class="sub-val" v-html="item.Commentary"></span>
                     </div>
+
                 </div>
             </span>
         </div>

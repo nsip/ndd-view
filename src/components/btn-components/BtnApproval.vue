@@ -5,7 +5,7 @@
     <a v-if="doEdit" class="float" id="pen" title="edit" @click="toCMS('edit', selCat, selItem, 'inbound')">
         <font-awesome-icon icon="pen" class="floating" />
     </a>
-    <a v-if="doReject" class="float" id="times" @click="PopupModal()">
+    <a v-if="doReject" class="float" id="times" @click="Modal()">
         <font-awesome-icon icon="times" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
@@ -16,8 +16,9 @@
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import CCModal from '@/components/modal-components/CCModal.vue'
+import MsgModal from '@/components/modal-components/MsgModal.vue'
 import Loader from "@/components/shared/Loader.vue"
-import { isEmpty, sleep, toCMS, download_file, isUrl } from "@/share/util"
+import { isEmpty, sleep, toCMS, download_file, isUrl, lastUrlPathSegment } from "@/share/util"
 import eventBus from '@/share/util'
 import {
     selMode,
@@ -27,23 +28,24 @@ import {
     putApprove,
     getList,
     LoadList4Dic,
-    LoadList4Sub,
     delReject,
-    selItem
+    selItem,
+    FileText,
+    UpdatePendingStatus
 } from "@/share/share";
 
 const loading = ref(false);
 
-const doApproval = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doReject = computed(() => selMode.value == 'approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doApproval = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doReject = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
 // APPROVE /////////////////////////////////////////////////////////////////////////
 
 const Approve = async () => {
 
     const cat = selCat.value
-    const name = cat == "entity" ? selEntity.Entity : selCollection.Entity;
+    const name = cat == 'entity' ? selEntity.Entity : selCollection.Entity;
 
     // check to be approved item is New OR Updated
     // DO NOT USE 'lsEnt', 'lsCol', get list from coldb 'existing'
@@ -82,12 +84,32 @@ const Approve = async () => {
 
             if (isUrl(de.error, "http:", "https:")) {
 
-                download_file(de.error, "report.log");
+                // *** download as a file, but some browsers open it in a tab :(
+                //
+                // download_file(de.error, "report.log");
+
                 notify({
-                    title: "Approved with Validation Issue",
-                    text: "refer to downloaded report for issues",
+                    title: "Approved, BUT validation issues exist",
+                    text: "refer to message to fix them",
                     type: "warn"
                 })
+
+                // *** so fetch remote file text content and display it in a popup window
+                // 
+                const file = lastUrlPathSegment(de.error);
+                const text = await FileText(file!)
+                if (text.length > 0) {
+                    if (String(await renderOverlay(MsgModal, {
+                        props: {
+                            text: text,
+                            fontsize: "15px",
+                            width: "62%",
+                            height: "60%",
+                        },
+                    })) === 'confirm') {
+                    }
+                }
+
                 validation_ok = false;
 
             } else {
@@ -106,7 +128,7 @@ const Approve = async () => {
         }
 
         // waiting... 2
-        await sleep(10000)
+        await sleep(200)
         document.body.style.pointerEvents = "auto";
         loading.value = false
 
@@ -118,11 +140,10 @@ const Approve = async () => {
             })
         }
     }
-    
-    await LoadList4Sub("entity");
-    await LoadList4Sub("collection");
-    await LoadList4Dic("entity");
-    await LoadList4Dic("collection");
+
+    await LoadList4Dic('entity');
+    await LoadList4Dic('collection');
+    await UpdatePendingStatus();
 
     selEntity.Reset();
     selCollection.Reset();
@@ -131,10 +152,10 @@ const Approve = async () => {
 
 // REJECT /////////////////////////////////////////////////////////////////////////
 
-const rejName = computed(() => selCat.value == "entity" ? selEntity.Entity : selCollection.Entity)
+const rejName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
 
-// *** use "confirm-cancel" modal ***
-const PopupModal = async () => {
+// *** use "confirm-cancel" modal box ***
+const Modal = async () => {
 
     try {
         if (String(await renderOverlay(CCModal, {
@@ -156,16 +177,15 @@ const PopupModal = async () => {
                     return
                 }
                 notify({
-                    title: "Reject Done",
+                    title: "Rejected",
                     text: `candidate item ${rejName} has been rejected`,
                     type: "success"
                 })
 
                 // 'inbound' db-col for candidates list
-                await LoadList4Sub("entity");
-                await LoadList4Sub("collection");
-                await LoadList4Dic("entity");
-                await LoadList4Dic("collection");
+                await LoadList4Dic('entity');
+                await LoadList4Dic('collection');
+
                 selEntity.Reset();
                 selCollection.Reset();
                 eventBus.emit('check-submission', 'from BtnReject');
@@ -177,6 +197,8 @@ const PopupModal = async () => {
                 break
         }
     }
+
+    await UpdatePendingStatus();
 }
 
 </script>

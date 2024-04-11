@@ -1,7 +1,7 @@
 <template>
     <div v-if="isNotEmpty(selEntity)" class="class">
         <span v-for="(item, idx) in selClsPath" :key="idx">
-            <span class="ea" @click="itemClick(item, 'existing')"> {{ item }}</span>
+            <span class="ea" :class="item == selItem ? 'selected' : ''" @click="itemClick(item, 'existing')"> {{ item }}</span>
             <span v-if="idx < selClsPath.length - 1"> / </span>
         </span>
         <span v-if="selChildren?.length > 0"> / </span>
@@ -54,6 +54,12 @@ const itemClick = async (item: string, phase: string) => {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.selected {
+    font-weight: bold;
+    text-decoration: underline;
+    color: black;
 }
 
 .firstOpt {

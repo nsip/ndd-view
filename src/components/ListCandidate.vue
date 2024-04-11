@@ -20,8 +20,8 @@ const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
 
 onMounted(async () => {
-    await LoadList4Sub("entity")
-    await LoadList4Sub("collection")
+    await LoadList4Sub('entity')
+    await LoadList4Sub('collection')
 });
 
 const itemClick = async (item: string, phase: string) => {

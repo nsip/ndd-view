@@ -4,6 +4,9 @@
             <span class="category">SIF:</span>
             <span class="content-flex">
                 <div v-for="(item, idx) in selEntity.SIF" :key="idx">
+
+                    <hr v-if="idx != selEntity.SIF.length && idx != 0" class="sub-sep-line" />
+
                     <div v-if="isNotEmpty(item.XPath)" class="cat-val-flex">
                         <span class="sub-cat">XPath:</span>
                         <div class="sub-val">
@@ -28,6 +31,7 @@
                         <span class="sub-cat">Datestamp:</span>
                         <span class="sub-val">{{ item.Datestamp }}</span>
                     </div>
+
                 </div>
             </span>
         </div>
@@ -93,5 +97,9 @@ import { isNotEmpty } from "@/share/util";
     width: 100%;
     margin-left: -90px;
     font-size: 15px;
+}
+
+.sub-sep-line {
+    color: darkgray;
 }
 </style>
