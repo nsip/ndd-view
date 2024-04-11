@@ -53,12 +53,7 @@
 
                     <div v-if="isNotEmpty(item.Values)" class="cat-val-flex">
                         <span class="sub-cat">Values:</span>
-                        <div class="sub-val">
-                            <div v-for="(subitem, i) in item.Values" :key="i">
-                                <span>{{ subitem }}</span>
-                                <br />
-                            </div>
-                        </div>
+                        <div class="sub-val" v-html="item.Values"> </div>
                     </div>
 
                 </div>

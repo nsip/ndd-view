@@ -1,6 +1,6 @@
 export class entityType {
     Entity = "";
-    Values: string[] = [];
+    Values = "";
     OtherNames: string[] = [];
     Definition: def[] = [];
     SIF: sif[] = [];
@@ -25,7 +25,7 @@ export class entityType {
 
     Reset() {
         this.Entity = "";
-        this.Values = [];
+        this.Values = "";
         this.OtherNames = [];
         this.Definition = [];
         this.SIF = [];
@@ -80,7 +80,7 @@ class col {
     BusinessRules: string[] = [];
     DefinitionModification = "";
     ElementName = "";
-    Values: string[] = [];
+    Values = "";
 }
 
 class meta {

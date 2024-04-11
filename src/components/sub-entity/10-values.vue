@@ -2,11 +2,7 @@
     <div v-if="isNotEmpty(selEntity.Values)">
         <div class="area">
             <span class="category">Values:</span>
-            <span class="content">
-                <span v-for="(item, idx) in selEntity.Values" :key="idx">
-                    {{ item }}&nbsp;&emsp;
-                </span>
-            </span>
+            <span class="content" v-html="selEntity.Values"> </span>
         </div>
         <hr />
     </div>
