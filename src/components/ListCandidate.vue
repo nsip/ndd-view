@@ -1,20 +1,20 @@
 <template>
-    <h4 v-if="lsEnt4Sub.length > 0" class="title-entity">Entity:</h4>
-    <ul v-if="lsEnt4Sub.length > 0" class="list-entity">
-        <li v-for="(item, idx) in lsEnt4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
+    <h4 v-if="lsEnt4Submit.length > 0" class="title-entity">Entity:</h4>
+    <ul v-if="lsEnt4Submit.length > 0" class="list-entity">
+        <li v-for="(item, idx) in lsEnt4Submit" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
             {{ item }}
         </li>
     </ul>
-    <h4 v-if="lsCol4Sub.length > 0" class="title-collection">Collection:</h4>
-    <ul v-if="lsCol4Sub.length > 0" class="list-collection">
-        <li v-for="(item, idx) in lsCol4Sub" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
+    <h4 v-if="lsCol4Submit.length > 0" class="title-collection">Collection:</h4>
+    <ul v-if="lsCol4Submit.length > 0" class="list-collection">
+        <li v-for="(item, idx) in lsCol4Submit" :key="idx" :title="item" class="ellip" :class="selItem == item ? sel_style : unsel_style" @click="itemClick(item, 'inbound')">
             {{ item }}
         </li>
     </ul>
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt4Sub, lsCol4Sub, Refresh, LoadList4Sub } from "@/share/share";
+import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, LoadList4Sub, globalMsg } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
@@ -22,6 +22,8 @@ const unsel_style = ref("unselected-style");
 onMounted(async () => {
     await LoadList4Sub('entity')
     await LoadList4Sub('collection')
+
+    globalMsg.value = `Dictionary has ${lsEnt4Submit.value.length} pending entity items, ${lsCol4Submit.value.length} pending collection items`
 });
 
 const itemClick = async (item: string, phase: string) => {

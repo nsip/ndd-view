@@ -16,14 +16,15 @@ export const selItem = ref(""); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
 export const selCollection = reactive(new collectionType()); // collection content
 export const aim = ref(""); // what item want to be search
-export const lsEnt4Dic = ref([]); // name list of entity in dictionary
-export const lsCol4Dic = ref([]); // name list of collection in dictionary
-export const lsEnt4Sub = ref([]); // name list of entity in candidates
-export const lsCol4Sub = ref([]); // name list of collection in candidates
+export const lsEnt4Dic = ref<string[]>([]); // name list of entity in dictionary
+export const lsCol4Dic = ref<string[]>([]); // name list of collection in dictionary
+export const lsEnt4Submit = ref<string[]>([]); // name list of entity in candidates
+export const lsCol4Submit = ref<string[]>([]); // name list of collection in candidates
 export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
 export const hasPending = ref(false);
+export const globalMsg = ref(""); // global message
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -456,6 +457,7 @@ export const postSendEmail = async (
 
 // set 'lsEnt4Dic', 'lsCol4Dic' here
 export const LoadList4Dic = async (cat: string) => {
+
     // get list of item
     switch (cat) {
         case 'entity':
@@ -493,8 +495,9 @@ export const LoadList4Dic = async (cat: string) => {
     lsSubscribed.value = de.data
 };
 
-// set 'lsEnt4Sub', 'lsCol4Sub' here
+// set 'lsEnt4Submit', 'lsCol4Submit' here
 export const LoadList4Sub = async (cat: string) => {
+
     // get list of item
     switch (cat) {
         case 'entity':
@@ -505,7 +508,7 @@ export const LoadList4Sub = async (cat: string) => {
                     console.log(de.error)
                     break
                 }
-                lsEnt4Sub.value = de.data
+                lsEnt4Submit.value = de.data
             }
             break;
 
@@ -517,7 +520,7 @@ export const LoadList4Sub = async (cat: string) => {
                     console.log(de.error)
                     break
                 }
-                lsCol4Sub.value = de.data
+                lsCol4Submit.value = de.data
             }
             break;
     }
@@ -626,7 +629,7 @@ export const PeekID = async (item: string) => {
 export const UpdatePendingStatus = async () => {
     await LoadList4Sub('entity');
     await LoadList4Sub('collection');
-    hasPending.value = lsEnt4Sub.value.length > 0 || lsCol4Sub.value.length > 0
+    hasPending.value = lsEnt4Submit.value.length > 0 || lsCol4Submit.value.length > 0
     if (!hasPending.value) {
         eventBus.emit('default-tab', 'from UpdatePendingStatus');
     }

@@ -1,6 +1,5 @@
 <template>
     <div class="tbl">
-        <TextLine :text="title" textAlign="left" textColor="gray" lineColor="gray" lineHeight="0px" />
         <Vue3EasyDataTable :headers="headers" :items="items" class="table" @click-row="Modal" alternating :fixed-header="true" />
     </div>
 </template>
@@ -12,8 +11,7 @@
 import eventBus from '@/share/util';
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
-import { getUserInfoList, getUserOnline, putUserUpdate, delUser, putResetUserPWD } from "@/share/share";
-import TextLine from "@/components/shared/TextLine.vue";
+import { getUserInfoList, getUserOnline, putUserUpdate, delUser, putResetUserPWD, globalMsg } from "@/share/share";
 import type { Header, Item } from "vue3-easy-data-table";
 import Vue3EasyDataTable from "vue3-easy-data-table";
 import "vue3-easy-data-table/dist/style.css";
@@ -98,7 +96,7 @@ const reloadTable = async () => {
         });
     }
 
-    title.value = `${items.value.length} Registered Users:`
+    globalMsg.value = `Dictionary has ${items.value.length} registered users`
 }
 
 onMounted(() => {

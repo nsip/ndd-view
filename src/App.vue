@@ -6,6 +6,7 @@
     <main v-if="display">
 
         <div class="tab">
+            <h5 class="msg-bar">{{ globalMsg }}</h5>
             <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[3] }}</button>
             <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin">{{ choices[2] }}</button>
             <button class="tab-links" @click="showTabContent" v-if="loginAsAdmin && hasPending">{{ choices[1] }}</button>
@@ -45,7 +46,6 @@
         </div>
 
         <div v-if="mTabShown.get(choices[3])" class="tab-content">
-            Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data
             <BtnMaintain />
         </div>
 
@@ -58,7 +58,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending, globalMsg } from "@/share/share";
 import eventBus from '@/share/util';
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
@@ -284,5 +284,15 @@ header {
     padding: 1px 1px;
     border: 1px solid #ccc;
     border-top: none;
+}
+
+.msg-bar {
+    float: left;
+    text-align: left;
+    padding-left: 2vh;
+    transform: translateY(-50%);
+    position: relative;
+    font-style: italic;
+    font-weight: bold;
 }
 </style>
