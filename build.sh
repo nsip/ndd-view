@@ -9,6 +9,8 @@ W=`tput sgr0`
 
 echo "example: build.sh test /path/to/ec2/key.pem"
 
+./clean.sh
+
 #######################################################################################
 
 declare -A mR
