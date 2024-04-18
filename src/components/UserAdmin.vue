@@ -19,7 +19,6 @@ import UserEditModal from '@/components/modal-components/UserEdit.vue'
 import CCModal from '@/components/modal-components/CCModal.vue'
 
 const TableHeight = ref((window.innerHeight * 0.8).toString() + "px");
-const title = ref<any>("Registered Users:");
 const headers = ref<any>(null);
 const items = ref<any>(null);
 
@@ -203,7 +202,7 @@ const Modal = async (item: ClickRowArgument) => {
                 if (String(await renderOverlay(CCModal, {
                     props: {
                         text: confirmation,
-                        fontsize: "13px",                        
+                        fontsize: "13px",
                         width: "450px",
                         height: "180px",
                     },
