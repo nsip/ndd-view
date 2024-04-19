@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { FileText } from '@/share/share';
-import { patchReCom, patchValidation } from '@/share/share';
+import { patchReCom, patchValidation, globalMsg } from '@/share/share';
 import MsgModal from '@/components/modal-components/MsgModal.vue'
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
@@ -18,6 +18,10 @@ import { sleep } from "@/share/util";
 import Loader from "@/components/shared/Loader.vue"
 
 const loading = ref(false);
+
+onMounted(async () => {
+    globalMsg.value = `Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data`
+})
 
 const validate = async () => {
 

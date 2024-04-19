@@ -3,7 +3,6 @@
         <span class="title">National Education Data Dictionary</span>
         <button class="btn-exit" title="logout?" @click="Modal()">Exit</button>
         <span class="user-name">{{ loginUser }}</span>
-        <hr class="sep" />
     </div>
 </template>
 

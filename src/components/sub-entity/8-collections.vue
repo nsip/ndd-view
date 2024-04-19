@@ -53,7 +53,7 @@
 
                     <div v-if="isNotEmpty(item.Values)" class="cat-val-flex">
                         <span class="sub-cat">Values:</span>
-                        <div class="sub-val" v-html="item.Values"> </div>
+                        <span class="sub-val" v-html="item.Values"> </span>
                     </div>
 
                 </div>

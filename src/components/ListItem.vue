@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg } from "@/share/share";
 
 const searchInput = ref();
 
@@ -88,6 +88,9 @@ onMounted(async () => {
     await LoadList4Dic(choices[1])
     await setDefaultTab("tab-default-cat")
     searchInput.value.focus()
+
+    globalMsg.value = `Dictionary has ${lsEnt4Dic.value.length} entity items, ${lsCol4Dic.value.length} collection items`
+
     mounted = true;
 })
 
