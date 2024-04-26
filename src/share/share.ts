@@ -533,7 +533,7 @@ export const Refresh = async (phase: string) => {
     // selected for searching
     aim.value = selItem.value;
 
-    // selected category
+    // update selected category from backend api
     {
         const de = await getCategory(selItem.value, phase);
         if (de.error != null) {
@@ -541,7 +541,7 @@ export const Refresh = async (phase: string) => {
             console.log(de.error)
             return
         }
-        selCat.value = de.data;
+        SetSelCat(de.data)
     }
     // alert(`into refresh, selCat is [${selCat.value}]`)
 
@@ -641,4 +641,24 @@ export const Attributes = async () => {
 
 export const FileText = async (file: string) => {
     return (await getFileText(file)).data as string
+}
+
+export const SetSelItem = (item: string) => {
+    const regex = /\(\d+\)$/;
+    selItem.value = item.replace(regex, '');
+}
+
+export const SetSelCat = (cat: string) => {
+    switch (cat) {
+        case 'entity':
+            selCat.value = cat
+            eventBus.emit('cat-selection', 'tab-cat-ent'); // notify ListItem.vue to change tab
+            break;
+        case 'collection':
+            selCat.value = cat
+            eventBus.emit('cat-selection', 'tab-cat-col'); // notify ListItem.vue to change tab
+            break;
+        default:
+            alert(`selCat can only be one of[entity, collection], ignore ${cat}`)
+    }
 }

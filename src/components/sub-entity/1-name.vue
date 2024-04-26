@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, putEditItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID, UpdatePendingStatus } from "@/share/share";
+import { selEntity, putEditItemName, selMode, Refresh, LoadList4Sub, SetSelItem, IsItemEditable, PeekID, UpdatePendingStatus } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
@@ -116,7 +116,8 @@ const Modal = async () => {
             newSubFullName = result.newName
         }
         if (selMode.value == 'Approval') {
-            selItem.value = newSubFullName
+            // alert(newSubFullName)
+            SetSelItem(newSubFullName)
         }
         await Refresh("inbound")
 

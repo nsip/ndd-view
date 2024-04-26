@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { selClsPath, selChildren, Refresh, selEntity, selItem } from "@/share/share";
+import { selClsPath, selChildren, Refresh, selEntity, selItem, SetSelItem } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const childSelect = ref(null);
@@ -30,7 +30,7 @@ const switchSelect = (event: any) => {
 };
 
 const itemClick = async (item: string, phase: string) => {
-    selItem.value = item
+    SetSelItem(item)
     await Refresh(phase)
 }
 
