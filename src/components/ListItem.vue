@@ -14,7 +14,7 @@
             <button class="tab-links-cat" id="tab-cat-col" @click="showTabContent">{{ choices[1] }}</button>
         </div>
 
-        <div v-if="selCat == choices[0]" class="tab-content">
+        <div v-if="CatOnEntity()" class="tab-content">
             <ul class="list-ent">
                 <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
                     {{ item }}
@@ -22,7 +22,7 @@
             </ul>
         </div>
 
-        <div v-if="selCat == choices[1]" class="tab-content">
+        <div v-if="CatOnCollection()" class="tab-content">
             <ul class="list-col">
                 <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
                     {{ item }}
@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg, SetSelItem, SetSelCat, selEntity, selCollection } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg, SetSelItem, SetSelCat, selEntity, selCollection, CatOnEntity, CatOnCollection } from "@/share/share";
 import eventBus from "@/share/util";
 
 const searchInput = ref();

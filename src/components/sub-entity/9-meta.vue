@@ -16,14 +16,14 @@
 
                 <div v-if="isNotEmpty(item.SuperClass)" class="cat-val-flex">
                     <span class="sub-cat">SuperClass:</span>
-                    <span :class="selMode == 'Dictionary' ? 'sub-val clickable' : 'sub-val'" @click="itemClick(item.SuperClass)">{{ item.SuperClass }}</span>
+                    <span :class="ModeOnDictionary() ? 'sub-val clickable' : 'sub-val'" @click="itemClick(item.SuperClass)">{{ item.SuperClass }}</span>
                 </div>
 
                 <div v-if="isNotEmpty(item.IsAttributeOf)" class="cat-val-flex">
                     <span class="sub-cat">Is Attribute Of:</span>
                     <div class="sub-val">
                         <div v-for="(subitem, i) in item.IsAttributeOf" :key="i">
-                            <span :class="selMode == 'Dictionary' ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
+                            <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                     <span class="sub-cat">Cross Reference Entities:</span>
                     <div class="sub-val">
                         <div v-for="(subitem, i) in item.CrossRefEntities" :key="i">
-                            <span :class="selMode == 'Dictionary' ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
+                            <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                     <span class="sub-cat">Expected Attributes*:</span>
                     <div class="sub-val">
                         <div v-for="(subitem, i) in attrs" :key="i">
-                            <span :class="selMode == 'Dictionary' ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
+                            <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
                     </div>
@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 
-import { selEntity, Attributes, Refresh, SetSelItem, selMode } from "@/share/share";
+import { selEntity, Attributes, Refresh, SetSelItem, ModeOnDictionary } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const attrs = ref();
@@ -65,7 +65,7 @@ watchEffect(async () => {
 });
 
 const itemClick = async (item: string) => {
-    if (selMode.value == 'Dictionary') {
+    if (ModeOnDictionary()) {
         SetSelItem(item);
         await Refresh('existing')
     }

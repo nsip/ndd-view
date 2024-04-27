@@ -4,7 +4,7 @@
             <span class="category">Entities:</span>
             <span class="content">
                 <span v-for="(item, idx) in selCollection.Entities" :key="idx">
-                    <span :class="selMode == 'Dictionary' ? 'clickable' : ''" @click="itemClick(item)">{{ item }}</span>
+                    <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(item)">{{ item }}</span>
                     <br />
                 </span>
             </span>
@@ -13,11 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import { selCollection, selMode, SetSelItem, Refresh, SetSelCat } from "@/share/share";
+import { selCollection, SetSelItem, Refresh, SetSelCat, ModeOnDictionary } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const itemClick = async (item: string) => {
-    if (selMode.value == 'Dictionary') {
+    if (ModeOnDictionary()) {
         SetSelCat('entity'); // jump to 'entity category' to display 'entity item'
         SetSelItem(item);
         await Refresh('existing')

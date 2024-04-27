@@ -662,3 +662,27 @@ export const SetSelCat = (cat: string) => {
             alert(`selCat can only be one of[entity, collection], ignore ${cat}`)
     }
 }
+
+export const ModeOnDictionary = () => {
+    return selMode.value == 'Dictionary'
+}
+
+export const ModeOnApproval = () => {
+    return selMode.value == 'Approval'
+}
+
+export const ModeOnAdmin = () => {
+    return selMode.value == 'Admin'
+}
+
+export const ModeOnMaintain = () => {
+    return selMode.value == 'Maintain'
+}
+
+export const CatOnEntity = () => {
+    return selCat.value == 'entity'
+}
+
+export const CatOnCollection = () => {
+    return selCat.value == 'collection'
+}

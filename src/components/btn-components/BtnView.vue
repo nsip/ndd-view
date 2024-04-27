@@ -23,7 +23,7 @@
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selMode, selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDumpJSON, getDumpCSV, loginAsAdmin } from "@/share/share";
+import { selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDumpJSON, getDumpCSV, loginAsAdmin, ModeOnDictionary, CatOnEntity, CatOnCollection } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
 import CCModal from '@/components/modal-components/CCModal.vue'
 import DownloadTypeSel from "../modal-components/DownloadTypeSel.vue";
@@ -31,11 +31,11 @@ import DownloadTypeSel from "../modal-components/DownloadTypeSel.vue";
 const loading = ref(false);
 
 // for UI
-const doNew = computed(() => selMode.value == 'Dictionary')
-const doSubscribe = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDelete = computed(() => loginAsAdmin.value && selMode.value == 'Dictionary' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doDump = computed(() => selMode.value == 'Dictionary')
+const doNew = computed(() => ModeOnDictionary())
+const doSubscribe = computed(() => ModeOnDictionary() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => ModeOnDictionary() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDelete = computed(() => loginAsAdmin.value && ModeOnDictionary() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doDump = computed(() => ModeOnDictionary())
 
 const Y_BtnEdit = ref('250px')
 const Y_BtnSubscribe = ref('180px')
@@ -44,8 +44,8 @@ const Y_BtnDownload = ref('40px')
 
 const Y_BtnNew = computed(() => {
     if (selCat.value.length == 0 ||
-        (selCat.value == 'entity' && isEmpty(selEntity)) ||
-        (selCat.value == 'collection' && isEmpty(selCollection))) {
+        (CatOnEntity() && isEmpty(selEntity)) ||
+        (CatOnCollection() && isEmpty(selCollection))) {
         return Y_BtnDelete.value
     }
     return "320px"
@@ -53,7 +53,7 @@ const Y_BtnNew = computed(() => {
 
 // DELETE ///////////////////////////////////////////////////////////////
 
-const delName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
+const delName = computed(() => CatOnEntity() ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal ***
 const Modal4Del = async () => {
