@@ -64,11 +64,21 @@
 </template>
 
 <script setup lang="ts">
-import { selEntity, SetSelItem, Refresh, SetSelCat, ModeOnDictionary } from "@/share/share";
+import { selEntity, SetSelItem, Refresh, SetSelCat, ModeOnDictionary, lsCol4Dic } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
+import { notify } from "@kyvg/vue3-notification";
 
 const itemClick = async (item: string) => {
     if (ModeOnDictionary()) {
+        if (!lsCol4Dic.value.includes(item)) {
+            notify({
+                title: "Invalid Collection Name Value",
+                text: `'${item}' is NOT in Collection List
+                Change name or Add a new Collection item`,
+                type: "warn"
+            })
+            return
+        }
         SetSelCat('collection');
         SetSelItem(item);
         await Refresh('existing')
