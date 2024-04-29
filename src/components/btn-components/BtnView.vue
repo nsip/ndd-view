@@ -197,7 +197,7 @@ const Modal4Download = async () => {
 }
 
 const DownloadJSON = async () => {
-    const de = await getDumpJSON(selCat.value, "existing")
+    const de = await getDumpJSON(selCat.value, 'existing')
     if (de.error != null) {
         notify({
             title: "Error: Dump All JSON",

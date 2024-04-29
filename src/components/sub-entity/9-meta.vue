@@ -66,8 +66,8 @@ watchEffect(async () => {
 
 const itemClick = async (item: string) => {
     if (ModeOnDictionary()) {
-        SetSelItem(item);
-        await Refresh('existing')
+        await SetSelItem(item, 'existing');
+        await Refresh('existing');
     }
 }
 

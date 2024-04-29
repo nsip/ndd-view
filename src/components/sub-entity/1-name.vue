@@ -117,9 +117,9 @@ const Modal = async () => {
         }
         if (ModeOnApproval()) {
             // alert(newSubFullName)
-            SetSelItem(newSubFullName)
+            await SetSelItem(newSubFullName, 'inbound')
         }
-        await Refresh("inbound")
+        await Refresh('inbound')
 
     } catch (e) {
         switch (e) {

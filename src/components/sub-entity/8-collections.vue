@@ -73,14 +73,13 @@ const itemClick = async (item: string) => {
         if (!lsCol4Dic.value.includes(item)) {
             notify({
                 title: "Invalid Collection Name Value",
-                text: `'${item}' is NOT in Collection List
+                text: `'${item}' is NOT in Collection List.
                 Change name or Add a new Collection item`,
                 type: "warn"
             })
             return
         }
-        SetSelCat('collection');
-        SetSelItem(item);
+        await SetSelItem(item, 'existing');
         await Refresh('existing')
     }
 }

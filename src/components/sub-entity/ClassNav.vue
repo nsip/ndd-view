@@ -20,7 +20,7 @@ const childSelect = ref(null);
 
 const switchSelect = (event: any) => {
     if (event.target.value != "-1") {
-        itemClick(event.target.value, "existing");
+        itemClick(event.target.value, 'existing');
 
         const select = childSelect.value as HTMLSelectElement | null;
         if (select != null) {
@@ -30,7 +30,7 @@ const switchSelect = (event: any) => {
 };
 
 const itemClick = async (item: string, phase: string) => {
-    SetSelItem(item)
+    await SetSelItem(item, phase)
     await Refresh(phase)
 }
 

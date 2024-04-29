@@ -27,7 +27,7 @@ onMounted(async () => {
 });
 
 const itemClick = async (item: string, phase: string) => {
-    SetSelItem(item)
+    await SetSelItem(item, phase)
     await Refresh(phase)
 }
 

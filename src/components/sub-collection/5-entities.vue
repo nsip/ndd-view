@@ -18,8 +18,7 @@ import { isNotEmpty } from "@/share/util";
 
 const itemClick = async (item: string) => {
     if (ModeOnDictionary()) {
-        SetSelCat('entity'); // jump to 'entity category' to display 'entity item'
-        SetSelItem(item);
+        await SetSelItem(item, 'existing'); // jump to 'entity category' to display 'entity item'
         await Refresh('existing')
     }
 }
