@@ -29,10 +29,10 @@
                     </div>
                 </div>
 
-                <div v-if="isNotEmpty(item.CrossRefEntities)" class="cat-val-flex">
+                <div v-if="isNotEmpty(refs)" class="cat-val-flex">
                     <span class="sub-cat">Cross Reference Entities:</span>
                     <div class="sub-val">
-                        <div v-for="(subitem, i) in item.CrossRefEntities" :key="i">
+                        <div v-for="(subitem, i) in refs" :key="i">
                             <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
@@ -56,12 +56,15 @@
 
 <script setup lang="ts">
 
-import { selEntity, Attributes, Refresh, SetSelItem, ModeOnDictionary } from "@/share/share";
+import { selEntity, Attributes, References, Refresh, SetSelItem, ModeOnDictionary } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const attrs = ref();
+const refs = ref();
+
 watchEffect(async () => {
     attrs.value = await Attributes();
+    refs.value = await References();
 });
 
 const itemClick = async (item: string) => {

@@ -202,6 +202,18 @@ export const getAttributes = async (name: string) => {
     };
 }
 
+export const getReferences = async (name: string) => {
+    const mQuery = new Map<string, any>([
+        ["name", name],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/bi-references`, "GET", mQuery, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getCategory = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -626,6 +638,10 @@ export const UpdatePendingStatus = async () => {
 
 export const Attributes = async () => {
     return (await getAttributes(selItem.value)).data as string[]
+}
+
+export const References = async () => {
+    return (await getReferences(selItem.value)).data as string[]
 }
 
 export const FileText = async (file: string) => {
