@@ -89,4 +89,5 @@ class meta {
     SuperClass = "";
     IsAttributeOf: string[] = [];
     CrossRefEntities: string[] = [];
+    Timeframe = "";
 }

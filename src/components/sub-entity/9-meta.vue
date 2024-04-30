@@ -49,6 +49,11 @@
                     </div>
                 </div>
 
+                <div v-if="isNotEmpty(item.Timeframe)" class="cat-val-flex">
+                    <span class="sub-cat">Timeframe:</span>
+                    <span class="sub-val">{{ item.Timeframe }}</span>
+                </div>
+
             </div>
         </span>
     </div>
