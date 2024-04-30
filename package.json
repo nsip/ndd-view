@@ -31,7 +31,7 @@
         "typescript": "~5.4.5",
         "unplugin-auto-import": "^0.17.5",
         "vite": "^5.2.10",
-        "vue-tsc": "^2.0.14",
+        "vue-tsc": "^2.0.15",
         "vue3-spinner": "^0.0.17"
     }
 }
