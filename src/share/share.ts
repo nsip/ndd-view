@@ -202,6 +202,18 @@ export const getAttributes = async (name: string) => {
     };
 }
 
+export const getReferences = async (name: string) => {
+    const mQuery = new Map<string, any>([
+        ["name", name],
+    ]);
+    const rt = await fetchNoBody(`api/dic/auth/bi-references`, "GET", mQuery, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const getCategory = async (name: string, phase: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -232,7 +244,7 @@ export const putEditItemName = async (oldName: string, newName: string, inbound:
     const mQuery = new Map<string, any>([
         ["old", oldName],
         ["new", newName],
-        ["inbound", inbound],
+        ['inbound', inbound],
         ["cat", cat],
     ]);
     const rt = await fetchNoBody(`api/dic/auth/update-name`, "PUT", mQuery, loginAuth.value);
@@ -462,7 +474,7 @@ export const LoadList4Dic = async (cat: string) => {
     switch (cat) {
         case 'entity':
             {
-                const de = await getList(cat, "existing");
+                const de = await getList(cat, 'existing');
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -474,7 +486,7 @@ export const LoadList4Dic = async (cat: string) => {
 
         case 'collection':
             {
-                const de = await getList(cat, "existing");
+                const de = await getList(cat, 'existing');
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -502,7 +514,7 @@ export const LoadList4Sub = async (cat: string) => {
     switch (cat) {
         case 'entity':
             {
-                const de = await getList(cat, "inbound");
+                const de = await getList(cat, 'inbound');
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -514,7 +526,7 @@ export const LoadList4Sub = async (cat: string) => {
 
         case 'collection':
             {
-                const de = await getList(cat, "inbound");
+                const de = await getList(cat, 'inbound');
                 if (de.error != null) {
                     // alert(de.error)
                     console.log(de.error)
@@ -526,24 +538,13 @@ export const LoadList4Sub = async (cat: string) => {
     }
 };
 
-// use selItem to refresh page content
-// so, before invoking Refresh, need "selItem.value = ***"
+// use SetSelItem to set page content
+// so, before invoking Refresh, need "SetSelItem(***)"
 export const Refresh = async (phase: string) => {
 
     // selected for searching
     aim.value = selItem.value;
 
-    // selected category
-    {
-        const de = await getCategory(selItem.value, phase);
-        if (de.error != null) {
-            // alert(de.error)
-            console.log(de.error)
-            return
-        }
-        selCat.value = de.data;
-    }
-    // alert(`into refresh, selCat is [${selCat.value}]`)
 
     // get content, here content is json as string
     {
@@ -580,7 +581,7 @@ export const Refresh = async (phase: string) => {
     })
 
     // update class path
-    if (phase == "existing") {
+    if (phase == 'existing') {
         // get class info
         const de = await getClsInfo(selItem.value)
         if (de.error != null) {
@@ -639,6 +640,62 @@ export const Attributes = async () => {
     return (await getAttributes(selItem.value)).data as string[]
 }
 
+export const References = async () => {
+    return (await getReferences(selItem.value)).data as string[]
+}
+
 export const FileText = async (file: string) => {
     return (await getFileText(file)).data as string
+}
+
+export const SetSelItem = async (item: string, phase: string) => {
+    // set selected item
+    const regex = /\(\d+\)$/;
+    selItem.value = item.replace(regex, '');
+
+    // also update selected category from backend api
+    const de = await getCategory(selItem.value, phase);
+    if (de.error == null) {
+        SetSelCat(de.data)
+    }
+}
+
+// only for tab clicking
+export const SetSelCat = (cat: string) => {
+    switch (cat) {
+        case 'entity':
+            selCat.value = cat
+            eventBus.emit('cat-selection', 'tab-cat-ent'); // notify ListItem.vue to change tab
+            break;
+        case 'collection':
+            selCat.value = cat
+            eventBus.emit('cat-selection', 'tab-cat-col'); // notify ListItem.vue to change tab
+            break;
+        default:
+            alert(`selCat can only be one of[entity, collection], ignore ${cat}`)
+    }
+}
+
+export const ModeOnDictionary = () => {
+    return selMode.value == 'Dictionary'
+}
+
+export const ModeOnApproval = () => {
+    return selMode.value == 'Approval'
+}
+
+export const ModeOnAdmin = () => {
+    return selMode.value == 'Admin'
+}
+
+export const ModeOnMaintain = () => {
+    return selMode.value == 'Maintain'
+}
+
+export const CatOnEntity = () => {
+    return selCat.value == 'entity'
+}
+
+export const CatOnCollection = () => {
+    return selCat.value == 'collection'
 }

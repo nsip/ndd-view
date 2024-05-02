@@ -8,7 +8,7 @@
 
                     <div v-if="isNotEmpty(item.Name)" class="cat-val-flex">
                         <span class="sub-cat">Name:</span>
-                        <span class="sub-val">{{ item.Name }}</span>
+                        <span :class="ModeOnDictionary() ? 'sub-val clickable' : 'sub-val'" @click="itemClick(item.Name)">{{ item.Name }}</span>
                     </div>
 
                     <div v-if="isNotEmpty(item.Description)" class="cat-val-flex">
@@ -64,8 +64,26 @@
 </template>
 
 <script setup lang="ts">
-import { selEntity } from "@/share/share";
+import { selEntity, SetSelItem, Refresh, SetSelCat, ModeOnDictionary, lsCol4Dic } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
+import { notify } from "@kyvg/vue3-notification";
+
+const itemClick = async (item: string) => {
+    if (ModeOnDictionary()) {
+        if (!lsCol4Dic.value.includes(item)) {
+            notify({
+                title: "Invalid Collection Name Value",
+                text: `'${item}' is NOT in Collection List.
+                Change name or Add a new Collection item`,
+                type: "warn"
+            })
+            return
+        }
+        await SetSelItem(item, 'existing');
+        await Refresh('existing')
+    }
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -125,5 +143,11 @@ import { isNotEmpty } from "@/share/util";
 
 .sub-sep-line {
     color: darkgray;
+}
+
+.clickable:hover {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
 }
 </style>

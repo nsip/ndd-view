@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, LoadList4Sub, globalMsg } from "@/share/share";
+import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, LoadList4Sub, globalMsg, SetSelItem } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
@@ -27,7 +27,7 @@ onMounted(async () => {
 });
 
 const itemClick = async (item: string, phase: string) => {
-    selItem.value = item
+    await SetSelItem(item, phase)
     await Refresh(phase)
 }
 

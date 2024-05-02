@@ -21,7 +21,6 @@ import Loader from "@/components/shared/Loader.vue"
 import { isEmpty, sleep, toCMS, download_file, isUrl, lastUrlPathSegment } from "@/share/util"
 import eventBus from '@/share/util'
 import {
-    selMode,
     selCat,
     selEntity,
     selCollection,
@@ -31,14 +30,16 @@ import {
     delReject,
     selItem,
     FileText,
-    UpdatePendingStatus
+    UpdatePendingStatus,
+    ModeOnApproval,
+    CatOnEntity
 } from "@/share/share";
 
 const loading = ref(false);
 
-const doApproval = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doEdit = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
-const doReject = computed(() => selMode.value == 'Approval' && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doApproval = computed(() => ModeOnApproval() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doEdit = computed(() => ModeOnApproval() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
+const doReject = computed(() => ModeOnApproval() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 
 // APPROVE /////////////////////////////////////////////////////////////////////////
 
@@ -52,7 +53,7 @@ const Approve = async () => {
 
     let flagCreate = true;
     {
-        const de = await getList(cat, "existing")
+        const de = await getList(cat, 'existing')
         if (de.error != null) {
             notify({
                 title: "Error: Get Existing List",
@@ -152,7 +153,7 @@ const Approve = async () => {
 
 // REJECT /////////////////////////////////////////////////////////////////////////
 
-const rejName = computed(() => selCat.value == 'entity' ? selEntity.Entity : selCollection.Entity)
+const rejName = computed(() => CatOnEntity() ? selEntity.Entity : selCollection.Entity)
 
 // *** use "confirm-cancel" modal box ***
 const Modal = async () => {

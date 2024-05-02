@@ -6,7 +6,7 @@ import mitt from "mitt"
 const eventBus = mitt();
 export default eventBus;
 
-import { IsItemEditable, selMode } from "./share";
+import { IsItemEditable, ModeOnDictionary } from "./share";
 import { notify } from "@kyvg/vue3-notification";
 
 export const space4html = (n: number) => {
@@ -144,7 +144,7 @@ export const lastUrlPathSegment = (url: string) => {
 
 export const toCMS = async (flag: string, selCat: string, selItem: string, phase: string) => {
 
-    if (selMode.value == 'Dictionary' && flag == 'edit') {
+    if (ModeOnDictionary() && flag == 'edit') {
         if (!await IsItemEditable(selItem)) {
             notify({
                 title: "",

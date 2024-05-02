@@ -16,24 +16,24 @@
 
                 <div v-if="isNotEmpty(item.SuperClass)" class="cat-val-flex">
                     <span class="sub-cat">SuperClass:</span>
-                    <span class="sub-val">{{ item.SuperClass }}</span>
+                    <span :class="ModeOnDictionary() ? 'sub-val clickable' : 'sub-val'" @click="itemClick(item.SuperClass)">{{ item.SuperClass }}</span>
                 </div>
 
                 <div v-if="isNotEmpty(item.IsAttributeOf)" class="cat-val-flex">
                     <span class="sub-cat">Is Attribute Of:</span>
                     <div class="sub-val">
                         <div v-for="(subitem, i) in item.IsAttributeOf" :key="i">
-                            <span>{{ subitem }}</span>
+                            <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
                     </div>
                 </div>
 
-                <div v-if="isNotEmpty(item.CrossRefEntities)" class="cat-val-flex">
+                <div v-if="isNotEmpty(refs)" class="cat-val-flex">
                     <span class="sub-cat">Cross Reference Entities:</span>
                     <div class="sub-val">
-                        <div v-for="(subitem, i) in item.CrossRefEntities" :key="i">
-                            <span>{{ subitem }}</span>
+                        <div v-for="(subitem, i) in refs" :key="i">
+                            <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
                     </div>
@@ -43,10 +43,15 @@
                     <span class="sub-cat">Expected Attributes*:</span>
                     <div class="sub-val">
                         <div v-for="(subitem, i) in attrs" :key="i">
-                            <span>{{ subitem }}</span>
+                            <span :class="ModeOnDictionary() ? 'clickable' : ''" @click="itemClick(subitem)">{{ subitem }}</span>
                             <br />
                         </div>
                     </div>
+                </div>
+
+                <div v-if="isNotEmpty(item.Timeframe)" class="cat-val-flex">
+                    <span class="sub-cat">Timeframe:</span>
+                    <span class="sub-val">{{ item.Timeframe }}</span>
                 </div>
 
             </div>
@@ -56,13 +61,23 @@
 
 <script setup lang="ts">
 
-import { selEntity, Attributes } from "@/share/share";
+import { selEntity, Attributes, References, Refresh, SetSelItem, ModeOnDictionary } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const attrs = ref();
+const refs = ref();
+
 watchEffect(async () => {
     attrs.value = await Attributes();
+    refs.value = await References();
 });
+
+const itemClick = async (item: string) => {
+    if (ModeOnDictionary()) {
+        await SetSelItem(item, 'existing');
+        await Refresh('existing');
+    }
+}
 
 </script>
 
@@ -119,5 +134,11 @@ watchEffect(async () => {
     width: 100%;
     margin-left: -90px;
     font-size: 15px;
+}
+
+.clickable:hover {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
 }
 </style>

@@ -3,7 +3,7 @@
         <div class="area">
             <span class="category">Name:</span>
             <span class="content">{{ selEntity.Entity }}</span>
-            <button v-if="selMode == 'Dictionary' || selMode == 'Approval'" id="edit-btn" @click="Modal()">
+            <button v-if="ModeOnDictionary() || ModeOnApproval()" id="edit-btn" @click="Modal()">
                 <font-awesome-icon icon="pen" />
             </button>
         </div>
@@ -14,12 +14,12 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, putEditItemName, selMode, Refresh, LoadList4Sub, selItem, IsItemEditable, PeekID, UpdatePendingStatus } from "@/share/share";
+import { selEntity, putEditItemName, Refresh, LoadList4Sub, SetSelItem, IsItemEditable, PeekID, UpdatePendingStatus, ModeOnApproval, ModeOnDictionary } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
 const oriName = (name: string) => {
-    if (selMode.value == 'Approval') {
+    if (ModeOnApproval()) {
         if (name.includes(')=>')) {
             const parts = name.split('=>')
             return parts[0].slice(0, parts[0].lastIndexOf('('))
@@ -36,7 +36,7 @@ const oriName = (name: string) => {
 }
 
 const idFromSubFullName = (name: string) => {
-    if (selMode.value == 'Approval') {
+    if (ModeOnApproval()) {
         if (name.includes(')=>')) {
             const parts = name.split('=>')
             const o = parts[0].lastIndexOf('(')
@@ -58,7 +58,7 @@ const Modal = async () => {
 
     let oldName = oriName(selEntity.Entity)
 
-    if (selMode.value == 'Dictionary') {
+    if (ModeOnDictionary()) {
         if (!await IsItemEditable(oldName)) {
             notify({
                 title: "",
@@ -86,7 +86,7 @@ const Modal = async () => {
             return
         }
 
-        const de = await putEditItemName(oldName, result.newName, selMode.value == 'Approval', 'entity')
+        const de = await putEditItemName(oldName, result.newName, ModeOnApproval(), 'entity')
         if (de.error != null) {
             notify({
                 title: "Error: Edit Entity Name",
@@ -115,10 +115,11 @@ const Modal = async () => {
         } else {
             newSubFullName = result.newName
         }
-        if (selMode.value == 'Approval') {
-            selItem.value = newSubFullName
+        if (ModeOnApproval()) {
+            // alert(newSubFullName)
+            await SetSelItem(newSubFullName, 'inbound')
         }
-        await Refresh("inbound")
+        await Refresh('inbound')
 
     } catch (e) {
         switch (e) {

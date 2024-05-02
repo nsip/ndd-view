@@ -10,11 +10,11 @@
         </div>
 
         <div class="tab">
-            <button class="tab-links-cat" id="tab-default-cat" @click="showTabContent">{{ choices[0] }}</button>
-            <button class="tab-links-cat" @click="showTabContent">{{ choices[1] }}</button>
+            <button class="tab-links-cat" id="tab-cat-ent" @click="showTabContent">{{ choices[0] }}</button>
+            <button class="tab-links-cat" id="tab-cat-col" @click="showTabContent">{{ choices[1] }}</button>
         </div>
 
-        <div v-if="mTabShown.get(choices[0])" class="tab-content">
+        <div v-if="CatOnEntity()" class="tab-content">
             <ul class="list-ent">
                 <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
                     {{ item }}
@@ -22,7 +22,7 @@
             </ul>
         </div>
 
-        <div v-if="mTabShown.get(choices[1])" class="tab-content">
+        <div v-if="CatOnCollection()" class="tab-content">
             <ul class="list-col">
                 <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
                     {{ item }}
@@ -36,7 +36,8 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg, SetSelItem, SetSelCat, selEntity, selCollection, CatOnEntity, CatOnCollection } from "@/share/share";
+import eventBus from "@/share/util";
 
 const searchInput = ref();
 
@@ -45,21 +46,9 @@ const choices = reactive([
     'collection',
 ]);
 
-// tab content shown flag, key is tab-text
-const mTabShown = ref(new Map([
-    [choices[0], false],
-    [choices[1], false],
-]));
-
 const showTabContent = async (evt: MouseEvent) => {
 
-    const id = (evt.target! as HTMLElement).textContent
-    console.log(id)
-
-    mTabShown.value.forEach((flag, tab) => {
-        mTabShown.value.set(tab, tab == id ? true : false)
-    });
-
+    // Tab Buttons Effect
     let tab_links = document.getElementsByClassName("tab-links-cat");
     for (let i = 0; i < tab_links.length; i++) {
         tab_links[i].className = tab_links[i].className.replace(" active", "");
@@ -68,51 +57,51 @@ const showTabContent = async (evt: MouseEvent) => {
 
     /////////////////////////
 
-    selCat.value = id!;
+    const id = (evt.target! as HTMLElement).textContent
+    if (id != selCat.value) {
+
+        // Tab Changed, Selected Category Changed
+        SetSelCat(id!);
+
+        // Tab Changed, Selected Item Cleared.
+        selEntity.Reset();
+        selCollection.Reset();
+    }
 }
 
 const setDefaultTab = async (id: string) => {
-    const iid = window.setInterval(() => {
-        document.getElementById(id)!.click();
-    }, 50)
-    window.setTimeout(() => {
-        window.clearInterval(iid)
-    }, 1000)
+    const iid = window.setInterval(() => { document.getElementById(id)!.click(); }, 50)
+    window.setTimeout(() => { window.clearInterval(iid) }, 1000)
 }
 
 let mounted = false;
 
 onMounted(async () => {
-    selCat.value = choices[0]
+
+    // prepare list
     await LoadList4Dic(choices[0])
     await LoadList4Dic(choices[1])
-    await setDefaultTab("tab-default-cat")
+
+    // set default category tab & set selected category
+    await setDefaultTab("tab-cat-ent")
+    SetSelCat(choices[0])
+
+    // focus search box
     searchInput.value.focus()
 
+    // prepare jumping item selection, e.g. from 'collection' page content link to 'entity' page. Category should also changed.
+    eventBus.on('cat-selection', async (cat) => {
+        document.getElementById(cat as string)!.click(); // cat: 'tab-cat-ent', 'tab-cat-col'
+    })
+
+    // global message bar info
     globalMsg.value = `Dictionary has ${lsEnt4Dic.value.length} entity items, ${lsCol4Dic.value.length} collection items`
 
     mounted = true;
 })
 
-watchEffect(async () => {
-    const cat = selCat.value;
-    if (mounted) {
-        if (cat.length > 0) {
-            await LoadList4Dic(cat)
-            switch (cat) {
-                case choices[0]:
-                    await itemClick(lsEnt4Dic.value[0], 'existing')
-                    break
-                case choices[1]:
-                    await itemClick(lsCol4Dic.value[0], 'existing')
-                    break
-            }
-        }
-    }
-})
-
 const itemClick = async (item: string, phase: string) => {
-    selItem.value = item
+    await SetSelItem(item, phase)
     await Refresh(phase)
 }
 
