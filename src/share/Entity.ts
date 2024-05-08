@@ -64,6 +64,7 @@ class legalDef {
     Definition = "";
     Commentary = "";
     Datestamp = "";
+    Jurisdiction = "";
 }
 
 class sensitivity {
