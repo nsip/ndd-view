@@ -1,7 +1,7 @@
 <template>
     <div id="modal">
 
-        <label id="prefix-selection">Download Type: </label>
+        <label id="prefix-selection">Dump Type: </label>
 
         <div class="type-input">
             <span v-for="choice in choices">

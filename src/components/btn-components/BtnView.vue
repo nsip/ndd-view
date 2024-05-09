@@ -197,17 +197,24 @@ const Modal4Download = async () => {
 }
 
 const DownloadJSON = async () => {
-    const de = await getDumpJSON(selCat.value, 'existing')
-    if (de.error != null) {
-        notify({
-            title: "Error: Dump All JSON",
-            text: de.error,
-            type: "error"
-        })
-        return
+    //
+    // dump both entities & collections
+    //
+    for (let cat of ['entity', 'collection']) {
+        const de = await getDumpJSON(cat, 'existing')
+        if (de.error != null) {
+            notify({
+                title: "Error: Dump All JSON",
+                text: de.error,
+                type: "error"
+            })
+            return
+        }
+        const url = de.data
+        console.log(`url ${url}`)
+        download_file(url, `dump-dic-${cat}.zip`);
+        await sleep(1000)
     }
-    const url = de.data
-    download_file(url, "dump-dic.zip");
 }
 
 const DownloadCSV = async () => {
