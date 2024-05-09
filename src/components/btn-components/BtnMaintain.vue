@@ -5,6 +5,9 @@
     <a class="float" id="file-circle-check" @click="reconstruct" title="re-construct backend data">
         <font-awesome-icon icon="file-circle-check" class="floating" />
     </a>
+    <a class="float" id="upload" @click="upload" title="upload zip package to update dictionary data">
+        <font-awesome-icon icon="upload" class="floating" />
+    </a>
     <Loader id="loader" v-if="loading" />
 </template>
 
@@ -92,6 +95,12 @@ const reconstruct = async () => {
     loading.value = false
 }
 
+const upload = async () => {
+
+    alert("TODO")
+
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -122,7 +131,7 @@ const reconstruct = async () => {
 }
 
 #check-square {
-    bottom: 110px;
+    bottom: 190px;
 }
 
 #check-square:hover {
@@ -130,10 +139,18 @@ const reconstruct = async () => {
 }
 
 #file-circle-check {
-    bottom: 40px;
+    bottom: 110px;
 }
 
 #file-circle-check:hover {
     background-color: rgb(17, 202, 44);
+}
+
+#upload {
+    bottom: 40px;
+}
+
+#upload:hover {
+    background-color: rgb(30, 226, 240);
 }
 </style>

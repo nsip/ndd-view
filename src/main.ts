@@ -2,10 +2,10 @@ import App from "@/App.vue";
 import vue3Spinner from 'vue3-spinner';
 import Notifications from '@kyvg/vue3-notification'
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes, faDownload, faCheckSquare, faFileCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes, faDownload, faUpload, faCheckSquare, faFileCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes, faDownload, faCheckSquare, faFileCircleCheck);
+library.add(faPhone, faPlus, faThumbsUp, faCheck, faSearch, faBookmark, faPen, faCross, faTimes, faDownload, faUpload, faCheckSquare, faFileCircleCheck);
 
 // import { globalCookiesConfig } from "vue3-cookies";
 // globalCookiesConfig({
