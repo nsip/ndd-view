@@ -1,12 +1,12 @@
 <template>
+    <a class="float" id="upload" @click="upload" title="upload zip package to update dictionary data">
+        <font-awesome-icon icon="upload" class="floating" />
+    </a>
     <a class="float" id="check-square" @click="validate" title="validate backend data">
         <font-awesome-icon icon="check-square" class="floating" />
     </a>
     <a class="float" id="file-circle-check" @click="reconstruct" title="re-construct backend data">
         <font-awesome-icon icon="file-circle-check" class="floating" />
-    </a>
-    <a class="float" id="upload" @click="upload" title="upload zip package to update dictionary data">
-        <font-awesome-icon icon="upload" class="floating" />
     </a>
     <Loader id="loader" v-if="loading" />
 </template>
@@ -130,8 +130,16 @@ const upload = async () => {
     color: white;
 }
 
-#check-square {
+#upload {
     bottom: 190px;
+}
+
+#upload:hover {
+    background-color: rgb(30, 226, 240);
+}
+
+#check-square {
+    bottom: 110px;
 }
 
 #check-square:hover {
@@ -139,18 +147,10 @@ const upload = async () => {
 }
 
 #file-circle-check {
-    bottom: 110px;
+    bottom: 40px;
 }
 
 #file-circle-check:hover {
     background-color: rgb(17, 202, 44);
-}
-
-#upload {
-    bottom: 40px;
-}
-
-#upload:hover {
-    background-color: rgb(30, 226, 240);
 }
 </style>
