@@ -465,6 +465,18 @@ export const postSendEmail = async (
     };
 };
 
+export const postUpload2Recover = async (file: File) => {
+    const mForm = new Map<string, any>([
+        ["file", file],
+    ]);
+    const rt = await fetchBodyForm(`/api/admin/upload-dic-formfile`, `POST`, mEmpty, mForm, loginAuth.value)
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 // set 'lsEnt4Dic', 'lsCol4Dic' here
