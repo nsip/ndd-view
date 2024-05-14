@@ -14,15 +14,13 @@
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, LoadList4Sub, globalMsg, SetSelItem } from "@/share/share";
+import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, globalMsg, SetSelItem, UpdatePendingStatus } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
 
 onMounted(async () => {
-    await LoadList4Sub('entity')
-    await LoadList4Sub('collection')
-
+    await UpdatePendingStatus();
     globalMsg.value = `Dictionary has ${lsEnt4Submit.value.length} pending entity items, ${lsCol4Submit.value.length} pending collection items`
 });
 

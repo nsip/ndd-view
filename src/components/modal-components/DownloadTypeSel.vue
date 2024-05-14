@@ -1,7 +1,9 @@
 <template>
     <div id="modal">
 
-        <label id="prefix-selection">Download Type: </label>
+        <label id="notification">{{ props.notification }}</label>
+
+        <label id="prefix-selection">Dump Type: </label>
 
         <div class="type-input">
             <span v-for="choice in choices">
@@ -45,7 +47,9 @@ const select = () => { };
 
 // for invoker confirm using
 
-const props = defineProps({})
+const props = defineProps({
+    notification: String
+})
 
 onMounted(() => {
     document.body.style.pointerEvents = "none";
@@ -62,9 +66,9 @@ onUnmounted(() => {
 
 // for labels, etc.
 let leftColumn1 = '30px'
-let leftColumn2 = '180px'
+let leftColumn2 = '230px'
 let topRow1 = '10px'
-let topRow2 = '55px'
+let topRow2 = '40px'
 let topRow3 = '80px'
 
 // for buttons
@@ -80,8 +84,8 @@ let bottomRow1 = '15px'
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 350px;
-    height: 100px;
+    width: 400px;
+    height: 130px;
     background-color: rgb(200, 200, 200);
     opacity: 0.95;
     border-radius: 20px;
@@ -89,21 +93,31 @@ let bottomRow1 = '15px'
 
 /* 1st line */
 
-#prefix-selection {
+#notification {
     position: absolute;
     left: v-bind('leftColumn1');
     top: v-bind('topRow1');
     margin-top: 5px;
-    font-size: large;
+    font-size: normal;
 }
 
 /* 2nd line */
 
+#prefix-selection {
+    position: absolute;
+    left: v-bind('leftColumn1');
+    top: v-bind('topRow2');
+    margin-top: 20px;
+    font-size: large;
+}
+
+/* 3rd line */
+
 .type-input {
     position: absolute;
     left: v-bind('leftColumn2');
-    top: v-bind('topRow1');
-    margin-top: 5px;
+    top: v-bind('topRow2');
+    margin-top: 20px;
     font-size: large;
 }
 

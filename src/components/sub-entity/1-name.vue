@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { notify } from "@kyvg/vue3-notification";
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selEntity, putEditItemName, Refresh, LoadList4Sub, SetSelItem, IsItemEditable, PeekID, UpdatePendingStatus, ModeOnApproval, ModeOnDictionary } from "@/share/share";
+import { selEntity, putEditItemName, Refresh, SetSelItem, IsItemEditable, PeekID, UpdatePendingStatus, ModeOnApproval, ModeOnDictionary } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import NameUpdateModal from '@/components/modal-components/NameUpdate.vue'
 
@@ -101,8 +101,7 @@ const Modal = async () => {
             type: "success"
         })
 
-        await LoadList4Sub('entity')
-        await LoadList4Sub('collection')
+        await UpdatePendingStatus();
 
         let id = idFromSubFullName(selEntity.Entity)
         if (id.trim().length == 0) {

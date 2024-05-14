@@ -4,6 +4,7 @@
             <span class="category">Legal Definitions:</span>
             <span class="content-flex">
                 <div v-for="(item, idx) in selEntity.LegalDefinitions" :key="idx">
+
                     <hr v-if="idx != selEntity.LegalDefinitions.length && idx != 0" class="sub-sep-line" />
 
                     <div v-if="isNotEmpty(item.LegislationName)" class="cat-val-flex">
@@ -35,6 +36,12 @@
                         <span class="sub-cat">Datestamp:</span>
                         <span class="sub-val">{{ item.Datestamp }}</span>
                     </div>
+
+                    <div v-if="isNotEmpty(item.Jurisdiction)" class="cat-val-flex">
+                        <span class="sub-cat">Jurisdiction:</span>
+                        <span class="sub-val">{{ item.Jurisdiction }}</span>
+                    </div>
+
                 </div>
             </span>
         </div>

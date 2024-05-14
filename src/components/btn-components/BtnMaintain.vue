@@ -1,4 +1,8 @@
 <template>
+    <a class="float" id="upload" @click="upload" title="upload zip package to recover dictionary">
+        <font-awesome-icon icon="upload" class="floating" />
+        <input type="file" name="file" id="fileInput" style="display: none;">
+    </a>
     <a class="float" id="check-square" @click="validate" title="validate backend data">
         <font-awesome-icon icon="check-square" class="floating" />
     </a>
@@ -10,17 +14,60 @@
 
 <script setup lang="ts">
 import { FileText } from '@/share/share';
-import { patchReCom, patchValidation, globalMsg } from '@/share/share';
+import { patchReCom, patchValidation, globalMsg, postUpload2Recover } from '@/share/share';
 import MsgModal from '@/components/modal-components/MsgModal.vue'
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
 import { sleep } from "@/share/util";
 import Loader from "@/components/shared/Loader.vue"
+import CCModal from '@/components/modal-components/CCModal.vue'
 
 const loading = ref(false);
+const fileInput = ref();
 
 onMounted(async () => {
-    globalMsg.value = `Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data`
+
+    globalMsg.value = `Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data`;
+
+    fileInput.value = document.getElementById('fileInput') as HTMLInputElement;
+    // Add an event listener to the file input element
+    fileInput.value.addEventListener('change', async () => {
+        const file: File | undefined = fileInput.value.files?.[0];
+        if (file) {
+            console.log('Selected file:', file);
+            try {
+                if (String(await renderOverlay(CCModal, {
+                    props: {
+                        text: `Overwrite ALL Current Items & Discard ALL Pending Items?`,
+                        fontsize: "13px",
+                        width: "20%",
+                        height: "10%",
+                    },
+                })) === 'confirm') {
+                    const de = await postUpload2Recover(file)
+                    if (de.error != null) {
+                        notify({
+                            title: "Error: Recovery",
+                            text: de.error,
+                            type: "error"
+                        })
+                        return
+                    }
+                    notify({
+                        title: "Recovery Successful",
+                        text: 'All dictionary are recovered by uploaded package, All pending items are discarded',
+                        type: "success"
+                    })
+                }
+            } catch (e) {
+                switch (e) {
+                    case 'cancel':
+                        break
+                }
+            }
+        }
+    });
+
 })
 
 const validate = async () => {
@@ -92,6 +139,10 @@ const reconstruct = async () => {
     loading.value = false
 }
 
+const upload = async () => {
+    fileInput.value.click();
+}
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -119,6 +170,14 @@ const reconstruct = async () => {
 .floating {
     margin-top: 22px;
     color: white;
+}
+
+#upload {
+    bottom: 180px;
+}
+
+#upload:hover {
+    background-color: rgb(30, 226, 240);
 }
 
 #check-square {

@@ -23,7 +23,7 @@
 import { notify } from "@kyvg/vue3-notification";
 import Loader from "@/components/shared/Loader.vue"
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
-import { selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, lsSubscribed, putSubscribe, getDumpJSON, getDumpCSV, loginAsAdmin, ModeOnDictionary, CatOnEntity, CatOnCollection } from "@/share/share";
+import { selCat, selItem, selEntity, selCollection, delRemoveItem, LoadList4Dic, LoadList4Sub, lsSubscribed, putSubscribe, getDumpJSON, getDumpCSV, loginAsAdmin, ModeOnDictionary, CatOnEntity, CatOnCollection, UpdatePendingStatus, hasPending } from "@/share/share";
 import { isEmpty, download_file, sleep, toCMS } from "@/share/util";
 import CCModal from '@/components/modal-components/CCModal.vue'
 import DownloadTypeSel from "../modal-components/DownloadTypeSel.vue";
@@ -176,8 +176,15 @@ const Subscribe = async () => {
 };
 
 const Modal4Download = async () => {
+
+    await UpdatePendingStatus()
+
     try {
-        const type = String(await renderOverlay(DownloadTypeSel, {}));
+        const type = String(await renderOverlay(DownloadTypeSel, {
+            props: {
+                notification: hasPending.value ? "pending exists, caution against recovering with dumped package!" : "Select Type to Dump"
+            }
+        }));
         switch (type) {
             case 'JSON':
                 await DownloadJSON()
@@ -197,17 +204,24 @@ const Modal4Download = async () => {
 }
 
 const DownloadJSON = async () => {
-    const de = await getDumpJSON(selCat.value, 'existing')
-    if (de.error != null) {
-        notify({
-            title: "Error: Dump All JSON",
-            text: de.error,
-            type: "error"
-        })
-        return
+    //
+    // dump both entities & collections
+    //
+    for (let cat of ['entity', 'collection']) {
+        const de = await getDumpJSON(cat, 'existing')
+        if (de.error != null) {
+            notify({
+                title: "Error: Dump All JSON",
+                text: de.error,
+                type: "error"
+            })
+            return
+        }
+        const url = de.data
+        console.log(`url ${url}`)
+        download_file(url, `dump-dic-${cat}.zip`);
+        await sleep(1000)
     }
-    const url = de.data
-    download_file(url, "dump-dic.zip");
 }
 
 const DownloadCSV = async () => {

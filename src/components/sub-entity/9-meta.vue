@@ -136,6 +136,10 @@ const itemClick = async (item: string) => {
     font-size: 15px;
 }
 
+.clickable {
+    color: blue;
+}
+
 .clickable:hover {
     color: blue;
     text-decoration: underline;
