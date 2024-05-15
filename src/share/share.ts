@@ -303,11 +303,8 @@ export const getList = async (cat: string, phase: string) => {
     };
 };
 
-export const getDumpJSON = async (cat: string, phase: string) => {
-    const mQuery = new Map<string, any>([
-        ["phase", phase]
-    ]);
-    const rt = await fetchNoBody(`api/dic/pub/dump/${cat}`, "GET", mQuery, "");
+export const getDumpJSON = async (cat: string) => {
+    const rt = await fetchNoBody(`api/dic/pub/dump/${cat}`, "GET", mEmpty, "");
     const err = await fetchErr(rt, onExpired)
     return {
         'data': err == null ? (rt as any[])[0] : null,
