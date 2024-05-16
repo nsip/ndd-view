@@ -240,6 +240,15 @@ export const getContent = async (name: string, phase: string) => {
     };
 };
 
+export const getAllEntityType = async () => {
+    const rt = await fetchNoBody(`api/dic/pub/all-entity-type`, "GET", mEmpty, "");
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const putEditItemName = async (oldName: string, newName: string, inbound: boolean, cat: string) => {
     const mQuery = new Map<string, any>([
         ["old", oldName],
