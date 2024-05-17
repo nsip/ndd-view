@@ -29,9 +29,16 @@ onMounted(async () => {
 
     globalMsg.value = `Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data`;
 
+    // -- open file dialog -- //
+
     fileInput.value = document.getElementById('fileInput') as HTMLInputElement;
     // Add an event listener to the file input element
-    fileInput.value.addEventListener('change', async () => {
+    fileInput.value.addEventListener('change', async (event: Event) => {
+
+        // const input = event.target as HTMLInputElement;
+        // const files = input.files;
+        // const file: File | undefined = files?.[0];
+
         const file: File | undefined = fileInput.value.files?.[0];
         if (file) {
             console.log('Selected file:', file);
@@ -42,6 +49,7 @@ onMounted(async () => {
                         fontsize: "13px",
                         width: "20%",
                         height: "10%",
+                        color: 'red',
                     },
                 })) === 'confirm') {
                     const de = await postUpload2Recover(file)
@@ -67,7 +75,6 @@ onMounted(async () => {
             }
         }
     });
-
 })
 
 const validate = async () => {
@@ -140,6 +147,9 @@ const reconstruct = async () => {
 }
 
 const upload = async () => {
+    // clear previous selection
+    fileInput.value.value = ''
+    // open file selection dialog for new selection
     fileInput.value.click();
 }
 

@@ -9,14 +9,23 @@
             </button>
         </div>
 
-        <div class="tab">
-            <button class="tab-links-cat" id="tab-cat-ent" @click="showTabContent">{{ choices[0] }}</button>
-            <button class="tab-links-cat" id="tab-cat-col" @click="showTabContent">{{ choices[1] }}</button>
+        <div class="area-tabs">
+            <div class="tab">
+                <button class="tab-links-cat" id="tab-cat-ent" @click="showTabContent">{{ choices[0] }}</button>
+                <button class="tab-links-cat" id="tab-cat-col" @click="showTabContent">{{ choices[1] }}</button>
+            </div>
+            <div v-if="selCat == 'entity'" class="type-filter">
+                <span v-for="opt in filterOptions">
+                    &nbsp;
+                    <input v-model="filter" type="radio" name="type" :value="opt" />
+                    <label>{{ opt }}</label>
+                </span>
+            </div>
         </div>
 
         <div v-if="CatOnEntity()" class="tab-content">
             <ul class="list-ent">
-                <li v-for="(item, idx) in lsEnt4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
+                <li v-for="(item, idx) in lsEnt4DicFiltered" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
                     {{ item }}
                 </li>
             </ul>
@@ -36,15 +45,27 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg, SetSelItem, SetSelCat, selEntity, selCollection, CatOnEntity, CatOnCollection } from "@/share/share";
+import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg, SetSelItem, SetSelCat, selEntity, selCollection, CatOnEntity, CatOnCollection, getAllEntityType } from "@/share/share";
 import eventBus from "@/share/util";
 
 const searchInput = ref();
+
+const filterOptions = reactive([
+    'all',
+    'abstract',
+    'element',
+    'object'
+])
+const filter = ref("all")
 
 const choices = reactive([
     'entity',
     'collection',
 ]);
+
+const lsEnt4DicFiltered = ref<string[]>([]);
+
+let mItemMType: Map<string, any>
 
 const showTabContent = async (evt: MouseEvent) => {
 
@@ -97,7 +118,49 @@ onMounted(async () => {
     // global message bar info
     globalMsg.value = `Dictionary has ${lsEnt4Dic.value.length} entity items, ${lsCol4Dic.value.length} collection items`
 
+    // collect all Metadata.Type for each entity for filter
+    const m = await getAllEntityType()
+    // console.log(m.data)
+    mItemMType = new Map(Object.entries(m.data))
+
     mounted = true;
+})
+
+
+watchEffect(async () => {
+
+    const flt = filter.value
+
+    lsEnt4DicFiltered.value = []
+    switch (flt) {
+        case 'all':
+            lsEnt4DicFiltered.value = lsEnt4Dic.value
+            break
+
+        case 'abstract':
+            lsEnt4Dic.value.forEach((ent: string) => {
+                if (mItemMType.get(ent) == 'Abstract') {
+                    lsEnt4DicFiltered.value.push(ent)
+                }
+            })
+            break
+
+        case 'element':
+            lsEnt4Dic.value.forEach((ent: string) => {
+                if (mItemMType.get(ent) == 'Element') {
+                    lsEnt4DicFiltered.value.push(ent)
+                }
+            })
+            break
+
+        case 'object':
+            lsEnt4Dic.value.forEach((ent: string) => {
+                if (mItemMType.get(ent) == 'Object') {
+                    lsEnt4DicFiltered.value.push(ent)
+                }
+            })
+            break
+    }
 })
 
 const itemClick = async (item: string, phase: string) => {
@@ -262,6 +325,17 @@ hr {
     /* Stacks elements vertically */
 }
 
+.area-tabs {
+    display: flex;
+    /* justify-content: space-between; */
+    background-color: #f1f1f1;
+}
+
+/* right most element keep right alignment */
+.area-tabs div:nth-child(n) {
+    margin-right: auto;
+}
+
 /* Style the tab */
 .tab {
     overflow: hidden;
@@ -298,5 +372,10 @@ hr {
     padding: 1px 1px;
     border: 1px solid #ccc;
     border-top: none;
+}
+
+/* radio button for filter */
+.type-filter {
+    margin-top: 1.2vh;
 }
 </style>

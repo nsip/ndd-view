@@ -207,21 +207,18 @@ const DownloadJSON = async () => {
     //
     // dump both entities & collections
     //
-    for (let cat of ['entity', 'collection']) {
-        const de = await getDumpJSON(cat, 'existing')
-        if (de.error != null) {
-            notify({
-                title: "Error: Dump All JSON",
-                text: de.error,
-                type: "error"
-            })
-            return
-        }
-        const url = de.data
-        console.log(`url ${url}`)
-        download_file(url, `dump-dic-${cat}.zip`);
-        await sleep(1000)
+    const de = await getDumpJSON('all')
+    if (de.error != null) {
+        notify({
+            title: "Error: Dump All JSON",
+            text: de.error,
+            type: "error"
+        })
+        return
     }
+    const url = de.data
+    console.log(`url ${url}`)
+    download_file(url, `dump-dic-all.zip`);
 }
 
 const DownloadCSV = async () => {

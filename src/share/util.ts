@@ -186,4 +186,12 @@ export const toCMS = async (flag: string, selCat: string, selItem: string, phase
     }
 
     location.replace(`${URL_CMS}`)
-};
+}
+
+export const timestamp = async () => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0'); // Get hours with leading zero if necessary
+    const minutes = now.getMinutes().toString().padStart(2, '0'); // Get minutes with leading zero if necessary
+    const seconds = now.getSeconds().toString().padStart(2, '0'); // Get seconds with leading zero if necessary
+    return `${hours}:${minutes}:${seconds}`;
+}

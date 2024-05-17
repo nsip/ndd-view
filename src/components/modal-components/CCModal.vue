@@ -16,6 +16,7 @@ const props = defineProps({
     fontsize: String,
     width: String,
     height: String,
+    color: String
 })
 
 // Define the events used in the component(optional)
@@ -34,10 +35,14 @@ const htmlText = computed(() => {
     if (props.fontsize != undefined && props.fontsize != null && props.fontsize.endsWith('px')) {
         fs = props.fontsize;
     }
+    let clr = 'black';
+    if (props.color != undefined && props.color != null) {
+        clr = props.color;
+    }
     if (props.text != undefined) {
         let t = props.text.replace(/\n/g, '<br>')
         t = t.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
-        return `<p style="font-size: ${fs};">` + t + '</p>'
+        return `<p style="font-size: ${fs}; color: ${clr};">` + t + '</p>'
     }
 })
 
