@@ -110,11 +110,13 @@ watchEffect(async () => {
                 })
                 SetSelCatType('entity', flt)
                 selEntity.Reset()
+                selCollection.Reset()
                 aim.value = ''
                 break
 
             case 'collection':
                 SetSelCatType('collection', flt)
+                selEntity.Reset()
                 selCollection.Reset()
                 aim.value = ''
                 break
