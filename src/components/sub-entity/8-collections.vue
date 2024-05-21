@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { selEntity, SetSelItem, Refresh, SetSelCat, ModeOnDictionary, lsCol4Dic } from "@/share/share";
+import { selEntity, SetSelItem, Refresh, ModeOnDictionary, lsCol4Dic } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import { notify } from "@kyvg/vue3-notification";
 

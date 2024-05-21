@@ -6,16 +6,18 @@ import eventBus from "./util";
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-export const loginUser = ref("");
-export const loginToken = ref(""); // without 'Bearer '
-export const loginAuth = ref(""); // with 'Bearer '
+export const loginUser = ref('');
+export const loginToken = ref(''); // without 'Bearer '
+export const loginAuth = ref(''); // with 'Bearer '
 export const loginAsAdmin = ref(false)
 export const selMode = ref(''); // 'Dictionary' or 'Approval', or 'Admin'
-export const selCat = ref(""); // which category of current selection, 'entity' or 'collection'
-export const selItem = ref(""); // item name is currently selected
+export const selCat = ref(''); // which category of current selection, 'entity' or 'collection'
+export const selType = ref(''); // type: 'abstract', 'element', 'object', or 'collection'
+export const selItem = ref(''); // item name is currently selected
 export const selEntity = reactive(new entityType()); // entity content
 export const selCollection = reactive(new collectionType()); // collection content
-export const aim = ref(""); // what item want to be search
+export const mItemMType = ref<Map<string, any>>(); // entity name: ['abstract', 'element', 'object']
+export const aim = ref(''); // what item want to be search
 export const lsEnt4Dic = ref<string[]>([]); // name list of entity in dictionary
 export const lsCol4Dic = ref<string[]>([]); // name list of collection in dictionary
 export const lsEnt4Submit = ref<string[]>([]); // name list of entity in candidates
@@ -24,7 +26,7 @@ export const selClsPath = ref([]); // current selected item's class path
 export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
 export const hasPending = ref(false);
-export const globalMsg = ref(""); // global message
+export const globalMsg = ref(''); // global message
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -674,24 +676,47 @@ export const SetSelItem = async (item: string, phase: string) => {
     // also update selected category from backend api
     const de = await getCategory(selItem.value, phase);
     if (de.error == null) {
-        SetSelCat(de.data)
+        if (mItemMType.value?.size == 0) {
+            const m = await getAllEntityType()
+            mItemMType.value = new Map(Object.entries(m.data))
+        }
+        const t = mItemMType.value?.get(selItem.value)
+        SetSelCatType(de.data, t == undefined ? 'collection' : t) // also set selected item's cat & type
     }
 }
 
 // only for tab clicking
-export const SetSelCat = (cat: string) => {
+export const SetSelCatType = (cat: string, type: string) => {
+
     switch (cat) {
         case 'entity':
-            selCat.value = cat
-            eventBus.emit('cat-selection', 'tab-cat-ent'); // notify ListItem.vue to change tab
-            break;
+            switch (type) {
+                case 'abstract':
+                case 'Abstract':
+                case 'element':
+                case 'Element':
+                case 'object':
+                case 'Object':
+                    selType.value = type.toLowerCase();
+                    break
+                default:
+                    alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
+                    return
+            }
+            break
+
         case 'collection':
-            selCat.value = cat
-            eventBus.emit('cat-selection', 'tab-cat-col'); // notify ListItem.vue to change tab
-            break;
+            selType.value = 'collection'
+            break
+
         default:
-            alert(`selCat can only be one of[entity, collection], ignore ${cat}`)
+            alert(`(cat) can only be one of[entity, collection], ignore '${cat}'`)
+            return
     }
+
+    selCat.value = cat
+
+    eventBus.emit('SetSelCatType', `${cat}-${type}`); // notify ListItem.vue to change tab
 }
 
 export const ModeOnDictionary = () => {

@@ -9,18 +9,12 @@
             </button>
         </div>
 
-        <div class="area-tabs">
-            <div class="tab">
-                <button class="tab-links-cat" id="tab-cat-ent" @click="showTabContent">{{ choices[0] }}</button>
-                <button class="tab-links-cat" id="tab-cat-col" @click="showTabContent">{{ choices[1] }}</button>
-            </div>
-            <div v-if="selCat == 'entity'" class="type-filter">
-                <span v-for="opt in filterOptions">
-                    &nbsp;
-                    <input v-model="filter" type="radio" name="type" :value="opt" />
-                    <label>{{ opt }}</label>
-                </span>
-            </div>
+        <div class="area-tabs type-filter">
+            <span v-for="opt in filterOptions">
+                &nbsp;
+                <input v-model="filter" type="radio" name="type" :value="opt" />
+                <label>{{ opt }}</label>
+            </span>
         </div>
 
         <div v-if="CatOnEntity()" class="tab-content">
@@ -45,121 +39,86 @@
 
 <script setup lang="ts">
 
-import { selItem, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, selCat, aim, Search, globalMsg, SetSelItem, SetSelCat, selEntity, selCollection, CatOnEntity, CatOnCollection, getAllEntityType } from "@/share/share";
+import { mItemMType, selItem, selType, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, aim, Search, globalMsg, SetSelItem, SetSelCatType, selEntity, selCollection, CatOnEntity, CatOnCollection, getAllEntityType } from "@/share/share";
 import eventBus from "@/share/util";
 
 const searchInput = ref();
 
 const filterOptions = reactive([
-    'all',
     'abstract',
     'element',
-    'object'
+    'object',
+    'collection'
 ])
-const filter = ref("all")
-
-const choices = reactive([
-    'entity',
-    'collection',
-]);
+const filter = ref(filterOptions[0])
 
 const lsEnt4DicFiltered = ref<string[]>([]);
-
-let mItemMType: Map<string, any>
-
-const showTabContent = async (evt: MouseEvent) => {
-
-    // Tab Buttons Effect
-    let tab_links = document.getElementsByClassName("tab-links-cat");
-    for (let i = 0; i < tab_links.length; i++) {
-        tab_links[i].className = tab_links[i].className.replace(" active", "");
-    }
-    (evt.currentTarget! as HTMLElement).className += " active";
-
-    /////////////////////////
-
-    const id = (evt.target! as HTMLElement).textContent
-    if (id != selCat.value) {
-
-        // Tab Changed, Selected Category Changed
-        SetSelCat(id!);
-
-        // Tab Changed, Selected Item Cleared.
-        selEntity.Reset();
-        selCollection.Reset();
-    }
-}
-
-const setDefaultTab = async (id: string) => {
-    const iid = window.setInterval(() => { document.getElementById(id)!.click(); }, 50)
-    window.setTimeout(() => { window.clearInterval(iid) }, 1000)
-}
 
 let mounted = false;
 
 onMounted(async () => {
 
     // prepare list
-    await LoadList4Dic(choices[0])
-    await LoadList4Dic(choices[1])
+    await LoadList4Dic('entity')
+    await LoadList4Dic('collection')
 
-    // set default category tab & set selected category
-    await setDefaultTab("tab-cat-ent")
-    SetSelCat(choices[0])
+    // collect all Metadata.Type for each entity for filter
+    const m = await getAllEntityType()
+    // console.log(m.data)
+    mItemMType.value = new Map(Object.entries(m.data))
 
     // focus search box
     searchInput.value.focus()
 
     // prepare jumping item selection, e.g. from 'collection' page content link to 'entity' page. Category should also changed.
-    eventBus.on('cat-selection', async (cat) => {
-        document.getElementById(cat as string)!.click(); // cat: 'tab-cat-ent', 'tab-cat-col'
+    eventBus.on('SetSelCatType', async (pCatType) => {
+        filter.value = selType.value // adjust radio button
     })
 
     // global message bar info
     globalMsg.value = `Dictionary has ${lsEnt4Dic.value.length} entity items, ${lsCol4Dic.value.length} collection items`
 
-    // collect all Metadata.Type for each entity for filter
-    const m = await getAllEntityType()
-    // console.log(m.data)
-    mItemMType = new Map(Object.entries(m.data))
+    // fill initial list
+    lsEnt4DicFiltered.value = []
+    lsEnt4Dic.value.forEach((ent: string) => {
+        if ((mItemMType.value!.get(ent) as string).toLowerCase() == filter.value) {
+            lsEnt4DicFiltered.value.push(ent)
+        }
+    })
+
+    // initial cat is 'entity', type is 'abstract'
+    SetSelCatType('entity', filter.value)
 
     mounted = true;
 })
-
 
 watchEffect(async () => {
 
     const flt = filter.value
 
-    lsEnt4DicFiltered.value = []
-    switch (flt) {
-        case 'all':
-            lsEnt4DicFiltered.value = lsEnt4Dic.value
-            break
+    if (mounted) {
+        switch (flt) {
 
-        case 'abstract':
-            lsEnt4Dic.value.forEach((ent: string) => {
-                if (mItemMType.get(ent) == 'Abstract') {
-                    lsEnt4DicFiltered.value.push(ent)
-                }
-            })
-            break
+            case 'abstract':
+            case 'element':
+            case 'object':
+                lsEnt4DicFiltered.value = []
+                lsEnt4Dic.value.forEach((ent: string) => {
+                    if ((mItemMType.value!.get(ent) as string).toLowerCase() == flt) {
+                        lsEnt4DicFiltered.value.push(ent)
+                    }
+                })
+                SetSelCatType('entity', flt)
+                selEntity.Reset()
+                aim.value = ''
+                break
 
-        case 'element':
-            lsEnt4Dic.value.forEach((ent: string) => {
-                if (mItemMType.get(ent) == 'Element') {
-                    lsEnt4DicFiltered.value.push(ent)
-                }
-            })
-            break
-
-        case 'object':
-            lsEnt4Dic.value.forEach((ent: string) => {
-                if (mItemMType.get(ent) == 'Object') {
-                    lsEnt4DicFiltered.value.push(ent)
-                }
-            })
-            break
+            case 'collection':
+                SetSelCatType('collection', flt)
+                selCollection.Reset()
+                aim.value = ''
+                break
+        }
     }
 })
 
