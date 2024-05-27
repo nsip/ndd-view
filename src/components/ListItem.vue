@@ -13,7 +13,7 @@
             <span v-for="opt in filterOptions">
                 &nbsp;
                 <input v-model="filter" type="radio" name="type" :value="opt" />
-                <label>{{ opt }}</label>
+                <label :title="mNumOptions[opt].toString()">{{ opt }}</label>
             </span>
         </div>
 
@@ -54,6 +54,16 @@ const filter = ref(filterOptions[0])
 
 const lsEnt4DicFiltered = ref<string[]>([]);
 
+interface mOptNum {
+    [key: string]: number;
+}
+const mNumOptions = ref<mOptNum>({
+    [filterOptions[0]]: 0,
+    [filterOptions[1]]: 0,
+    [filterOptions[2]]: 0,
+    [filterOptions[3]]: 0,
+})
+
 let mounted = false;
 
 onMounted(async () => {
@@ -86,6 +96,9 @@ onMounted(async () => {
         }
     })
 
+    // initial list item amount
+    mNumOptions.value[filter.value] = lsEnt4DicFiltered.value.length;
+
     // initial cat is 'entity', type is 'abstract'
     SetSelCatType('entity', filter.value)
 
@@ -93,6 +106,10 @@ onMounted(async () => {
 })
 
 watchEffect(async () => {
+
+    // after searching, refresh filtered list
+    const lsEnt = lsEnt4Dic.value
+    const lsCol = lsCol4Dic.value
 
     const flt = filter.value
 
@@ -111,14 +128,14 @@ watchEffect(async () => {
                 SetSelCatType('entity', flt)
                 selEntity.Reset()
                 selCollection.Reset()
-                aim.value = ''
+                mNumOptions.value[flt] = lsEnt4DicFiltered.value.length;
                 break
 
             case 'collection':
                 SetSelCatType('collection', flt)
                 selEntity.Reset()
                 selCollection.Reset()
-                aim.value = ''
+                mNumOptions.value[flt] = lsCol4Dic.value.length;
                 break
         }
     }

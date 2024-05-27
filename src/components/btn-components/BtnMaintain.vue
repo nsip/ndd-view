@@ -27,7 +27,7 @@ const fileInput = ref();
 
 onMounted(async () => {
 
-    globalMsg.value = `Click Button To Do Whole Backend Data Validation OR Reconstruct Whole Data`;
+    globalMsg.value = `Select Button to Do Uploading for Restoring, or Whole Backend Data Validation, or Reconstruct Whole Backend Dictionary Data`;
 
     // -- open file dialog -- //
 
