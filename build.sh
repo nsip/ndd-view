@@ -8,6 +8,7 @@ Y=`tput setaf 3`
 W=`tput sgr0`
 
 echo "example: build.sh test /path/to/ec2/key.pem"
+# also MUST modify isso.cfg [general]-[host] !!!
 
 ./clean.sh
 
@@ -83,6 +84,12 @@ if [ -f "$2" ]; then
     PKG_NAME='dist'
     echo "scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/$PKG_NAME-$TM"
     scp -i $2 -r $CD/$PKG_NAME ubuntu@$IP:dd/ndd-view-$PKG_NAME-$TM
+
+    ###############################################################
+    # copy isso.cfg
+    # also MUST modify uploaded isso.cfg [general]-[host] !!!
+
+    scp -i $2 isso/isso.cfg ubuntu@$IP:dd/ndd-view-isso.cfg
 
 else
     echo "${Y}valid key file is not provided, cannot send package to EC2${W}"

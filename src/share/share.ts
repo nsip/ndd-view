@@ -1,7 +1,7 @@
 import { fetchNoBody, fetchBodyForm, mEmpty, fetchErr } from "@/share/fetch";
 import { entityType } from "@/share/Entity";
 import { collectionType } from "@/share/Collection";
-import { URL_SIGN } from "./ip";
+import { URL_ISSO, URL_SIGN } from "./ip";
 import eventBus from "./util";
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,8 @@ export const selChildren = ref([]); // current selected item's children
 export const lsSubscribed = ref([]); // subscribed item name list
 export const hasPending = ref(false);
 export const globalMsg = ref(''); // global message
+export const dataIssoId = ref('');
+export const dataIssoTitle = ref('');
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -741,4 +743,26 @@ export const CatOnEntity = () => {
 
 export const CatOnCollection = () => {
     return selCat.value == 'collection'
+}
+
+//////////////////////////////////////////////////////////////
+
+export const UpdateIssoLoading = () => {
+    document.head.removeAttribute("script");
+    const issoScript = document.createElement("script");
+    issoScript.setAttribute(
+        "src",
+        `${URL_ISSO}/js/embed.min.js`
+    );
+    issoScript.setAttribute(
+        "data-isso",
+        `${URL_ISSO}`
+    );
+    document.head.appendChild(issoScript);
+
+    // hide 'isso-thread-heading'
+    const issoHeaders = document.getElementsByClassName('isso-thread-heading');
+    for (let i = 0; i < issoHeaders.length; i++) {
+        (issoHeaders[i] as HTMLElement).style.display = 'none';
+    }
 }
