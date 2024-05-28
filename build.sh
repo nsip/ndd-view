@@ -89,7 +89,7 @@ if [ -f "$2" ]; then
     # copy isso.cfg
     # also MUST modify uploaded isso.cfg [general]-[host] !!!
 
-    scp -i $2 isso/isso.cfg ubuntu@$IP:dd/ndd-view-isso.cfg
+    scp -i $2 isso/isso.cfg ubuntu@$IP:dd/ndd-isso.cfg
 
 else
     echo "${Y}valid key file is not provided, cannot send package to EC2${W}"
