@@ -748,6 +748,7 @@ export const CatOnCollection = () => {
 //////////////////////////////////////////////////////////////
 
 export const UpdateIssoLoading = () => {
+
     document.head.removeAttribute("script");
     const issoScript = document.createElement("script");
     issoScript.setAttribute(
@@ -761,6 +762,10 @@ export const UpdateIssoLoading = () => {
     document.head.appendChild(issoScript);
 
     // hide 'isso-thread-heading'
+    hideIssoHeading();
+}
+
+const hideIssoHeading = () => {
     const issoHeaders = document.getElementsByClassName('isso-thread-heading');
     for (let i = 0; i < issoHeaders.length; i++) {
         (issoHeaders[i] as HTMLElement).style.display = 'none';

@@ -20,8 +20,6 @@ declare -A mR
 
 if [[ $1 == 'test' ]]; then
 
-    file="./src/share/ip.ts"
-
     # CHANGE DOMAIN from local(.test) to test(.link)
 read -r R1 <<'EOF'
 data-dictionary.test
@@ -30,17 +28,19 @@ read -r mR['$R1'] <<'EOF'
 data-dictionary.link
 EOF
 
+    file1="./src/share/ip.ts"
+    file2="./isso/isso.cfg"
+
     for key in "${!mR[@]}"; do
         value=${mR[$key]}
-        sed -i "s#$key#$value#g" "$file"
+        sed -i "s#$key#$value#g" "$file1"
+        sed -i "s#$key#$value#g" "$file2"
         unset mR["$key"]
     done
 
 fi
 
 if [[ $1 == 'prod' || $1 == 'product' ]]; then
-
-    file="./src/share/ip.ts"
     
     # CHANGE DOMAIN from local(.test) to prod(.net)
 read -r R1 <<'EOF'
@@ -58,9 +58,13 @@ read -r mR['$R2'] <<'EOF'
 https://
 EOF
 
+    file1="./src/share/ip.ts"
+    file2="./isso/isso.cfg"
+
     for key in "${!mR[@]}"; do
         value=${mR[$key]}
-        sed -i "s#$key#$value#g" "$file"
+        sed -i "s#$key#$value#g" "$file1"
+        sed -i "s#$key#$value#g" "$file2"
         unset mR["$key"]
     done
 
@@ -101,8 +105,6 @@ fi
 
 if [[ $1 == 'test' ]]; then
 
-    file="./src/share/ip.ts"
-
     # CHANGE DOMAIN from test(.link) back to local(.test)
 read -r R1 <<'EOF'
 data-dictionary.link
@@ -111,9 +113,13 @@ read -r mR['$R1'] <<'EOF'
 data-dictionary.test
 EOF
 
+    file1="./src/share/ip.ts"
+    file2="./isso/isso.cfg"
+
     for key in "${!mR[@]}"; do
         value=${mR[$key]}
-        sed -i "s#$key#$value#g" "$file"
+        sed -i "s#$key#$value#g" "$file1"
+        sed -i "s#$key#$value#g" "$file2"
         unset mR["$key"]
     done
 
@@ -122,8 +128,6 @@ fi
 # ---------------------------------- #
 
 if [[ $1 == 'prod' || $1 == 'product' ]]; then
-
-    file="./src/share/ip.ts"
     
     # CHANGE DOMAIN from prod(.net) back to local(.test)
 read -r R1 <<'EOF'
@@ -141,9 +145,13 @@ read -r mR['$R2'] <<'EOF'
 http://
 EOF
 
+    file1="./src/share/ip.ts"
+    file2="./isso/isso.cfg"
+
     for key in "${!mR[@]}"; do
         value=${mR[$key]}
-        sed -i "s#$key#$value#g" "$file"
+        sed -i "s#$key#$value#g" "$file1"
+        sed -i "s#$key#$value#g" "$file2"
         unset mR["$key"]
     done
 
