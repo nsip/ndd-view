@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="cmt-area" :hidden="selItem == ''">
+        <div class="cmt-area" :hidden="selEntity.Entity.length == 0 && selCollection.Entity.length == 0">
             <section id="isso-thread" :data-title="dataIssoTitle" :data-isso-id="dataIssoId"></section>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { dataIssoTitle, dataIssoId, UpdateIssoLoading, selItem } from "@/share/share"
+import { dataIssoTitle, dataIssoId, UpdateIssoLoading, selEntity, selCollection } from "@/share/share"
 
 onBeforeMount(() => {
     UpdateIssoLoading()

@@ -126,7 +126,6 @@ watchEffect(async () => {
                     }
                 })
                 SetSelCatType('entity', flt)
-                selItem.value = '';
                 selEntity.Reset()
                 selCollection.Reset()
                 mNumOptions.value[flt] = lsEnt4DicFiltered.value.length;
@@ -134,7 +133,6 @@ watchEffect(async () => {
 
             case 'collection':
                 SetSelCatType('collection', flt)
-                selItem.value = '';
                 selEntity.Reset()
                 selCollection.Reset()
                 mNumOptions.value[flt] = lsCol4Dic.value.length;
