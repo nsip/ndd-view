@@ -61,7 +61,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending, globalMsg } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending, globalMsg, selItem } from "@/share/share";
 import eventBus from '@/share/util';
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
@@ -201,6 +201,7 @@ const showTabContent = async (evt: MouseEvent) => {
     selMode.value = id!;
 
     // extra clear work when click tab
+    selItem.value = ""
     selEntity.Reset()
     selCollection.Reset()
     aim.value = ""
@@ -264,6 +265,7 @@ header {
     bottom: 0;
     width: 100%;
     height: 26vh;
+    margin-top: 5px;
     margin-bottom: 6px;
     background-color: #e0eff7;
 }

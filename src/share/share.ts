@@ -763,6 +763,8 @@ export const UpdateIssoLoading = () => {
 
     // hide 'isso-thread-heading'
     hideIssoHeading();
+    // hideIssoPostboxEmail();
+    // hideIssoPostboxWebsite();
 }
 
 const hideIssoHeading = () => {
@@ -771,3 +773,25 @@ const hideIssoHeading = () => {
         (issoHeaders[i] as HTMLElement).style.display = 'none';
     }
 }
+
+// const hideIssoPostboxEmail = () => {
+//     const label = document.querySelector('label[for="isso-postbox-email"]');
+//     if (label != null) {
+//         (label as HTMLElement).style.display = 'none';
+//     }
+//     const input = document.getElementById('isso-postbox-email');
+//     if (input != null) {
+//         (input as HTMLElement).style.display = 'none';
+//     }
+// }
+
+// const hideIssoPostboxWebsite = () => {
+//     const label = document.querySelector('label[for="isso-postbox-website"]');
+//     if (label != null) {
+//         (label as HTMLElement).style.display = 'none';
+//     }
+//     const input = document.getElementById('isso-postbox-website');
+//     if (input != null) {
+//         (input as HTMLElement).style.display = 'none';
+//     }
+// }
