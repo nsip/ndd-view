@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { selEntity, SetSelItem, Refresh, SetSelCat, ModeOnDictionary, lsCol4Dic } from "@/share/share";
+import { selEntity, SetSelItem, Refresh, ModeOnDictionary, lsCol4Dic, UpdateIssoLoading, dataIssoId, dataIssoTitle } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 import { notify } from "@kyvg/vue3-notification";
 
@@ -80,7 +80,11 @@ const itemClick = async (item: string) => {
             return
         }
         await SetSelItem(item, 'existing');
-        await Refresh('existing')
+        await Refresh('existing');
+        ///// ISSO Comment /////
+        UpdateIssoLoading()
+        dataIssoId.value = item;
+        dataIssoTitle.value = item;
     }
 }
 

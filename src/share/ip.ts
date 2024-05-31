@@ -5,7 +5,7 @@ export const URL_API = `http://api.${Domain}`;   // "127.0.0.1:1323"
 export const URL_SIGN = `http://${Domain}`;      // "127.0.0.1:8080"
 export const URL_VIEW = `http://view.${Domain}`; // "127.0.0.1:8081"
 export const URL_CMS = `http://cms.${Domain}`;   // "127.0.0.1:8082"
-
+export const URL_ISSO = `http://isso.${Domain}`; // "127.0.0.1:8088" the SAME as './isso.cfg' [server]-[listen]
 
 // *** example for nginx/sites config for local running with domain ***
 //

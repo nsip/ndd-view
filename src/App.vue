@@ -20,8 +20,11 @@
                 </div>
                 <div id="right">
                     <ClassNav />
-                    <EntityContent />
-                    <CollectionContent />
+                    <div id="dic-content-area">
+                        <EntityContent />
+                        <CollectionContent />
+                    </div>
+                    <CommentArea id="cmt-area" />
                     <BtnView />
                 </div>
             </div>
@@ -58,7 +61,7 @@
 
 import { useCookies } from "vue3-cookies";
 import { notify } from "@kyvg/vue3-notification";
-import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending, globalMsg } from "@/share/share";
+import { loginUser, loginAuth, loginToken, loginAsAdmin, getSelfName, getSelfAdminStatus, selMode, selCat, selEntity, selCollection, aim, UpdatePendingStatus, hasPending, globalMsg, selItem } from "@/share/share";
 import eventBus from '@/share/util';
 import PageTitle from "@/components/PageTitle.vue";
 import ClassNav from "@/components/sub-entity/ClassNav.vue";
@@ -71,6 +74,7 @@ import BtnApproval from "@/components/btn-components/BtnApproval.vue";
 import BtnAdmin from "@/components/btn-components/BtnAdmin.vue";
 import BtnMaintain from "@/components/btn-components/BtnMaintain.vue";
 import UserAdmin from "@/components/UserAdmin.vue";
+import CommentArea from "./components/CommentArea.vue";
 
 const { cookies } = useCookies();
 const Height = ref((window.innerHeight * 0.93).toString() + "px");
@@ -197,6 +201,7 @@ const showTabContent = async (evt: MouseEvent) => {
     selMode.value = id!;
 
     // extra clear work when click tab
+    selItem.value = ""
     selEntity.Reset()
     selCollection.Reset()
     aim.value = ""
@@ -246,6 +251,23 @@ header {
     /* overflow-y: scroll; */
     display: flex;
     flex-direction: column;
+}
+
+#dic-content-area {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: 60vh;
+}
+
+#cmt-area {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    bottom: 0;
+    width: 100%;
+    height: 26vh;
+    margin-top: 5px;
+    margin-bottom: 6px;
+    background-color: #e0eff7;
 }
 
 /* Style the tab */

@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 
-import { selEntity, Attributes, References, Refresh, SetSelItem, ModeOnDictionary } from "@/share/share";
+import { selEntity, Attributes, References, Refresh, SetSelItem, ModeOnDictionary, UpdateIssoLoading, dataIssoId, dataIssoTitle } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const attrs = ref();
@@ -76,6 +76,10 @@ const itemClick = async (item: string) => {
     if (ModeOnDictionary()) {
         await SetSelItem(item, 'existing');
         await Refresh('existing');
+        ///// ISSO Comment /////
+        UpdateIssoLoading()
+        dataIssoId.value = item;
+        dataIssoTitle.value = item;
     }
 }
 

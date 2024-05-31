@@ -13,13 +13,17 @@
 </template>
 
 <script setup lang="ts">
-import { selCollection, SetSelItem, Refresh, SetSelCat, ModeOnDictionary } from "@/share/share";
+import { selCollection, SetSelItem, Refresh, ModeOnDictionary, UpdateIssoLoading, dataIssoId, dataIssoTitle } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const itemClick = async (item: string) => {
     if (ModeOnDictionary()) {
         await SetSelItem(item, 'existing'); // jump to 'entity category' to display 'entity item'
-        await Refresh('existing')
+        await Refresh('existing');
+        ///// ISSO Comment /////
+        UpdateIssoLoading()
+        dataIssoId.value = item;
+        dataIssoTitle.value = item;
     }
 }
 </script>

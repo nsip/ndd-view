@@ -37,10 +37,10 @@ const doEdit = computed(() => ModeOnDictionary() && (!isEmpty(selEntity) || !isE
 const doDelete = computed(() => loginAsAdmin.value && ModeOnDictionary() && (!isEmpty(selEntity) || !isEmpty(selCollection)))
 const doDump = computed(() => ModeOnDictionary())
 
-const Y_BtnEdit = ref('250px')
-const Y_BtnSubscribe = ref('180px')
-const Y_BtnDelete = ref('110px')
-const Y_BtnDownload = ref('40px')
+const Y_BtnEdit = ref('560px')
+const Y_BtnSubscribe = ref('490px')
+const Y_BtnDelete = ref('420px')
+const Y_BtnDownload = ref('350px')
 
 const Y_BtnNew = computed(() => {
     if (selCat.value.length == 0 ||
@@ -48,7 +48,7 @@ const Y_BtnNew = computed(() => {
         (CatOnCollection() && isEmpty(selCollection))) {
         return Y_BtnDelete.value
     }
-    return "320px"
+    return "630px"
 })
 
 // DELETE ///////////////////////////////////////////////////////////////
