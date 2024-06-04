@@ -195,3 +195,11 @@ export const timestamp = async () => {
     const seconds = now.getSeconds().toString().padStart(2, '0'); // Get seconds with leading zero if necessary
     return `${hours}:${minutes}:${seconds}`;
 }
+
+export const trimTailFrom = async (str: string, substr: string) => {
+    const index = str.indexOf(substr);
+    if (index === -1) {
+        return str;
+    }
+    return str.substring(0, index);
+}

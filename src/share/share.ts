@@ -2,7 +2,7 @@ import { fetchNoBody, fetchBodyForm, mEmpty, fetchErr } from "@/share/fetch";
 import { entityType } from "@/share/Entity";
 import { collectionType } from "@/share/Collection";
 import { URL_ISSO, URL_SIGN } from "./ip";
-import eventBus from "./util";
+import eventBus, { trimTailFrom } from "./util";
 
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -702,7 +702,7 @@ export const SetSelCatType = (cat: string, type: string) => {
                     selType.value = type.toLowerCase();
                     break
                 default:
-                    alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
+                    // alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
                     return
             }
             break

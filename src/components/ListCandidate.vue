@@ -25,8 +25,10 @@ onMounted(async () => {
 });
 
 const itemClick = async (item: string, phase: string) => {
+
     await SetSelItem(item, phase)
     await Refresh(phase)
+
     ///// ISSO Comment (candidates page doesn't have comment) /////
     // UpdateIssoLoading()
     // dataIssoId.value = item;
