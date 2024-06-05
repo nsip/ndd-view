@@ -672,8 +672,12 @@ export const FileText = async (file: string) => {
 
 export const SetSelItem = async (item: string, phase: string) => {
     // set selected item
-    const regex = /\(\d+\)$/;
-    selItem.value = item.replace(regex, '');
+    if (!item.includes('=>')) { // no name changing, extract original name
+        const regex = /\(\d+\)$/;
+        selItem.value = item.replace(regex, '');
+    } else {                    // name changing, keep modified name as XXX(1)=>YYY(1)
+        selItem.value = item;
+    }
 
     // also update selected category from backend api
     const de = await getCategory(selItem.value, phase);
@@ -682,7 +686,13 @@ export const SetSelItem = async (item: string, phase: string) => {
             const m = await getAllEntityType()
             mItemMType.value = new Map(Object.entries(m.data))
         }
-        const t = mItemMType.value?.get(selItem.value)
+
+        // use original name to check its TYPE
+        let oriName = await trimTailFrom(selItem.value, "=>")
+        const regex = /\(\d+\)$/;
+        oriName = oriName.replace(regex, '');
+
+        const t = mItemMType.value?.get(oriName);
         SetSelCatType(de.data, t == undefined ? 'collection' : t) // also set selected item's cat & type
     }
 }
@@ -702,7 +712,7 @@ export const SetSelCatType = (cat: string, type: string) => {
                     selType.value = type.toLowerCase();
                     break
                 default:
-                    // alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
+                    alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
                     return
             }
             break
