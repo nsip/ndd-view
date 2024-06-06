@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, globalMsg, SetSelItem, UpdatePendingStatus } from "@/share/share";
+import { selItem, lsEnt4Submit, lsCol4Submit, Refresh, globalMsg, SetSelItem, UpdatePendingStatus, OriginalName } from "@/share/share";
 
 const sel_style = ref("selected-style");
 const unsel_style = ref("unselected-style");
@@ -30,9 +30,10 @@ const itemClick = async (item: string, phase: string) => {
     await Refresh(phase)
 
     ///// ISSO Comment (candidates page doesn't have comment) /////
+    // const on = await OriginalName(item);
     // UpdateIssoLoading()
-    // dataIssoId.value = item;
-    // dataIssoTitle.value = item;
+    // dataIssoId.value = on;
+    // dataIssoTitle.value = on;
 }
 
 </script>

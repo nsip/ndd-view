@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { selClsPath, selChildren, Refresh, selEntity, selItem, SetSelItem, UpdateIssoLoading, dataIssoId, dataIssoTitle } from "@/share/share";
+import { selClsPath, selChildren, Refresh, selEntity, selItem, SetSelItem, UpdateIssoLoading, dataIssoId, dataIssoTitle, OriginalName } from "@/share/share";
 import { isNotEmpty } from "@/share/util";
 
 const childSelect = ref(null);
@@ -33,9 +33,10 @@ const itemClick = async (item: string, phase: string) => {
     await SetSelItem(item, phase)
     await Refresh(phase)
     ///// ISSO Comment /////
+    const on = await OriginalName(item);
     UpdateIssoLoading()
-    dataIssoId.value = item;
-    dataIssoTitle.value = item;
+    dataIssoId.value = on;
+    dataIssoTitle.value = on;
 }
 
 </script>

@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 
-import { mItemMType, selItem, selType, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, aim, Search, globalMsg, SetSelItem, SetSelCatType, selEntity, selCollection, CatOnEntity, CatOnCollection, getAllEntityType, UpdateIssoLoading, dataIssoId, dataIssoTitle } from "@/share/share";
+import { mItemMType, selItem, selType, lsEnt4Dic, lsCol4Dic, lsSubscribed, LoadList4Dic, Refresh, aim, Search, globalMsg, SetSelItem, SetSelCatType, selEntity, selCollection, CatOnEntity, CatOnCollection, getAllEntityType, UpdateIssoLoading, dataIssoId, dataIssoTitle, OriginalName } from "@/share/share";
 import eventBus from "@/share/util";
 
 const searchInput = ref();
@@ -144,10 +144,12 @@ watchEffect(async () => {
 const itemClick = async (item: string, phase: string) => {
     await SetSelItem(item, phase)
     await Refresh(phase)
+
     ///// ISSO Comment /////
+    const on = await OriginalName(item);
     UpdateIssoLoading()
-    dataIssoId.value = item;
-    dataIssoTitle.value = item;
+    dataIssoId.value = on;
+    dataIssoTitle.value = on;
 }
 
 const default_style = ref("default-style");

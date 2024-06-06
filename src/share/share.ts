@@ -378,6 +378,15 @@ export const getPeekID = async (name: string) => {
     };
 }
 
+export const getOriginalName = async (name: string) => {
+    const rt = await fetchNoBody(`api/dic/auth/original-name/${name}`, "GET", mEmpty, loginAuth.value);
+    const err = await fetchErr(rt, onExpired)
+    return {
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
+}
+
 export const delReject = async (name: string, cat: string) => {
     const mQuery = new Map<string, any>([
         ["name", name],
@@ -647,6 +656,15 @@ export const PeekID = async (item: string) => {
     return de.data
 }
 
+export const OriginalName = async (item: string) => {
+    const de = await getOriginalName(item);
+    if (de.error != null) {
+        console.log(de.error)
+        return ""
+    }
+    return de.data
+}
+
 //////////////////////////////////////////////////////////////////////////////////////
 
 export const UpdatePendingStatus = async () => {
@@ -771,7 +789,7 @@ export const UpdateIssoLoading = () => {
     );
     document.head.appendChild(issoScript);
 
-    // hide 'isso-thread-heading'
+    // ** hide 'isso-thread-heading' ** //
     hideIssoHeading();
     // hideIssoPostboxEmail();
     // hideIssoPostboxWebsite();
