@@ -711,12 +711,12 @@ export const SetSelItem = async (item: string, phase: string) => {
         oriName = oriName.replace(regex, '');
 
         const t = mItemMType.value?.get(oriName);
-        SetSelCatType(de.data, t == undefined ? 'collection' : t) // also set selected item's cat & type
+        SetSelCatType(de.data, t == undefined ? 'collection' : t, phase) // also set selected item's cat & type
     }
 }
 
 // only for tab clicking
-export const SetSelCatType = (cat: string, type: string) => {
+export const SetSelCatType = (cat: string, type: string, phase: string) => {
 
     switch (cat) {
         case 'entity':
@@ -730,7 +730,9 @@ export const SetSelCatType = (cat: string, type: string) => {
                     selType.value = type.toLowerCase();
                     break
                 default:
-                    alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
+                    if (phase == 'existing') {
+                        alert(`entity's (type) can only be one of[abstract, element, object], ignore '${type}'`)
+                    }
                     return
             }
             break
@@ -740,13 +742,15 @@ export const SetSelCatType = (cat: string, type: string) => {
             break
 
         default:
-            alert(`(cat) can only be one of[entity, collection], ignore '${cat}'`)
+            if (phase == 'existing') {
+                alert(`(cat) can only be one of[entity, collection], ignore '${cat}'`)
+            }
             return
     }
 
     selCat.value = cat
 
-    eventBus.emit('SetSelCatType', `${cat}-${type}`); // notify ListItem.vue to change tab
+    eventBus.emit('SetSelCatType', `${cat}-${type}-${phase}`); // notify ListItem.vue to change tab
 }
 
 export const ModeOnDictionary = () => {

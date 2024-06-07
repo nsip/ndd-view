@@ -81,7 +81,7 @@ onMounted(async () => {
     searchInput.value.focus()
 
     // prepare jumping item selection, e.g. from 'collection' page content link to 'entity' page. Category should also changed.
-    eventBus.on('SetSelCatType', async (pCatType) => {
+    eventBus.on('SetSelCatType', async (pCatTypePhase) => {
         filter.value = selType.value // adjust radio button
     })
 
@@ -100,7 +100,7 @@ onMounted(async () => {
     mNumOptions.value[filter.value] = lsEnt4DicFiltered.value.length;
 
     // initial cat is 'entity', type is 'abstract'
-    SetSelCatType('entity', filter.value)
+    SetSelCatType('entity', filter.value, 'existing')
 
     mounted = true;
 })
@@ -125,14 +125,14 @@ watchEffect(async () => {
                         lsEnt4DicFiltered.value.push(ent)
                     }
                 })
-                SetSelCatType('entity', flt)
+                SetSelCatType('entity', flt, 'existing')
                 selEntity.Reset()
                 selCollection.Reset()
                 mNumOptions.value[flt] = lsEnt4DicFiltered.value.length;
                 break
 
             case 'collection':
-                SetSelCatType('collection', flt)
+                SetSelCatType('collection', flt, 'existing')
                 selEntity.Reset()
                 selCollection.Reset()
                 mNumOptions.value[flt] = lsCol4Dic.value.length;
