@@ -20,7 +20,7 @@
         <div v-if="CatOnEntity()" class="tab-content">
             <ul class="list-ent">
                 <li v-for="(item, idx) in lsEnt4DicFiltered" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
-                    {{ item }}
+                    {{ (item == selItem ? "=> " : "") + item }}
                 </li>
             </ul>
         </div>
@@ -28,7 +28,7 @@
         <div v-if="CatOnCollection()" class="tab-content">
             <ul class="list-col">
                 <li v-for="(item, idx) in lsCol4Dic" :key="idx" :title="item" class="ellip" :class="style(item)" @click="itemClick(item, 'existing')">
-                    {{ item }}
+                    {{ (item == selItem ? "=> " : "") + item }}
                 </li>
             </ul>
         </div>
@@ -246,6 +246,9 @@ ul.list-col li.ellip {
 .selected-style {
     font-weight: bold;
     font-style: italic;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    color: darkred;
 }
 
 .selected-style:hover {
