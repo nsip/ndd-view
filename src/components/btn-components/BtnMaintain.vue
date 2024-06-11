@@ -1,14 +1,23 @@
 <template>
-    <a class="float" id="upload" @click="upload" title="upload zip package to recover dictionary">
-        <font-awesome-icon icon="upload" class="floating" />
-        <input type="file" name="file" id="fileInput" style="display: none;">
+
+    <a class="float" id="upload-csv" @click="upload_csv" title="upload csv file to update dictionary">
+        <font-awesome-icon icon="file-upload" class="floating" />
+        <input type="file" name="file" id="fileInputCSV" style="display: none;">
     </a>
+
+    <a class="float" id="upload-json" @click="upload_json" title="upload zip package to recover dictionary">
+        <font-awesome-icon icon="upload" class="floating" />
+        <input type="file" name="file" id="fileInputJSON" style="display: none;">
+    </a>
+
     <a class="float" id="check-square" @click="validate" title="validate backend data">
         <font-awesome-icon icon="check-square" class="floating" />
     </a>
+
     <a class="float" id="file-circle-check" @click="reconstruct" title="re-construct backend data">
         <font-awesome-icon icon="file-circle-check" class="floating" />
     </a>
+
     <Loader id="loader" v-if="loading" />
 </template>
 
@@ -23,7 +32,8 @@ import Loader from "@/components/shared/Loader.vue"
 import CCModal from '@/components/modal-components/CCModal.vue'
 
 const loading = ref(false);
-const fileInput = ref();
+const fileInputJSON = ref();
+const fileInputCSV = ref();
 
 onMounted(async () => {
 
@@ -31,21 +41,21 @@ onMounted(async () => {
 
     // -- open file dialog -- //
 
-    fileInput.value = document.getElementById('fileInput') as HTMLInputElement;
+    fileInputJSON.value = document.getElementById('fileInputJSON') as HTMLInputElement;
     // Add an event listener to the file input element
-    fileInput.value.addEventListener('change', async (event: Event) => {
+    fileInputJSON.value.addEventListener('change', async (event: Event) => {
 
         // const input = event.target as HTMLInputElement;
         // const files = input.files;
         // const file: File | undefined = files?.[0];
 
-        const file: File | undefined = fileInput.value.files?.[0];
+        const file: File | undefined = fileInputJSON.value.files?.[0];
         if (file) {
             console.log('Selected file:', file);
             try {
                 if (String(await renderOverlay(CCModal, {
                     props: {
-                        text: `Overwrite ALL Current Items & Discard ALL Pending Items?`,
+                        text: `Overwrite ALL Current Dictionary & Discard ALL Pending Items?`,
                         fontsize: "13px",
                         width: "20%",
                         height: "10%",
@@ -75,6 +85,53 @@ onMounted(async () => {
             }
         }
     });
+
+    ///////////////////////////////////////////////
+
+    fileInputCSV.value = document.getElementById('fileInputCSV') as HTMLInputElement;
+
+    fileInputCSV.value.addEventListener('change', async (event: Event) => {
+
+        const file: File | undefined = fileInputCSV.value.files?.[0];
+        if (file) {
+            console.log('Selected file:', file);
+            try {
+                if (String(await renderOverlay(CCModal, {
+                    props: {
+                        text: `Update Current Dictionary & Discard ALL Pending Items?`,
+                        fontsize: "13px",
+                        width: "20%",
+                        height: "10%",
+                        color: 'red',
+                    },
+                })) === 'confirm') {
+
+                    alert('TODO:')
+
+                    // const de = await postUpload2Recover(file)
+                    // if (de.error != null) {
+                    //     notify({
+                    //         title: "Error: Recovery",
+                    //         text: de.error,
+                    //         type: "error"
+                    //     })
+                    //     return
+                    // }
+                    // notify({
+                    //     title: "Recovery Successful",
+                    //     text: 'All dictionary are recovered by uploaded package, All pending items are discarded',
+                    //     type: "success"
+                    // })
+                }
+            } catch (e) {
+                switch (e) {
+                    case 'cancel':
+                        break
+                }
+            }
+        }
+    });
+
 })
 
 const validate = async () => {
@@ -146,11 +203,18 @@ const reconstruct = async () => {
     loading.value = false
 }
 
-const upload = async () => {
+const upload_json = async () => {
     // clear previous selection
-    fileInput.value.value = ''
+    fileInputJSON.value.value = ''
     // open file selection dialog for new selection
-    fileInput.value.click();
+    fileInputJSON.value.click();
+}
+
+const upload_csv = async () => {
+    // clear previous selection
+    fileInputCSV.value.value = ''
+    // open file selection dialog for new selection
+    fileInputCSV.value.click();
 }
 
 </script>
@@ -182,11 +246,19 @@ const upload = async () => {
     color: white;
 }
 
-#upload {
+#upload-csv {
+    bottom: 250px;
+}
+
+#upload-csv:hover {
+    background-color: rgb(30, 226, 240);
+}
+
+#upload-json {
     bottom: 180px;
 }
 
-#upload:hover {
+#upload-json:hover {
     background-color: rgb(30, 226, 240);
 }
 
