@@ -497,23 +497,15 @@ export const postUpload2Recover = async (file: File) => {
 }
 
 export const postCSV2Update = async (file: File) => {
-
-    alert('TODO:')
-
+    const mForm = new Map<string, any>([
+        ["file", file],
+    ]);
+    const rt = await fetchBodyForm(`/api/admin/upload-csv-formfile`, `POST`, mEmpty, mForm, loginAuth.value)
+    const err = await fetchErr(rt, onExpired)
     return {
-        'data': "",
-        'error': null
-    }
-
-    // const mForm = new Map<string, any>([
-    //     ["file", file],
-    // ]);
-    // const rt = await fetchBodyForm(`/api/admin/upload-dic-formfile`, `POST`, mEmpty, mForm, loginAuth.value)
-    // const err = await fetchErr(rt, onExpired)
-    // return {
-    //     'data': err == null ? (rt as any[])[0] : null,
-    //     'error': err
-    // };
+        'data': err == null ? (rt as any[])[0] : null,
+        'error': err
+    };
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
