@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { FileText } from '@/share/share';
-import { patchReCom, patchValidation, globalMsg, postUpload2Recover } from '@/share/share';
+import { patchReCom, patchValidation, globalMsg, postUpload2Recover, postCSV2Update } from '@/share/share';
 import MsgModal from '@/components/modal-components/MsgModal.vue'
 import { useOverlayMeta, renderOverlay } from '@unoverlays/vue'
 import { notify } from "@kyvg/vue3-notification";
@@ -73,7 +73,7 @@ onMounted(async () => {
                     }
                     notify({
                         title: "Recovery Successful",
-                        text: 'All dictionary are recovered by uploaded package, All pending items are discarded',
+                        text: 'All dictionary are recovered by uploaded package, AND All pending items are discarded',
                         type: "success"
                     })
                 }
@@ -89,7 +89,6 @@ onMounted(async () => {
     ///////////////////////////////////////////////
 
     fileInputCSV.value = document.getElementById('fileInputCSV') as HTMLInputElement;
-
     fileInputCSV.value.addEventListener('change', async (event: Event) => {
 
         const file: File | undefined = fileInputCSV.value.files?.[0];
@@ -105,23 +104,20 @@ onMounted(async () => {
                         color: 'red',
                     },
                 })) === 'confirm') {
-
-                    alert('TODO:')
-
-                    // const de = await postUpload2Recover(file)
-                    // if (de.error != null) {
-                    //     notify({
-                    //         title: "Error: Recovery",
-                    //         text: de.error,
-                    //         type: "error"
-                    //     })
-                    //     return
-                    // }
-                    // notify({
-                    //     title: "Recovery Successful",
-                    //     text: 'All dictionary are recovered by uploaded package, All pending items are discarded',
-                    //     type: "success"
-                    // })
+                    const de = await postCSV2Update(file)
+                    if (de.error != null) {
+                        notify({
+                            title: "Error: Update Via CSV",
+                            text: de.error,
+                            type: "error"
+                        })
+                        return
+                    }
+                    notify({
+                        title: "CSV Uploaded Successfully",
+                        text: 'Dictionary is updated by uploaded csv file, AND All pending items are discarded',
+                        type: "success"
+                    })
                 }
             } catch (e) {
                 switch (e) {
