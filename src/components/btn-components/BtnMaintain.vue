@@ -2,12 +2,12 @@
 
     <a class="float" id="upload-csv" @click="upload_csv" title="upload csv file to update dictionary">
         <font-awesome-icon icon="file-upload" class="floating" />
-        <input type="file" name="file" id="fileInputCSV" style="display: none;">
+        <input type="file" name="file" id="fileInputCSV" accept=".csv" style="display: none;">
     </a>
 
     <a class="float" id="upload-json" @click="upload_json" title="upload zip package to recover dictionary">
         <font-awesome-icon icon="upload" class="floating" />
-        <input type="file" name="file" id="fileInputJSON" style="display: none;">
+        <input type="file" name="file" id="fileInputJSON" accept=".zip" style="display: none;">
     </a>
 
     <a class="float" id="check-square" @click="validate" title="validate backend data">
@@ -127,7 +127,6 @@ onMounted(async () => {
             }
         }
     });
-
 })
 
 const validate = async () => {
